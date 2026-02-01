@@ -91,7 +91,28 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
         const evaluation = evaluations.find(e => e.schoolId === school.id && e.periodId === p.id);
         if (!evaluation || !evaluation.isFinalized) return;
 
-        // Calcular pontos deste mês usando as categorias corretas da escola
+        // Se estiver finalizado e tiver snapshot, usar os dados congelados para evitar que mudanças futuras afetem o passado
+        if (evaluation.snapshot) {
+          const snap = evaluation.snapshot;
+          if (!resultsBySchool[school.id]) {
+            resultsBySchool[school.id] = {
+              schoolName: school.name,
+              treasurerName: snap.treasurerName || school.treasurerName || 'N/A',
+              viceName: snap.viceTreasurerName || school.viceTreasurerName || 'N/A',
+              totalTreasurer: 0,
+              totalVice: 0,
+              totalPoints: 0,
+              evaluationsCount: 0
+            };
+          }
+          resultsBySchool[school.id].totalTreasurer += snap.totalTreasurerPrize;
+          resultsBySchool[school.id].totalVice += snap.vicePrize;
+          resultsBySchool[school.id].totalPoints += snap.totalPoints;
+          resultsBySchool[school.id].evaluationsCount += 1;
+          return;
+        }
+
+        // Caso não tenha snapshot (avaliações antigas), faz o cálculo dinâmico
         const currentCategories = school.custom_categories || INITIAL_CATEGORIES;
         const points = currentCategories.reduce((acc, cat) => {
           const pnt = calculatePoints(

@@ -56,6 +56,27 @@ export interface Evaluation {
   inadimplenciaRankingPercentage?: number; // Percentual para o ranking de inadimplência entre escolas
   isFinalized: boolean;
   calculatedAt?: string;
+  snapshot?: {
+    treasurerName?: string;
+    treasurerCpf?: string;
+    viceTreasurerName?: string;
+    viceTreasurerCpf?: string;
+    managementBonusValue: number;
+    anrsBonusValue: number;
+    inadimplenciaRankingBonusValue: number;
+    totalTreasurerPrize: number;
+    vicePrize: number;
+    totalPoints: number;
+    inadimplenciaRank?: number;
+    awardLevel: AwardLevel;
+    // Também armazenamos as configs de bonus caso queira ser extremamente preciso
+    bonusConfigs?: {
+      managementBonusConfig: ManagementBonusConfig;
+      anrsBonusConfig: AnrsBonusConfig;
+      inadimplenciaRankingConfig: InadimplenciaRankingConfig;
+      thresholds: Thresholds;
+    };
+  };
 }
 
 export interface SchoolUnit {
@@ -66,15 +87,15 @@ export interface SchoolUnit {
   treasurerCpf?: string;
   viceTreasurerName?: string;
   viceTreasurerCpf?: string;
-  isLocked?: boolean; 
+  isLocked?: boolean;
   custom_categories?: Category[]; // Categorias customizadas da unidade
 }
 
 export interface AppState {
   thresholds: Thresholds;
-  inadimplenciaRankingConfig: InadimplenciaRankingConfig; 
-  managementBonusConfig: ManagementBonusConfig;         
-  anrsBonusConfig: AnrsBonusConfig;                   
+  inadimplenciaRankingConfig: InadimplenciaRankingConfig;
+  managementBonusConfig: ManagementBonusConfig;
+  anrsBonusConfig: AnrsBonusConfig;
   categories: Category[];
   schools: SchoolUnit[];
   periods: Period[];

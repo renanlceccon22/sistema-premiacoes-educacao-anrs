@@ -18,6 +18,7 @@ interface SchoolWithEvaluationStatus extends SchoolUnit {
   inadimplenciaRankingPercentage?: number;
   isFinalized: boolean;
   categories: Category[];
+  snapshot?: any; // SnapshotData
 }
 
 interface SummaryTableProps {
@@ -49,6 +50,30 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
 }) => {
 
   const getSchoolResult = (school: SchoolWithEvaluationStatus) => {
+    // Se estiver finalizado e tiver snapshot, usar os dados congelados
+    if (school.isFinalized && school.snapshot) {
+      const snap = school.snapshot;
+      return {
+        inadimplenciaRankingBonus: snap.inadimplenciaRankingBonusValue,
+        managementBonus: snap.managementBonusValue,
+        anrsBonus: snap.anrsBonusValue,
+        totalTreasurerPrize: snap.totalTreasurerPrize,
+        vicePrize: snap.vicePrize,
+        level: snap.awardLevel,
+        inadimplenciaRank: snap.inadimplenciaRank,
+        points: snap.totalPoints,
+        statusText: "Finalizado",
+        statusColor: "bg-green-100 text-green-600",
+        school: {
+          ...school,
+          treasurerName: snap.treasurerName || school.treasurerName,
+          treasurerCpf: snap.treasurerCpf || school.treasurerCpf,
+          viceTreasurerName: snap.viceTreasurerName || school.viceTreasurerName,
+          viceTreasurerCpf: snap.viceTreasurerCpf || school.viceTreasurerCpf,
+        }
+      };
+    }
+
     // Cálculo rigoroso de pontos garantindo que orcamento_bi e descontos usem o contexto correto
     const points = school.categories.reduce((acc, cat) => {
       const target = school.targets[cat.id] || 0;

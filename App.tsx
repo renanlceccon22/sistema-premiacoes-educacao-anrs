@@ -167,7 +167,8 @@ const App: React.FC = () => {
               realizedValues: e.realized_values || {},
               inadimplenciaRankingPercentage: e.inadimplencia_ranking_percentage,
               isFinalized: e.is_finalized,
-              calculatedAt: e.calculated_at
+              calculatedAt: e.calculated_at,
+              snapshot: e.snapshot
             }));
             setEvaluations(mappedEvals);
           }
@@ -234,12 +235,17 @@ const App: React.FC = () => {
   const inadimplenciaRankingPercentage = useMemo(() => currentEvaluation?.inadimplenciaRankingPercentage, [currentEvaluation]);
 
   const totalPoints = useMemo(() => {
+    // Se estiver finalizado, SEMPRE usar o valor do snapshot para garantir que alterações futuras não afetem o passado
+    if (currentEvaluation?.isFinalized && currentEvaluation.snapshot) {
+      return currentEvaluation.snapshot.totalPoints;
+    }
+
     const targets = activeSchool?.targets || {};
     return activeCategories.reduce((acc, cat) => {
       const p = calculatePoints(cat, selections[cat.id], realizedValues[cat.id], targets[cat.id] || 0, activePeriod?.label);
       return acc + p;
     }, 0);
-  }, [selections, realizedValues, activeCategories, activeSchool, activePeriod]);
+  }, [selections, realizedValues, activeCategories, activeSchool, activePeriod, currentEvaluation]);
 
   const schoolsForSummary = useMemo(() => {
     return schools.map(s => {
@@ -250,7 +256,8 @@ const App: React.FC = () => {
         realizedValues: evalData?.realizedValues || {},
         inadimplenciaRankingPercentage: evalData?.inadimplenciaRankingPercentage,
         isFinalized: evalData?.isFinalized || false,
-        categories: schoolCustomCategories[s.id] || INITIAL_CATEGORIES
+        categories: schoolCustomCategories[s.id] || INITIAL_CATEGORIES,
+        snapshot: evalData?.snapshot
       };
     });
   }, [schools, evaluations, activePeriodId, schoolCustomCategories]);
@@ -276,11 +283,25 @@ const App: React.FC = () => {
         inadimplenciaRank: undefined,
       };
     }
+
+    // Se estiver finalizado, usar os valores gravados no snapshot
+    if (currentEvaluation?.isFinalized && currentEvaluation.snapshot) {
+      return {
+        inadimplenciaRankingBonus: currentEvaluation.snapshot.inadimplenciaRankingBonusValue,
+        managementBonus: currentEvaluation.snapshot.managementBonusValue,
+        anrsBonus: currentEvaluation.snapshot.anrsBonusValue,
+        totalTreasurerPrize: currentEvaluation.snapshot.totalTreasurerPrize,
+        vicePrize: currentEvaluation.snapshot.vicePrize,
+        level: currentEvaluation.snapshot.awardLevel,
+        inadimplenciaRank: currentEvaluation.snapshot.inadimplenciaRank,
+      };
+    }
+
     return calculateAllPrizes(
       totalPoints, thresholds, inadimplenciaRankingConfig, managementBonusConfig, anrsBonusConfig,
       allPeriodEvaluationsForPrizes, activeSchoolId, activePeriod?.label
     );
-  }, [totalPoints, thresholds, inadimplenciaRankingConfig, managementBonusConfig, anrsBonusConfig, allPeriodEvaluationsForPrizes, activeSchoolId, activePeriodId, activePeriod]);
+  }, [totalPoints, thresholds, inadimplenciaRankingConfig, managementBonusConfig, anrsBonusConfig, allPeriodEvaluationsForPrizes, activeSchoolId, activePeriodId, activePeriod, currentEvaluation]);
 
   const awardLevel = level;
 
@@ -373,7 +394,8 @@ const App: React.FC = () => {
           realized_values: updatedEval.realizedValues,
           inadimplencia_ranking_percentage: updatedEval.inadimplenciaRankingPercentage,
           is_finalized: updatedEval.isFinalized,
-          calculated_at: updatedEval.calculatedAt
+          calculated_at: updatedEval.calculatedAt,
+          snapshot: updatedEval.snapshot
         };
         await supabase.from('evaluations').upsert(dbPayload, { onConflict: 'school_id,period_id' });
       }
@@ -402,8 +424,34 @@ const App: React.FC = () => {
   };
 
   const handleFinalize = async () => {
-    if (!activeSchoolId || !activePeriodId) return;
-    await updateEvaluation({ isFinalized: true, calculatedAt: new Date().toISOString() });
+    if (!activeSchoolId || !activePeriodId || !activeSchool) return;
+
+    const snapshot = {
+      treasurerName: activeSchool.treasurerName,
+      treasurerCpf: activeSchool.treasurerCpf,
+      viceTreasurerName: activeSchool.viceTreasurerName,
+      viceTreasurerCpf: activeSchool.viceTreasurerCpf,
+      managementBonusValue: managementBonus,
+      anrsBonusValue: anrsBonus,
+      inadimplenciaRankingBonusValue: inadimplenciaRankingBonus,
+      totalTreasurerPrize: totalTreasurerPrize,
+      vicePrize: vicePrize,
+      totalPoints: totalPoints,
+      inadimplenciaRank: inadimplenciaRank,
+      awardLevel: awardLevel,
+      bonusConfigs: {
+        managementBonusConfig,
+        anrsBonusConfig,
+        inadimplenciaRankingConfig,
+        thresholds
+      }
+    };
+
+    await updateEvaluation({
+      isFinalized: true,
+      calculatedAt: new Date().toISOString(),
+      snapshot
+    });
   };
 
   const handleReopenEvaluation = () => {
@@ -412,7 +460,7 @@ const App: React.FC = () => {
       'Reabrir Avaliação',
       "Deseja reabrir esta avaliação para ajustes? Isso permitirá editar critérios e os valores realizados.",
       () => {
-        updateEvaluation({ isFinalized: false });
+        updateEvaluation({ isFinalized: false, snapshot: undefined });
         setConfirmConfig(prev => ({ ...prev, isOpen: false }));
       }
     );
