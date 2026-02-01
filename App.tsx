@@ -57,11 +57,11 @@ const App: React.FC = () => {
   const [session, setSession] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
-  // Estados para Dropdowns customizados
   const [isSchoolDropdownOpen, setIsSchoolDropdownOpen] = useState(false);
   const [isPeriodDropdownOpen, setIsPeriodDropdownOpen] = useState(false);
   const schoolDropdownRef = useRef<HTMLDivElement>(null);
   const periodDropdownRef = useRef<HTMLDivElement>(null);
+  const saveTimeoutRef = useRef<NodeJS.Timeout>(null);
 
   // Estado para Modal de Confirmação
   const [confirmConfig, setConfirmConfig] = useState<{
@@ -241,7 +241,6 @@ const App: React.FC = () => {
   }, [selections, realizedValues, activeCategories, activeSchool, activePeriod]);
 
   const schoolsForSummary = useMemo(() => {
-    if (!activePeriodId) return [];
     return schools.map(s => {
       const evalData = evaluations.find(e => e.schoolId === s.id && e.periodId === activePeriodId);
       return {
@@ -341,10 +340,10 @@ const App: React.FC = () => {
     setSyncing(false);
   };
 
-  const updateEvaluation = async (updates: Partial<Evaluation>) => {
+  const updateEvaluation = (updates: Partial<Evaluation>) => {
     if (!activeSchoolId || !activePeriodId) return;
-    setSyncing(true);
 
+    // 1. Atualiza Localmente INSTANTANEAMENTE (Sem lag)
     const current = evaluations.find(e => e.schoolId === activeSchoolId && e.periodId === activePeriodId) || {
       schoolId: activeSchoolId,
       periodId: activePeriodId,
@@ -354,28 +353,30 @@ const App: React.FC = () => {
     };
 
     const updatedEval = { ...current, ...updates };
-
-    if (isConfigured && supabase) {
-      const dbPayload = {
-        school_id: updatedEval.schoolId,
-        period_id: updatedEval.periodId,
-        selections: updatedEval.selections,
-        realized_values: updatedEval.realizedValues,
-        inadimplencia_ranking_percentage: updatedEval.inadimplenciaRankingPercentage,
-        is_finalized: updatedEval.isFinalized,
-        calculated_at: updatedEval.calculatedAt
-      };
-
-      await supabase.from('evaluations').upsert(dbPayload, { onConflict: 'school_id,period_id' });
-    }
-
     const newEvaluations = evaluations.some(e => e.schoolId === activeSchoolId && e.periodId === activePeriodId)
       ? evaluations.map(e => (e.schoolId === activeSchoolId && e.periodId === activePeriodId) ? updatedEval : e)
       : [...evaluations, updatedEval];
 
     setEvaluations(newEvaluations);
     saveLocally('evaluations', newEvaluations);
-    setSyncing(false);
+
+    // 2. Grava no Supabase com DEBOUNCE (Silencioso e sem travar a UI)
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+
+    saveTimeoutRef.current = setTimeout(async () => {
+      if (isConfigured && supabase) {
+        const dbPayload = {
+          school_id: updatedEval.schoolId,
+          period_id: updatedEval.periodId,
+          selections: updatedEval.selections,
+          realized_values: updatedEval.realizedValues,
+          inadimplencia_ranking_percentage: updatedEval.inadimplenciaRankingPercentage,
+          is_finalized: updatedEval.isFinalized,
+          calculated_at: updatedEval.calculatedAt
+        };
+        await supabase.from('evaluations').upsert(dbPayload, { onConflict: 'school_id,period_id' });
+      }
+    }, 1000); // Aguarda 1 segundo após o último toque antes de subir pra nuvem
   };
 
   const handleSelection = (categoryId: string, optionId: string) => {
@@ -417,30 +418,57 @@ const App: React.FC = () => {
   };
 
   const handleUpdateCategories = async (updated: Category[]) => {
-    if (!activeSchoolId) return;
-    setSyncing(true);
-    if (isConfigured && supabase) {
-      await supabase.from('schools').update({ custom_categories: updated }).eq('id', activeSchoolId);
-    }
+    // 1. Atualiza Localmente para TODAS as escolas (Sincronização Global)
     setSchoolCustomCategories(prev => {
-      const newState = { ...prev, [activeSchoolId]: updated };
+      const newState: Record<string, Category[]> = {};
+      schools.forEach(s => {
+        newState[s.id] = updated;
+      });
+
       setSchools(currentSchools => {
-        const updatedSchools = currentSchools.map(s => s.id === activeSchoolId ? { ...s, custom_categories: updated } : s);
+        const updatedSchools = currentSchools.map(s => ({ ...s, custom_categories: updated }));
         saveLocally('schools', updatedSchools);
         return updatedSchools;
       });
+
       return newState;
     });
-    setSyncing(false);
+
+    // 2. Grava no Supabase para TODAS as escolas (Update em massa)
+    if (isConfigured && supabase) {
+      // Usamos .neq('id', '00000000-0000-0000-0000-000000000000') ou simplesmente um filtro que pegue todos
+      // O Supabase não permite update sem filtro, então pegamos as ids atuais
+      const schoolIds = schools.map(s => s.id);
+      if (schoolIds.length > 0) {
+        await supabase.from('schools').update({ custom_categories: updated }).in('id', schoolIds);
+      }
+    }
   };
 
   const handleAddSchool = async (name: string) => {
     setSyncing(true);
     const newId = crypto.randomUUID();
-    const newSchool: SchoolUnit = { id: newId, name, targets: {} };
+
+    // Pega as categorias atuais de qualquer escola existente (já que agora são globais)
+    // Se não houver escolas, usa as iniciais.
+    const currentCategories = schools.length > 0
+      ? (schools[0].custom_categories || INITIAL_CATEGORIES)
+      : INITIAL_CATEGORIES;
+
+    const newSchool: SchoolUnit = {
+      id: newId,
+      name,
+      targets: {},
+      custom_categories: currentCategories
+    };
 
     if (isConfigured && supabase) {
-      const { data } = await supabase.from('schools').insert({ name, targets: {} }).select().single();
+      const { data } = await supabase.from('schools').insert({
+        name,
+        targets: {},
+        custom_categories: currentCategories
+      }).select().single();
+
       if (data) {
         const mapped: SchoolUnit = {
           id: data.id,
@@ -455,11 +483,15 @@ const App: React.FC = () => {
         };
         setSchools(prev => [...prev, mapped]);
         setActiveSchoolId(mapped.id);
+
+        // Atualiza também o cache de categorias
+        setSchoolCustomCategories(prev => ({ ...prev, [mapped.id]: currentCategories }));
       }
     } else {
       const updated = [...schools, newSchool];
       setSchools(updated);
       saveLocally('schools', updated);
+      setSchoolCustomCategories(prev => ({ ...prev, [newId]: currentCategories }));
       setActiveSchoolId(newId);
     }
     setSyncing(false);
@@ -627,7 +659,7 @@ const App: React.FC = () => {
             </div>
 
             {/* Dropdown Período Contábil Customizado */}
-            <div className="flex flex-col flex-1 min-w-[200px] md:w-56 relative" ref={periodDropdownRef}>
+            <div className="flex flex-col flex-1 min-w-[200px] md:w-64 relative" ref={periodDropdownRef}>
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 flex items-center">
                 <svg className="w-3.5 h-3.5 mr-1.5 text-[#FDB813]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z" />
@@ -639,7 +671,7 @@ const App: React.FC = () => {
                 className={`w-full flex justify-between items-center bg-slate-50 border-2 rounded-2xl px-5 py-4 text-sm font-black transition-all outline-none ${activePeriodId ? 'border-[#FDB813] text-slate-800 bg-white ring-4 ring-[#FDB813]/5 shadow-lg shadow-[#FDB813]/10' : 'border-slate-100 text-slate-400'
                   }`}
               >
-                <span className="truncate">{activePeriod ? `${activePeriod.label} ${activePeriod.status === 'closed' ? '🔒' : ''}` : "Selecione o Mês..."}</span>
+                <span className="truncate">{activePeriod ? `${activePeriod.label} ${activePeriod.status === 'closed' ? '🔒' : ''}` : "Consolidado (Todos os Meses)"}</span>
                 <svg className={`w-5 h-5 transition-transform duration-300 ${isPeriodDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
                 </svg>
@@ -649,9 +681,9 @@ const App: React.FC = () => {
                 <ul className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white border border-slate-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-64 overflow-y-auto">
                   <li
                     onClick={() => { setActivePeriodId(null); setIsPeriodDropdownOpen(false); }}
-                    className="px-5 py-3 text-sm font-black text-slate-400 hover:bg-slate-50 cursor-pointer transition-colors"
+                    className={`px-5 py-3 text-sm font-black cursor-pointer transition-colors ${!activePeriodId ? 'bg-[#FDB813] text-[#003B71]' : 'text-slate-400 hover:bg-slate-50'}`}
                   >
-                    Selecione o Mês...
+                    Consolidado (Todos os Meses)
                   </li>
                   {periods.map(p => (
                     <li
@@ -790,6 +822,7 @@ const App: React.FC = () => {
               inadimplenciaRankingConfig={inadimplenciaRankingConfig}
               managementBonusConfig={managementBonusConfig}
               anrsBonusConfig={anrsBonusConfig}
+              activePeriodId={activePeriodId}
             />
           </div>
         )}

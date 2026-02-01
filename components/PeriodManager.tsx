@@ -25,7 +25,7 @@ const PeriodManager: React.FC<PeriodManagerProps> = ({
     'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
     'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
   ];
-  
+
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - 1 + i);
 
@@ -56,14 +56,13 @@ const PeriodManager: React.FC<PeriodManagerProps> = ({
             <span className="w-2 h-8 bg-[#FDB813] rounded-full mr-3"></span>
             Gestão de Períodos Contábeis
           </h2>
-          
+
           <div className="flex flex-col space-y-4">
             {/* Seletor de Novo Período */}
-            <div className={`flex flex-wrap items-end gap-3 p-4 rounded-xl border transition-all ${
-              schoolsCount === 0 
-                ? 'bg-orange-50 border-orange-200 opacity-80' 
+            <div className={`flex flex-wrap items-end gap-3 p-4 rounded-xl border transition-all ${schoolsCount === 0
+                ? 'bg-orange-50 border-orange-200 opacity-80'
                 : 'bg-slate-50 border-slate-100'
-            }`}>
+              }`}>
               {schoolsCount === 0 && (
                 <div className="w-full mb-2 flex items-center gap-2 text-orange-700">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -99,11 +98,10 @@ const PeriodManager: React.FC<PeriodManagerProps> = ({
 
               <button
                 onClick={handleAdd}
-                className={`px-5 py-2.5 rounded-lg font-bold transition-all flex items-center gap-2 shadow-md active:scale-95 ${
-                  schoolsCount === 0
+                className={`px-5 py-2 text-sm border border-transparent rounded-lg font-bold transition-all flex items-center gap-2 shadow-md active:scale-95 ${schoolsCount === 0
                     ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
                     : 'bg-[#003B71] text-white hover:bg-[#002a51]'
-                }`}
+                  }`}
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -120,37 +118,33 @@ const PeriodManager: React.FC<PeriodManagerProps> = ({
               {periods.map((p) => (
                 <div
                   key={p.id}
-                  className={`group relative flex items-center transition-all ${
-                    activePeriodId === p.id ? 'scale-105 z-10' : ''
-                  }`}
+                  className={`group relative flex items-center transition-all ${activePeriodId === p.id ? 'scale-105 z-10' : ''
+                    }`}
                 >
                   <button
                     onClick={() => onSelectPeriod(p.id)}
-                    className={`pl-4 pr-12 py-2 rounded-lg border-2 transition-all flex items-center space-x-3 text-left ${
-                      activePeriodId === p.id
+                    className={`pl-4 pr-12 py-2 rounded-lg border-2 transition-all flex items-center space-x-3 text-left ${activePeriodId === p.id
                         ? 'bg-[#003B71] border-[#003B71] text-white shadow-lg'
                         : 'bg-white border-slate-100 text-slate-600 hover:border-slate-300'
-                    }`}
+                      }`}
                   >
                     <span className="font-bold text-sm">{p.label}</span>
-                    <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full ${
-                      p.status === 'open' ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-400'
-                    }`}>
+                    <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full ${p.status === 'open' ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-400'
+                      }`}>
                       {p.status === 'open' ? 'Aberto' : 'Encerrado'}
                     </span>
                   </button>
-                  
+
                   <button
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                       onRemovePeriod(p.id);
                     }}
-                    className={`absolute right-2 p-1.5 rounded-lg transition-all z-20 hover:scale-110 active:scale-90 ${
-                      activePeriodId === p.id 
-                        ? 'text-white/60 hover:text-white hover:bg-white/20' 
+                    className={`absolute right-2 p-1.5 rounded-lg transition-all z-20 hover:scale-110 active:scale-90 ${activePeriodId === p.id
+                        ? 'text-white/60 hover:text-white hover:bg-white/20'
                         : 'text-slate-300 hover:text-red-500 hover:bg-red-50'
-                    }`}
+                      }`}
                     title="Excluir Período"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -172,11 +166,10 @@ const PeriodManager: React.FC<PeriodManagerProps> = ({
             </p>
             <button
               onClick={() => onToggleStatus(activePeriod.id)}
-              className={`w-full px-4 py-2.5 rounded-xl font-black text-xs transition-all border-2 shadow-sm uppercase tracking-widest ${
-                activePeriod.status === 'open'
+              className={`w-full px-4 py-2.5 rounded-xl font-black text-xs transition-all border-2 shadow-sm uppercase tracking-widest ${activePeriod.status === 'open'
                   ? 'bg-white border-red-100 text-red-500 hover:bg-red-50 hover:border-red-200'
                   : 'bg-white border-green-100 text-green-600 hover:bg-green-50 hover:border-green-200'
-              }`}
+                }`}
             >
               {activePeriod.status === 'open' ? 'Encerrar Período' : 'Reativar Período'}
             </button>

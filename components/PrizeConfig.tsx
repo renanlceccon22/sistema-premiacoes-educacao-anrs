@@ -212,9 +212,9 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
       */}
 
       {/* Novo Bloco: Premiação Inadimpl. Ranking */}
-      <div className="mb-8 p-6 rounded-2xl border border-blue-200 bg-blue-50/20">
-        <h3 className="text-[9px] font-black text-blue-700 uppercase tracking-[0.2em] mb-4 flex items-center">
-          <span className="w-4 h-[1px] bg-blue-200 mr-2"></span>
+      <div className="mb-8 p-6 rounded-2xl border border-green-300 bg-green-50">
+        <h3 className="text-[9px] font-black text-green-900 uppercase tracking-[0.2em] mb-4 flex items-center">
+          <span className="w-4 h-[1px] bg-green-200 mr-2"></span>
           Premiação Ranking de Inadimplência (Escolas com menor %)
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -223,7 +223,7 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
             { key: 'inad_rank_2', label: '2º Lugar', value: localInadimplenciaRankingConfig.secondPlace },
             { key: 'inad_rank_3', label: '3º Lugar', value: localInadimplenciaRankingConfig.thirdPlace },
           ].map((item) => (
-            <div key={item.key} className="p-4 rounded-xl border border-blue-100 bg-white shadow-sm">
+            <div key={item.key} className="p-4 rounded-xl border border-green-100 bg-white shadow-sm">
               <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">{item.label}</label>
               {isLocked ? (
                 <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">
@@ -247,8 +247,8 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
       </div>
 
       {/* Novo Bloco: Premiação de Gestão */}
-      <div className="mb-8 p-6 rounded-2xl border border-green-200 bg-green-50/20">
-        <h3 className="text-[9px] font-black text-green-700 uppercase tracking-[0.2em] mb-4 flex items-center">
+      <div className="mb-8 p-6 rounded-2xl border border-green-300 bg-green-50">
+        <h3 className="text-[9px] font-black text-green-900 uppercase tracking-[0.2em] mb-4 flex items-center">
           <span className="w-4 h-[1px] bg-green-200 mr-2"></span>
           Premiação de Gestão (*Adiantamentos e Cartão em Dia*)
         </h3>
@@ -291,13 +291,13 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
       </div>
 
       {/* Novo Bloco: Premiação Meta ANRS */}
-      <div className="p-6 rounded-2xl border border-purple-200 bg-purple-50/20">
-        <h3 className="text-[9px] font-black text-purple-700 uppercase tracking-[0.2em] mb-4 flex items-center">
-          <span className="w-4 h-[1px] bg-purple-200 mr-2"></span>
+      <div className="p-6 rounded-2xl border border-green-300 bg-green-50">
+        <h3 className="text-[9px] font-black text-green-900 uppercase tracking-[0.2em] mb-4 flex items-center">
+          <span className="w-4 h-[1px] bg-green-200 mr-2"></span>
           Premiação Meta ANRS (*Inadimplência, Orçamento e Descontos*)
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-4 rounded-xl border border-purple-100 bg-white shadow-sm">
+          <div className="p-4 rounded-xl border border-green-100 bg-white shadow-sm">
             <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">Mín. Pontos (Inadim. + Orçam. + Desc.)</label>
             {isLocked ? (
               <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">
@@ -312,7 +312,7 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
               />
             )}
           </div>
-          <div className="p-4 rounded-xl border border-purple-100 bg-white shadow-sm">
+          <div className="p-4 rounded-xl border border-green-100 bg-white shadow-sm">
             <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">Valor Bônus (R$)</label>
             {isLocked ? (
               <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">

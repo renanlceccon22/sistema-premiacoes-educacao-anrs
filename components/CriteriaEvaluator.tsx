@@ -34,9 +34,23 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
   activePeriodLabel
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
+  const [localCategories, setLocalCategories] = useState<Category[]>(categories);
+
+  // Sincroniza localCategories quando categories mudar (ex: troca de escola ou carregamento inicial)
+  React.useEffect(() => {
+    setLocalCategories(categories);
+  }, [categories]);
+
+  const handleToggleEditMode = () => {
+    if (isEditMode) {
+      // Saindo do modo de edição: grava as alterações
+      onUpdateCategories(localCategories);
+    }
+    setIsEditMode(!isEditMode);
+  };
 
   const handleUpdateOption = (catId: string, optId: string, updates: Partial<CriterionOption>) => {
-    const updated = categories.map(cat => {
+    const updated = localCategories.map(cat => {
       if (cat.id !== catId) return cat;
       return {
         ...cat,
@@ -46,31 +60,31 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
         })
       };
     });
-    onUpdateCategories(updated);
+    setLocalCategories(updated);
   };
 
   const handleUpdateCategoryName = (catId: string, newName: string) => {
-    const updated = categories.map(cat => {
+    const updated = localCategories.map(cat => {
       if (cat.id !== catId) return cat;
       return { ...cat, name: newName };
     });
-    onUpdateCategories(updated);
+    setLocalCategories(updated);
   };
 
   const handleUpdateThreshold = (catId: string, index: number, value: number) => {
-    const updated = categories.map(cat => {
+    const updated = localCategories.map(cat => {
       if (cat.id !== catId) return cat;
       const newThresholds = [...(cat.metricThresholds || [0, 0])];
       newThresholds[index] = value;
-      
+
       const newOptions = [...cat.options];
       if (catId === 'inadimplencia_mes') {
         if (index === 0) {
-           newOptions[0].label = `Inadimplência <= ${value}%`;
-           newOptions[1].label = `Inadimplência entre ${value + 0.1}% e ${newThresholds[1]}%`;
+          newOptions[0].label = `Inadimplência <= ${value}%`;
+          newOptions[1].label = `Inadimplência entre ${value + 0.1}% e ${newThresholds[1]}%`;
         } else if (index === 1) {
-           newOptions[1].label = `Inadimplência entre ${newThresholds[0] + 0.1}% e ${value}%`;
-           newOptions[2].label = `Inadimplência > ${value}%`;
+          newOptions[1].label = `Inadimplência entre ${newThresholds[0] + 0.1}% e ${value}%`;
+          newOptions[2].label = `Inadimplência > ${value}%`;
         }
       } else if (catId === 'orcamento_bi') {
         if (index === 1) {
@@ -86,12 +100,12 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
 
       return { ...cat, metricThresholds: newThresholds, options: newOptions };
     });
-    onUpdateCategories(updated);
+    setLocalCategories(updated);
   };
 
   const getAutoSelectedOptionId = (category: Category, realized: number, target: number) => {
     const thresholds = category.metricThresholds || [0, 0];
-    
+
     if (category.id === 'inadimplencia_mes') {
       const limit1 = thresholds[0] ?? 2;
       const limit2 = thresholds[1] ?? 3;
@@ -139,15 +153,14 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
             Personalizado para: <span className="bg-[#003B71] text-white px-2 py-0.5 rounded">{schoolName}</span>
           </p>
         </div>
-        
+
         {!isReadOnly && (
           <button
-            onClick={() => setIsEditMode(!isEditMode)}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-black text-xs transition-all uppercase tracking-widest shadow-md ${
-              isEditMode 
-                ? 'bg-green-600 text-white hover:bg-green-700' 
-                : 'bg-white border-2 border-slate-100 text-slate-400 hover:border-slate-300 hover:text-slate-600'
-            }`}
+            onClick={handleToggleEditMode}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-black text-xs transition-all uppercase tracking-widest shadow-md ${isEditMode
+              ? 'bg-green-600 text-white hover:bg-green-700'
+              : 'bg-white border-2 border-slate-100 text-slate-400 hover:border-slate-300 hover:text-slate-600'
+              }`}
           >
             {isEditMode ? (
               <>
@@ -191,13 +204,13 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
       )}
 
       <div className="space-y-8">
-        {categories.map((category) => {
+        {localCategories.map((category) => {
           const isMetric = !!category.isMetric;
           const target = schoolTargets[category.id] || 0;
           const realized = realizedValues[category.id] || 0;
-          
-          const effectiveSelectionId = isMetric 
-            ? getAutoSelectedOptionId(category, realized, target) 
+
+          const effectiveSelectionId = isMetric
+            ? getAutoSelectedOptionId(category, realized, target)
             : selections[category.id];
 
           return (
@@ -205,62 +218,62 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
               {isEditMode ? (
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
-                     <input
-                        type="text"
-                        value={category.name}
-                        onChange={(e) => handleUpdateCategoryName(category.id, e.target.value)}
-                        className="text-lg font-black text-[#003B71] uppercase tracking-wide bg-white border-b-2 border-[#003B71] rounded-t px-4 py-2 w-full md:w-1/2 focus:outline-none focus:bg-white transition-all"
-                      />
-                      <span className="text-[10px] font-black text-slate-300 uppercase italic">Título da Categoria</span>
+                    <input
+                      type="text"
+                      value={category.name}
+                      onChange={(e) => handleUpdateCategoryName(category.id, e.target.value)}
+                      className="text-lg font-black text-[#003B71] uppercase tracking-wide bg-white border-b-2 border-[#003B71] rounded-t px-4 py-2 w-full md:w-1/2 focus:outline-none focus:bg-white transition-all"
+                    />
+                    <span className="text-[10px] font-black text-slate-300 uppercase italic">Título da Categoria</span>
                   </div>
 
                   {isMetric && (
                     <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {category.id === 'inadimplencia_mes' && (
-                          <>
-                            <div>
-                              <label className="block text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1">Limite Opção 1 (Pontuação Máxima)</label>
-                              <div className="relative">
-                                <input 
-                                  type="number" 
-                                  step="0.1"
-                                  value={category.metricThresholds?.[0] ?? 2}
-                                  onChange={(e) => handleUpdateThreshold(category.id, 0, Number(e.target.value))}
-                                  className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 font-black text-blue-800"
-                                />
-                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-blue-300">%</span>
-                              </div>
-                            </div>
-                            <div>
-                              <label className="block text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1">Limite Opção 2 (Pontuação Média)</label>
-                              <div className="relative">
-                                <input 
-                                  type="number" 
-                                  step="0.1"
-                                  value={category.metricThresholds?.[1] ?? 3}
-                                  onChange={(e) => handleUpdateThreshold(category.id, 1, Number(e.target.value))}
-                                  className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 font-black text-blue-800"
-                                />
-                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-blue-300">%</span>
-                              </div>
-                            </div>
-                          </>
-                        )}
-                        {(category.id === 'orcamento_bi' || category.id === 'descontos_concedidos') && (
+                      {category.id === 'inadimplencia_mes' && (
+                        <>
                           <div>
-                            <label className="block text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1">Margem de Tolerância (%)</label>
+                            <label className="block text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1">Limite Opção 1 (Pontuação Máxima)</label>
                             <div className="relative">
-                              <input 
-                                type="number" 
-                                step="0.01"
-                                value={category.metricThresholds?.[1] ?? (category.id === 'orcamento_bi' ? 10 : 0.25)}
+                              <input
+                                type="number"
+                                step="0.1"
+                                value={category.metricThresholds?.[0] ?? 2}
+                                onChange={(e) => handleUpdateThreshold(category.id, 0, Number(e.target.value))}
+                                className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 font-black text-blue-800"
+                              />
+                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-blue-300">%</span>
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1">Limite Opção 2 (Pontuação Média)</label>
+                            <div className="relative">
+                              <input
+                                type="number"
+                                step="0.1"
+                                value={category.metricThresholds?.[1] ?? 3}
                                 onChange={(e) => handleUpdateThreshold(category.id, 1, Number(e.target.value))}
                                 className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 font-black text-blue-800"
                               />
                               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-blue-300">%</span>
                             </div>
                           </div>
-                        )}
+                        </>
+                      )}
+                      {(category.id === 'orcamento_bi' || category.id === 'descontos_concedidos') && (
+                        <div>
+                          <label className="block text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1">Margem de Tolerância (%)</label>
+                          <div className="relative">
+                            <input
+                              type="number"
+                              step="0.01"
+                              value={category.metricThresholds?.[1] ?? (category.id === 'orcamento_bi' ? 10 : 0.25)}
+                              onChange={(e) => handleUpdateThreshold(category.id, 1, Number(e.target.value))}
+                              className="w-full bg-white border border-blue-200 rounded-lg px-3 py-2 font-black text-blue-800"
+                            />
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-blue-300">%</span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -276,21 +289,21 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
                         <>
                           <div className="flex flex-col">
                             <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">
-                                {category.id === 'orcamento_bi' ? 'Meta Acumulada (Pelo Mês)' : 'Meta Definida'}
+                              {category.id === 'orcamento_bi' ? 'Meta Acumulada (Pelo Mês)' : 'Meta Definida'}
                             </span>
                             <span className="text-sm font-black text-[#003B71]">
-                                {category.id === 'orcamento_bi' 
-                                  ? formatBRL((target / 12) * (activePeriodLabel ? getMonthIndexFromLabel(activePeriodLabel) : 1)) 
-                                  : formatPercentage(target)}
+                              {category.id === 'orcamento_bi'
+                                ? formatBRL((target / 12) * (activePeriodLabel ? getMonthIndexFromLabel(activePeriodLabel) : 1))
+                                : formatPercentage(target)}
                             </span>
                           </div>
                           <div className="h-6 w-px bg-slate-200"></div>
                         </>
                       )}
-                      
+
                       <div className="flex flex-col min-w-[120px]">
                         <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">
-                            Valor Realizado ({category.id === 'orcamento_bi' ? 'R$' : '%'})
+                          Valor Realizado ({category.id === 'orcamento_bi' ? 'R$' : '%'})
                         </span>
                         <div className="relative mt-0.5">
                           {category.id === 'inadimplencia_mes' ? (
@@ -316,11 +329,11 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
                   )}
                 </div>
               )}
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {category.options.map((option) => {
                   const isSelected = effectiveSelectionId === option.id;
-                  
+
                   if (isEditMode) {
                     return (
                       <div key={option.id} className="p-4 rounded-2xl border-2 border-slate-100 bg-white flex flex-col space-y-3 hover:border-slate-200 transition-all shadow-sm">
@@ -354,19 +367,17 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
                       key={option.id}
                       disabled={isReadOnly || isMetric}
                       onClick={() => !isReadOnly && !isMetric && onSelect(category.id, option.id)}
-                      className={`flex justify-between items-center p-5 rounded-2xl border-2 transition-all duration-300 text-left relative overflow-hidden group ${
-                        isSelected 
-                          ? 'bg-[#003B71] border-[#003B71] text-white shadow-xl scale-[1.02] z-10' 
-                          : 'bg-white border-slate-100 text-slate-500 hover:border-blue-200 hover:bg-blue-50/30'
-                      } ${isReadOnly && !isSelected ? 'opacity-40 cursor-not-allowed' : ''} ${isMetric ? 'cursor-default' : ''}`}
+                      className={`flex justify-between items-center p-5 rounded-2xl border-2 transition-all duration-300 text-left relative overflow-hidden group ${isSelected
+                        ? 'bg-[#003B71] border-[#003B71] text-white shadow-xl scale-[1.02] z-10'
+                        : 'bg-white border-slate-100 text-slate-500 hover:border-blue-200 hover:bg-blue-50/30'
+                        } ${isReadOnly && !isSelected ? 'opacity-40 cursor-not-allowed' : ''} ${isMetric ? 'cursor-default' : ''}`}
                     >
                       {isSelected && (
                         <div className="absolute right-0 top-0 bottom-0 w-1 bg-[#FDB813]"></div>
                       )}
                       <span className="text-sm font-bold pr-4 leading-tight">{option.label}</span>
-                      <span className={`text-[10px] font-black px-3 py-1.5 rounded-full whitespace-nowrap tracking-widest uppercase transition-colors shadow-sm border border-transparent ${
-                        isSelected ? 'bg-white text-[#003B71] border-white/20' : 'bg-slate-100 text-slate-400 group-hover:bg-blue-100 group-hover:text-blue-600'
-                      }`}>
+                      <span className={`text-[10px] font-black px-3 py-1.5 rounded-full whitespace-nowrap tracking-widest uppercase transition-colors shadow-sm border border-transparent ${isSelected ? 'bg-white text-[#003B71] border-white/20' : 'bg-slate-100 text-slate-400 group-hover:bg-blue-100 group-hover:text-blue-600'
+                        }`}>
                         {option.points} <span className="opacity-25">pts</span>
                       </span>
                     </button>
