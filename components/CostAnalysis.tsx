@@ -24,6 +24,7 @@ interface CostAnalysisProps {
   managementBonusConfig: ManagementBonusConfig;
   anrsBonusConfig: AnrsBonusConfig;
   activePeriodId: string | null;
+  activeSchoolId: string | null;
 }
 
 const CostAnalysis: React.FC<CostAnalysisProps> = ({
@@ -34,7 +35,8 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
   inadimplenciaRankingConfig,
   managementBonusConfig,
   anrsBonusConfig,
-  activePeriodId
+  activePeriodId,
+  activeSchoolId
 }) => {
   // Deriva o Ano e o Mês do período selecionado ou do período mais recente
   const { currentYear, selectedMonth } = useMemo(() => {
@@ -46,18 +48,15 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
       }
     }
 
-    // Se não houver período selecionado (Finalizado), pega o ano do último período cadastrado
-    const lastPeriod = [...periods].sort((a, b) => b.label.localeCompare(a.label))[0];
-    const defaultYear = lastPeriod ? lastPeriod.label.split('/')[1] : new Date().getFullYear().toString();
-
-    return { currentYear: defaultYear, selectedMonth: 'all' };
+    // Se não houver período selecionado (Todos os Períodos), retornamos 'all' para ignorar o filtro
+    return { currentYear: 'all', selectedMonth: 'all' };
   }, [activePeriodId, periods]);
 
   const consolidatedData = useMemo(() => {
     // 1. Filtrar períodos baseados no ano e mês derivados
     const filteredPeriods = periods.filter(p => {
       const [m, y] = p.label.split('/');
-      const yearMatch = y === currentYear;
+      const yearMatch = currentYear === 'all' || y === currentYear;
       const monthMatch = selectedMonth === 'all' || m === selectedMonth;
       return yearMatch && monthMatch;
     });
@@ -87,7 +86,9 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
         };
       });
 
-      schools.forEach(school => {
+      const targetSchools = activeSchoolId ? schools.filter(s => s.id === activeSchoolId) : schools;
+
+      targetSchools.forEach(school => {
         const evaluation = evaluations.find(e => e.schoolId === school.id && e.periodId === p.id);
         if (!evaluation || !evaluation.isFinalized) return;
 
@@ -157,7 +158,7 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
     });
 
     return Object.values(resultsBySchool).sort((a, b) => b.totalPoints - a.totalPoints);
-  }, [currentYear, selectedMonth, periods, evaluations, schools, thresholds, inadimplenciaRankingConfig, managementBonusConfig, anrsBonusConfig]);
+  }, [currentYear, selectedMonth, periods, evaluations, schools, thresholds, inadimplenciaRankingConfig, managementBonusConfig, anrsBonusConfig, activeSchoolId]);
 
   const totals = useMemo(() => {
     return consolidatedData.reduce((acc, curr) => ({
@@ -339,7 +340,7 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
         {consolidatedData.length > 0 && (
           <div className="mt-8 pt-6 border-t-2 border-dashed border-slate-100 flex justify-between items-center">
             <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Total Geral do Período</span>
-            <span className="text-2xl font-black text-[#FDB813] drop-shadow-sm">{formatBRL(totals.general)}</span>
+            <span className="text-2xl font-black text-[#FDB813]">{formatBRL(totals.general)}</span>
           </div>
         )}
       </div>

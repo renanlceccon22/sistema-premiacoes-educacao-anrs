@@ -663,51 +663,53 @@ const App: React.FC = () => {
           <div className="bg-white rounded-[1.5rem] border border-slate-200 shadow-sm p-3.5 mb-4 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
 
-              {/* Dropdown Unidade Escolar Customizado */}
-              <div className="flex flex-col flex-1 min-w-[200px] md:w-64 relative" ref={schoolDropdownRef}>
-                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1 flex items-center">
-                  <svg className="w-3 h-3 mr-1.5 text-[#003B71]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                  Unidade Escolar Ativa
-                </label>
-                <button
-                  onClick={() => setIsSchoolDropdownOpen(!isSchoolDropdownOpen)}
-                  className={`w-full flex justify-between items-center bg-slate-50 border-2 rounded-xl px-3.5 py-2 text-xs font-black transition-all outline-none ${activeSchoolId ? 'border-[#003B71] text-[#003B71] bg-white ring-4 ring-[#003B71]/5 shadow-lg shadow-[#003B71]/10' : 'border-slate-100 text-slate-400'
-                    }`}
-                >
-                  <span className="truncate">{activeSchool ? activeSchool.name : "Selecione a Unidade..."}</span>
-                  <svg className={`w-4 h-4 transition-transform duration-300 ${isSchoolDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
+              {/* Dropdown Unidade Escolar Customizado - Oculto na aba Relatórios */}
+              {activeTab !== AppTab.REPORT && (
+                <div className="flex flex-col flex-1 min-w-[200px] md:w-64 relative" ref={schoolDropdownRef}>
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1 flex items-center">
+                    <svg className="w-3 h-3 mr-1.5 text-[#003B71]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                    Unidade Escolar Ativa
+                  </label>
+                  <button
+                    onClick={() => setIsSchoolDropdownOpen(!isSchoolDropdownOpen)}
+                    className={`w-full flex justify-between items-center bg-slate-50 border-2 rounded-xl px-3.5 py-2 text-xs font-black transition-all outline-none ${activeSchoolId ? 'border-[#003B71] text-[#003B71] bg-white ring-4 ring-[#003B71]/5 shadow-lg shadow-[#003B71]/10' : 'border-slate-100 text-[#003B71] bg-white ring-4 ring-slate-100/5'
+                      }`}
+                  >
+                    <span className="truncate">{activeSchool ? activeSchool.name : "Todas Unidades Escolares"}</span>
+                    <svg className={`w-4 h-4 transition-transform duration-300 ${isSchoolDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
 
-                {isSchoolDropdownOpen && (
-                  <ul className="absolute left-0 right-0 top-[calc(100%+4px)] bg-white border border-slate-100 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-64 overflow-y-auto">
-                    <li
-                      onClick={() => { setActiveSchoolId(null); setIsSchoolDropdownOpen(false); }}
-                      className="px-3.5 py-1.5 text-xs font-black text-slate-400 hover:bg-slate-50 cursor-pointer transition-colors"
-                    >
-                      Selecione a Unidade...
-                    </li>
-                    {schools.map(s => (
+                  {isSchoolDropdownOpen && (
+                    <ul className="absolute left-0 right-0 top-[calc(100%+4px)] bg-white border border-slate-100 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-64 overflow-y-auto">
                       <li
-                        key={s.id}
-                        onClick={() => { setActiveSchoolId(s.id); setIsSchoolDropdownOpen(false); }}
-                        className={`px-3.5 py-1.5 text-xs font-black cursor-pointer transition-colors flex items-center justify-between ${activeSchoolId === s.id ? 'bg-[#003B71] text-white' : 'text-slate-700 hover:bg-blue-50 hover:text-[#003B71]'
-                          }`}
+                        onClick={() => { setActiveSchoolId(null); setIsSchoolDropdownOpen(false); }}
+                        className={`px-3.5 py-1.5 text-xs font-black cursor-pointer transition-colors ${!activeSchoolId ? 'bg-blue-50 text-[#003B71]' : 'text-slate-400 hover:bg-slate-50'}`}
                       >
-                        {s.name}
-                        {activeSchoolId === s.id && (
-                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                        )}
+                        Todas Unidades Escolares
                       </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+                      {schools.map(s => (
+                        <li
+                          key={s.id}
+                          onClick={() => { setActiveSchoolId(s.id); setIsSchoolDropdownOpen(false); }}
+                          className={`px-3.5 py-1.5 text-xs font-black cursor-pointer transition-colors flex items-center justify-between ${activeSchoolId === s.id ? 'bg-[#003B71] text-white' : 'text-slate-700 hover:bg-blue-50 hover:text-[#003B71]'
+                            }`}
+                        >
+                          {s.name}
+                          {activeSchoolId === s.id && (
+                            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
 
               {/* Dropdown Período Contábil Customizado */}
               <div className="flex flex-col flex-1 min-w-[150px] md:w-48 relative" ref={periodDropdownRef}>
@@ -722,7 +724,7 @@ const App: React.FC = () => {
                   className={`w-full flex justify-between items-center bg-slate-50 border-2 rounded-xl px-3.5 py-2 text-xs font-black transition-all outline-none ${activePeriodId ? 'border-[#FDB813] text-slate-800 bg-white ring-4 ring-[#FDB813]/5 shadow-lg shadow-[#FDB813]/10' : 'border-slate-100 text-slate-400'
                     }`}
                 >
-                  <span className="truncate">{activePeriod ? `${activePeriod.label} ${activePeriod.status === 'closed' ? '🔒' : ''}` : "Finalizado"}</span>
+                  <span className="truncate">{activePeriod ? `${activePeriod.label} ${activePeriod.status === 'closed' ? '🔒' : ''}` : "Todos os Períodos"}</span>
                   <svg className={`w-4 h-4 transition-transform duration-300 ${isPeriodDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
                   </svg>
@@ -734,7 +736,7 @@ const App: React.FC = () => {
                       onClick={() => { setActivePeriodId(null); setIsPeriodDropdownOpen(false); }}
                       className={`px-3.5 py-1.5 text-xs font-black cursor-pointer transition-colors ${!activePeriodId ? 'bg-[#FDB813] text-[#003B71]' : 'text-slate-400 hover:bg-slate-50'}`}
                     >
-                      Finalizado
+                      Todos os Períodos
                     </li>
                     {periods.map(p => (
                       <li
@@ -890,6 +892,7 @@ const App: React.FC = () => {
               managementBonusConfig={managementBonusConfig}
               anrsBonusConfig={anrsBonusConfig}
               activePeriodId={activePeriodId}
+              activeSchoolId={activeSchoolId}
             />
           </div>
         )}
