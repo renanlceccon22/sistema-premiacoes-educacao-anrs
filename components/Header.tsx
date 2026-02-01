@@ -5,9 +5,11 @@ interface HeaderProps {
   activeTab: string;
   onTabChange: (tab: any) => void;
   isCloudConfigured?: boolean;
+  onLogout?: () => void;
+  userEmail?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange, isCloudConfigured }) => {
+const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange, isCloudConfigured, onLogout, userEmail }) => {
   const tabs = [
     { id: 'UNITIES', label: 'CADASTRO UNIDADES' },
     { id: 'MASTER_VALUES', label: 'CADASTRO PREMIAÇÕES' },
@@ -52,16 +54,25 @@ const Header: React.FC<HeaderProps> = ({ activeTab, onTabChange, isCloudConfigur
             ))}
           </nav>
 
-          {/* Info - Direita em telas Grandes */}
-          <div className="hidden lg:flex flex-col items-end lg:w-1/4 space-y-1">
-            <span className="text-[9px] font-black text-[#003B71] uppercase tracking-[0.2em]">Portal do Gestor</span>
-            <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border text-[8px] font-black uppercase tracking-widest ${isCloudConfigured
-              ? 'bg-green-50 text-green-600 border-green-100'
-              : 'bg-slate-50 text-slate-400 border-slate-100'
-              }`}>
-              <div className={`w-1 h-1 rounded-full ${isCloudConfigured ? 'bg-green-500 animate-pulse' : 'bg-slate-300'}`}></div>
-              {isCloudConfigured ? 'Banco de Dados Ativo' : 'Off-line'}
+          {/* Info & Logout - Direita */}
+          <div className="hidden lg:flex items-center gap-6 lg:w-1/4 justify-end">
+            <div className="flex flex-col items-end">
+              <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">{userEmail || 'Gestor Logado'}</span>
+              <div className={`flex items-center gap-1 mt-0.5 text-[8px] font-black uppercase tracking-widest ${isCloudConfigured ? 'text-green-500' : 'text-slate-300'}`}>
+                <div className={`w-1 h-1 rounded-full ${isCloudConfigured ? 'bg-green-500 animate-pulse' : 'bg-slate-300'}`}></div>
+                {isCloudConfigured ? 'ON-LINE' : 'OFF-LINE'}
+              </div>
             </div>
+
+            <button
+              onClick={onLogout}
+              className="group flex items-center justify-center w-10 h-10 rounded-xl bg-slate-50 border border-slate-100 text-slate-400 hover:bg-red-50 hover:border-red-100 hover:text-red-500 transition-all duration-300 shadow-sm"
+              title="Sair do Sistema"
+            >
+              <svg className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
           </div>
 
         </div>

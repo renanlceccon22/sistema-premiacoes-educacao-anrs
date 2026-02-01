@@ -9,6 +9,8 @@ import SummaryTable from './components/SummaryTable';
 import PeriodManager from './components/PeriodManager';
 import CostAnalysis from './components/CostAnalysis';
 import Footer from './components/Footer';
+import ConfirmModal from './components/ConfirmModal';
+import Auth from './components/Auth';
 import { supabase, isConfigured } from './src/lib/supabase';
 import {
   INITIAL_THRESHOLDS,
@@ -52,12 +54,50 @@ const App: React.FC = () => {
   const [activePeriodId, setActivePeriodId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
+  const [session, setSession] = useState<any>(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
   // Estados para Dropdowns customizados
   const [isSchoolDropdownOpen, setIsSchoolDropdownOpen] = useState(false);
   const [isPeriodDropdownOpen, setIsPeriodDropdownOpen] = useState(false);
   const schoolDropdownRef = useRef<HTMLDivElement>(null);
   const periodDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Estado para Modal de Confirmação
+  const [confirmConfig, setConfirmConfig] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    onConfirm: () => void;
+    isDanger?: boolean;
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    onConfirm: () => { },
+  });
+
+  const showConfirm = (title: string, message: string, onConfirm: () => void, isDanger = false) => {
+    setConfirmConfig({ isOpen: true, title, message, onConfirm, isDanger });
+  };
+
+  // Verificação de Autenticação
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setAuthLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -261,24 +301,30 @@ const App: React.FC = () => {
     setSyncing(false);
   };
 
-  const handleRemovePeriod = async (id: string) => {
-    if (confirm(`Deseja realmente excluir este período?`)) {
-      setSyncing(true);
-      if (isConfigured && supabase) {
-        await supabase.from('periods').delete().eq('id', id);
-        await supabase.from('evaluations').delete().eq('period_id', id);
-      }
-      const updatedPeriods = periods.filter(p => p.id !== id);
-      setPeriods(updatedPeriods);
-      const updatedEvals = evaluations.filter(e => e.periodId !== id);
-      setEvaluations(updatedEvals);
+  const handleRemovePeriod = (id: string) => {
+    showConfirm(
+      'Remover Período',
+      'Deseja realmente excluir este período? Todos os dados vinculados a ele serão removidos permanentemente.',
+      async () => {
+        setSyncing(true);
+        if (isConfigured && supabase) {
+          await supabase.from('periods').delete().eq('id', id);
+          await supabase.from('evaluations').delete().eq('period_id', id);
+        }
+        const updatedPeriods = periods.filter(p => p.id !== id);
+        setPeriods(updatedPeriods);
+        const updatedEvals = evaluations.filter(e => e.periodId !== id);
+        setEvaluations(updatedEvals);
 
-      saveLocally('periods', updatedPeriods);
-      saveLocally('evaluations', updatedEvals);
+        saveLocally('periods', updatedPeriods);
+        saveLocally('evaluations', updatedEvals);
 
-      if (activePeriodId === id) setActivePeriodId(null);
-      setSyncing(false);
-    }
+        if (activePeriodId === id) setActivePeriodId(null);
+        setSyncing(false);
+        setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+      },
+      true
+    );
   };
 
   const handleTogglePeriodStatus = async (id: string) => {
@@ -360,9 +406,14 @@ const App: React.FC = () => {
 
   const handleReopenEvaluation = () => {
     if (!activeSchoolId || !activePeriodId) return;
-    if (confirm("Deseja reabrir esta avaliação para ajustes? Isso permitirá editar critérios e os valores realizados.")) {
-      updateEvaluation({ isFinalized: false });
-    }
+    showConfirm(
+      'Reabrir Avaliação',
+      "Deseja reabrir esta avaliação para ajustes? Isso permitirá editar critérios e os valores realizados.",
+      () => {
+        updateEvaluation({ isFinalized: false });
+        setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+      }
+    );
   };
 
   const handleUpdateCategories = async (updated: Category[]) => {
@@ -434,24 +485,31 @@ const App: React.FC = () => {
     setSyncing(false);
   };
 
-  const handleRemoveSchool = async (id: string) => {
-    if (confirm(`Remover a unidade?`)) {
-      setSyncing(true);
-      if (isConfigured && supabase) {
-        await supabase.from('schools').delete().eq('id', id);
-        await supabase.from('evaluations').delete().eq('school_id', id);
-      }
-      const updatedSchools = schools.filter(x => x.id !== id);
-      setSchools(updatedSchools);
-      const updatedEvals = evaluations.filter(x => x.schoolId !== id);
-      setEvaluations(updatedEvals);
+  const handleRemoveSchool = (id: string) => {
+    const school = schools.find(s => s.id === id);
+    showConfirm(
+      'Remover Unidade',
+      `Deseja realmente remover a unidade "${school?.name}"? Isso apagará todas as avaliações e metas associadas.`,
+      async () => {
+        setSyncing(true);
+        if (isConfigured && supabase) {
+          await supabase.from('schools').delete().eq('id', id);
+          await supabase.from('evaluations').delete().eq('school_id', id);
+        }
+        const updatedSchools = schools.filter(x => x.id !== id);
+        setSchools(updatedSchools);
+        const updatedEvals = evaluations.filter(x => x.schoolId !== id);
+        setEvaluations(updatedEvals);
 
-      saveLocally('schools', updatedSchools);
-      saveLocally('evaluations', updatedEvals);
+        saveLocally('schools', updatedSchools);
+        saveLocally('evaluations', updatedEvals);
 
-      if (activeSchoolId === id) setActiveSchoolId(null);
-      setSyncing(false);
-    }
+        if (activeSchoolId === id) setActiveSchoolId(null);
+        setSyncing(false);
+        setConfirmConfig(prev => ({ ...prev, isOpen: false }));
+      },
+      true
+    );
   };
 
   const handleUpdateAllBonusConfig = async (
@@ -485,6 +543,18 @@ const App: React.FC = () => {
     setSyncing(false);
   };
 
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-[#003B71] border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return <Auth onLogin={() => { }} />;
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center space-y-4">
@@ -496,7 +566,13 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
-      <Header activeTab={activeTab} onTabChange={setActiveTab} isCloudConfigured={isConfigured} />
+      <Header
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        isCloudConfigured={isConfigured}
+        onLogout={handleLogout}
+        userEmail={session?.user?.email}
+      />
 
 
       {syncing && (
@@ -725,6 +801,16 @@ const App: React.FC = () => {
         )}
       </main>
       <Footer />
+
+      <ConfirmModal
+        isOpen={confirmConfig.isOpen}
+        title={confirmConfig.title}
+        message={confirmConfig.message}
+        onConfirm={confirmConfig.onConfirm}
+        onCancel={() => setConfirmConfig(prev => ({ ...prev, isOpen: false }))}
+        isDanger={confirmConfig.isDanger}
+        confirmLabel={confirmConfig.isDanger ? "Excluir" : "Confirmar"}
+      />
     </div>
   );
 };
