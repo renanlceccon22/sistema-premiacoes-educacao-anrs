@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { SchoolUnit, Category } from '../types';
 import { formatBRL, formatPercentage, formatCurrencyInput, parseCurrencyString } from '../utils/formatting';
+import EmptyState from './EmptyState';
 
 interface SchoolManagerProps {
   schools: SchoolUnit[];
@@ -138,18 +139,18 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
         {schools.map((school) => (
           <div
             key={school.id}
-            className={`group relative flex items-center justify-between p-4 rounded-2xl border-2 cursor-pointer transition-all duration-300 ${activeSchoolId === school.id
-                ? 'bg-blue-50 border-[#003B71] shadow-lg ring-2 ring-blue-100 transform -translate-y-1'
-                : 'bg-white border-slate-100 hover:border-slate-300 hover:shadow-md'
+            className={`group relative flex items-center justify-between p-2.5 rounded-xl border-2 cursor-pointer transition-all duration-300 ${activeSchoolId === school.id
+              ? 'bg-blue-50 border-[#003B71] shadow-lg ring-2 ring-blue-100 transform -translate-y-1'
+              : 'bg-white border-slate-100 hover:border-slate-300 hover:shadow-md'
               }`}
             onClick={() => onSelectSchool(school.id)}
           >
-            <div className="flex items-center space-x-3 flex-1 min-w-0 py-1 px-1">
-              <div className={`w-3 h-3 rounded-full flex-shrink-0 transition-all duration-300 origin-center ${activeSchoolId === school.id
-                  ? 'bg-[#FDB813] scale-125 shadow-[0_0_10px_rgba(253,184,19,0.7)]'
-                  : 'bg-slate-200'
+            <div className="flex items-center space-x-2 flex-1 min-w-0 px-0.5">
+              <div className={`w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300 origin-center ${activeSchoolId === school.id
+                ? 'bg-[#FDB813] scale-125 shadow-[0_0_10px_rgba(253,184,19,0.7)]'
+                : 'bg-slate-200'
                 }`}></div>
-              <span className={`text-sm font-bold truncate ${activeSchoolId === school.id ? 'text-[#003B71]' : 'text-slate-600'
+              <span className={`text-xs font-bold truncate ${activeSchoolId === school.id ? 'text-[#003B71]' : 'text-slate-600'
                 }`}>
                 {school.name}
               </span>
@@ -205,8 +206,8 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
                   onClick={handleSaveData}
                   disabled={isSaving}
                   className={`flex items-center gap-2 px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all shadow-lg active:scale-95 ${isSaving
-                      ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                      : 'bg-[#FDB813] text-[#003B71] hover:bg-[#eab308]'
+                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                    : 'bg-[#FDB813] text-[#003B71] hover:bg-[#eab308]'
                     }`}
                 >
                   {isSaving ? (
@@ -310,9 +311,9 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
                         value={displayTargets[cat.id] || '0,00'}
                         onChange={(e) => handleTargetChange(cat.id, e.target.value)}
                         disabled={isLocked}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-lg font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all pr-12 disabled:bg-slate-100 disabled:text-slate-500 disabled:cursor-not-allowed"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm font-bold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all pr-12 disabled:bg-slate-100 disabled:text-slate-500 disabled:cursor-not-allowed"
                       />
-                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-black text-slate-400">
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-400">
                         {cat.id === 'orcamento_bi' ? 'R$' : '%'}
                       </span>
                     </div>
@@ -324,11 +325,17 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
       )}
 
       {schools.length === 0 && (
-        <div className="col-span-full py-12 text-center text-slate-400 border-2 border-dashed border-slate-100 rounded-3xl bg-slate-50/50">
-          <svg className="w-16 h-16 mx-auto mb-4 opacity-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-          </svg>
-          <p className="font-bold text-slate-500">Nenhuma unidade cadastrada.</p>
+        <div className="col-span-full">
+          <EmptyState
+            icon={
+              <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+              </svg>
+            }
+            title="Nenhuma Escola"
+            description="Cadastre sua primeira unidade escolar acima"
+            className="p-12"
+          />
         </div>
       )}
     </div>

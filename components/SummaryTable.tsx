@@ -343,7 +343,7 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
     <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
       <div className="p-8 border-b border-slate-100 bg-slate-50/50 flex flex-col md:flex-row justify-between items-center gap-6">
         <div>
-          <h2 className="text-2xl font-black text-[#003B71] uppercase tracking-tight">Resumo Consolidado</h2>
+          <h2 className="text-2xl font-black text-[#003B71] uppercase tracking-tight">Resumo Finalizado</h2>
           <p className="text-sm text-slate-500 font-medium">Período Ativo: <span className="text-[#FDB813] font-bold">{activePeriodLabel}</span></p>
         </div>
         <div className="flex items-center gap-3">

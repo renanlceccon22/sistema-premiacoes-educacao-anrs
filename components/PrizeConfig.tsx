@@ -212,32 +212,32 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
       */}
 
       {/* Novo Bloco: Premiação Inadimpl. Ranking */}
-      <div className="mb-8 p-6 rounded-2xl border border-green-300 bg-green-50">
-        <h3 className="text-[9px] font-black text-green-900 uppercase tracking-[0.2em] mb-4 flex items-center">
-          <span className="w-4 h-[1px] bg-green-200 mr-2"></span>
-          Premiação Ranking de Inadimplência (Escolas com menor %)
+      <div className="mb-4 p-3.5 rounded-2xl border border-blue-100/50 bg-blue-50/50">
+        <h3 className="text-[10px] font-black text-[#003B71]/60 uppercase tracking-[0.2em] mb-2.5 flex items-center">
+          <span className="w-6 h-[1px] bg-blue-200 mr-3"></span>
+          Ranking de Inadimplência
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {[
             { key: 'inad_rank_1', label: '1º Lugar', value: localInadimplenciaRankingConfig.firstPlace },
             { key: 'inad_rank_2', label: '2º Lugar', value: localInadimplenciaRankingConfig.secondPlace },
             { key: 'inad_rank_3', label: '3º Lugar', value: localInadimplenciaRankingConfig.thirdPlace },
           ].map((item) => (
-            <div key={item.key} className="p-4 rounded-xl border border-green-100 bg-white shadow-sm">
-              <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">{item.label}</label>
+            <div key={item.key} className="p-3.5 rounded-xl bg-white shadow-sm border border-white flex flex-col justify-between transition-all hover:shadow-md">
+              <label className="block text-[10px] font-bold uppercase text-blue-400/70 mb-1.5 tracking-[0.15em]">{item.label}</label>
               {isLocked ? (
-                <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">
-                  <span className="text-xs text-slate-300 mr-1">R$</span> {displayValues[item.key]}
+                <div className="text-base font-black text-slate-800 leading-none flex items-baseline">
+                  <span className="text-xs text-blue-300 font-bold mr-1">R$</span> {displayValues[item.key]}
                 </div>
               ) : (
                 <div className="relative group">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold opacity-30 group-focus-within:opacity-100 transition-opacity">R$</span>
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold opacity-30 group-focus-within:opacity-100 transition-opacity">R$</span>
                   <input
                     type="text"
                     inputMode="numeric"
                     value={displayValues[item.key]}
                     onChange={(e) => handleCurrencyChange(item.key, e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-lg font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-sm"
+                    className="w-full bg-blue-50/30 border border-blue-100 rounded-lg pl-9 pr-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner"
                   />
                 </div>
               )}
@@ -247,42 +247,42 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
       </div>
 
       {/* Novo Bloco: Premiação de Gestão */}
-      <div className="mb-8 p-6 rounded-2xl border border-green-300 bg-green-50">
-        <h3 className="text-[9px] font-black text-green-900 uppercase tracking-[0.2em] mb-4 flex items-center">
-          <span className="w-4 h-[1px] bg-green-200 mr-2"></span>
-          Premiação de Gestão (*Adiantamentos e Cartão em Dia*)
+      <div className="mb-4 p-3.5 rounded-2xl border border-blue-100/50 bg-blue-50/50">
+        <h3 className="text-[10px] font-black text-[#003B71]/60 uppercase tracking-[0.2em] mb-2.5 flex items-center">
+          <span className="w-6 h-[1px] bg-blue-200 mr-3"></span>
+          Premiação de Gestão
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-4 rounded-xl border border-green-100 bg-white shadow-sm">
-            <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">Mín. Pontos (Adiant. + Cartão)</label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="p-3.5 rounded-xl bg-white shadow-sm border border-white transition-all hover:shadow-md">
+            <label className="block text-[10px] font-bold uppercase text-blue-400/70 mb-1.5 tracking-[0.15em]">Mínimo para Bônus</label>
             {isLocked ? (
-              <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">
-                {localManagementBonusConfig.pointThreshold} <span className="text-[10px] text-slate-300 uppercase">pts</span>
+              <div className="text-base font-black text-slate-800 leading-none flex items-baseline">
+                {localManagementBonusConfig.pointThreshold} <span className="text-xs text-blue-300 font-bold ml-1 uppercase">pts</span>
               </div>
             ) : (
               <input
                 type="number"
                 value={localManagementBonusConfig.pointThreshold}
                 onChange={(e) => setLocalManagementBonusConfig(prev => ({ ...prev, pointThreshold: Number(e.target.value) }))}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-lg font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-sm"
+                className="w-full bg-blue-50/30 border border-blue-100 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner"
               />
             )}
           </div>
-          <div className="p-4 rounded-xl border border-green-100 bg-white shadow-sm">
-            <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">Valor Bônus (R$)</label>
+          <div className="p-3.5 rounded-xl bg-white shadow-sm border border-white transition-all hover:shadow-md">
+            <label className="block text-[10px] font-bold uppercase text-blue-400/70 mb-1.5 tracking-[0.15em]">Valor do Bônus</label>
             {isLocked ? (
-              <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">
-                <span className="text-xs text-slate-300 mr-1">R$</span> {displayValues['management_bonus']}
+              <div className="text-base font-black text-slate-800 leading-none flex items-baseline">
+                <span className="text-xs text-blue-300 font-bold mr-1">R$</span> {displayValues['management_bonus']}
               </div>
             ) : (
               <div className="relative group">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold opacity-30 group-focus-within:opacity-100 transition-opacity">R$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold opacity-30 group-focus-within:opacity-100 transition-opacity">R$</span>
                 <input
                   type="text"
                   inputMode="numeric"
                   value={displayValues['management_bonus']}
                   onChange={(e) => handleCurrencyChange('management_bonus', e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-lg font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-sm"
+                  className="w-full bg-blue-50/30 border border-blue-100 rounded-lg pl-9 pr-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner"
                 />
               </div>
             )}
@@ -291,42 +291,42 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
       </div>
 
       {/* Novo Bloco: Premiação Meta ANRS */}
-      <div className="p-6 rounded-2xl border border-green-300 bg-green-50">
-        <h3 className="text-[9px] font-black text-green-900 uppercase tracking-[0.2em] mb-4 flex items-center">
-          <span className="w-4 h-[1px] bg-green-200 mr-2"></span>
-          Premiação Meta ANRS (*Inadimplência, Orçamento e Descontos*)
+      <div className="p-3.5 rounded-2xl border border-blue-100/50 bg-blue-50/50">
+        <h3 className="text-[10px] font-black text-[#003B71]/60 uppercase tracking-[0.2em] mb-2.5 flex items-center">
+          <span className="w-6 h-[1px] bg-blue-200 mr-3"></span>
+          Premiação Meta ANRS
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="p-4 rounded-xl border border-green-100 bg-white shadow-sm">
-            <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">Mín. Pontos (Inadim. + Orçam. + Desc.)</label>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="p-3.5 rounded-xl bg-white shadow-sm border border-white transition-all hover:shadow-md">
+            <label className="block text-[10px] font-bold uppercase text-blue-400/70 mb-1.5 tracking-[0.15em]">Mínimo para Bônus</label>
             {isLocked ? (
-              <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">
-                {localAnrsBonusConfig.pointThreshold} <span className="text-[10px] text-slate-300 uppercase">pts</span>
+              <div className="text-base font-black text-slate-800 leading-none flex items-baseline">
+                {localAnrsBonusConfig.pointThreshold} <span className="text-xs text-blue-300 font-bold ml-1 uppercase">pts</span>
               </div>
             ) : (
               <input
                 type="number"
                 value={localAnrsBonusConfig.pointThreshold}
                 onChange={(e) => setLocalAnrsBonusConfig(prev => ({ ...prev, pointThreshold: Number(e.target.value) }))}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-lg font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-sm"
+                className="w-full bg-blue-50/30 border border-blue-100 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner"
               />
             )}
           </div>
-          <div className="p-4 rounded-xl border border-green-100 bg-white shadow-sm">
-            <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">Valor Bônus (R$)</label>
+          <div className="p-3.5 rounded-xl bg-white shadow-sm border border-white transition-all hover:shadow-md">
+            <label className="block text-[10px] font-bold uppercase text-blue-400/70 mb-1.5 tracking-[0.15em]">Valor do Bônus</label>
             {isLocked ? (
-              <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">
-                <span className="text-xs text-slate-300 mr-1">R$</span> {displayValues['anrs_bonus']}
+              <div className="text-base font-black text-slate-800 leading-none flex items-baseline">
+                <span className="text-xs text-blue-300 font-bold mr-1">R$</span> {displayValues['anrs_bonus']}
               </div>
             ) : (
               <div className="relative group">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold opacity-30 group-focus-within:opacity-100 transition-opacity">R$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold opacity-30 group-focus-within:opacity-100 transition-opacity">R$</span>
                 <input
                   type="text"
                   inputMode="numeric"
                   value={displayValues['anrs_bonus']}
                   onChange={(e) => handleCurrencyChange('anrs_bonus', e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-lg font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-sm"
+                  className="w-full bg-blue-50/30 border border-blue-100 rounded-lg pl-9 pr-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner"
                 />
               </div>
             )}

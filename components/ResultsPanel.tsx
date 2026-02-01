@@ -50,7 +50,7 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
   const exportIndividualPDF = async () => {
     setIsExporting(true);
     try {
-      const { jsPDF } = await import('https://esm.sh/jspdf');
+      const { jsPDF } = await import('jspdf');
       const doc = new jsPDF();
       doc.setFillColor(0, 59, 113);
       doc.rect(0, 0, 210, 40, 'F');
@@ -92,10 +92,10 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
             {/* Premiação Gestão - Medalha */}
             <div className="flex justify-between items-center group">
               <div className="flex items-center">
-                <div className={`p-2 rounded-xl mr-3 shadow-sm transition-all duration-500 ${managementBonus > 0 ? 'bg-green-100 text-green-600 scale-110 shadow-green-100' : 'bg-white text-slate-200 border border-slate-100'}`}>
+                <div className={`p-2 rounded-xl mr-3 shadow-sm transition-all duration-500 ${managementBonus > 0 ? 'bg-green-500 text-white scale-110 shadow-green-100' : 'bg-white text-slate-200 border border-slate-100'}`}>
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4-3.9-3.8 5.4-.8L12 2zM12 0L9.1 5.9 2.6 6.9l4.7 4.6-1.1 6.5 5.8-3 5.8 3-1.1-6.5 4.7-4.6-6.5-1L12 0z" />
-                    <path d="M12 18c-3.3 0-6-2.7-6-6s2.7-6 6-6 6 2.7 6 6-2.7 6-6 6zm0-10c-2.2 0-4 1.8-4 4s1.8 4 4 4 4-1.8 4-4-1.8-4-4-4z" />
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                    <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" strokeWidth="2" />
                   </svg>
                 </div>
                 <span className={`text-[10px] font-black uppercase tracking-widest ${managementBonus > 0 ? 'text-slate-800' : 'text-slate-400'}`}>Premiação Gestão</span>
@@ -106,9 +106,10 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
             {/* Premiação Meta ANRS - Troféu */}
             <div className="flex justify-between items-center group">
               <div className="flex items-center">
-                <div className={`p-2 rounded-xl mr-3 shadow-sm transition-all duration-500 ${anrsBonus > 0 ? 'bg-green-100 text-green-600 scale-110 shadow-green-100' : 'bg-white text-slate-200 border border-slate-100'}`}>
+                <div className={`p-2 rounded-xl mr-3 shadow-sm transition-all duration-500 ${anrsBonus > 0 ? 'bg-green-500 text-white scale-110 shadow-green-100' : 'bg-white text-slate-200 border border-slate-100'}`}>
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18 2H6v2h12V2zM19 5H5c-1.1 0-2 .9-2 2v3c0 2.5 1.8 4.6 4.2 5.2.8 1.4 2.2 2.4 3.8 2.7V20H8v2h8v-2h-3v-2.1c1.6-.3 3-1.3 3.8-2.7 2.4-.6 4.2-2.7 4.2-5.2V7c0-1.1-.9-2-2-2zM5 10V7h2v5.1C5.8 11.6 5 10.9 5 10zm14 0c0 .9-.8 1.6-2 2.1V7h2v3z" />
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                    <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" strokeWidth="2" />
                   </svg>
                 </div>
                 <span className={`text-[10px] font-black uppercase tracking-widest ${anrsBonus > 0 ? 'text-slate-800' : 'text-slate-400'}`}>Premiação Meta ANRS</span>
@@ -119,9 +120,10 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
             {/* Premiação Ranking - Podium/Estrela */}
             <div className="flex justify-between items-center group">
               <div className="flex items-center">
-                <div className={`p-2 rounded-xl mr-3 shadow-sm transition-all duration-500 ${inadimplenciaRankingBonus > 0 ? 'bg-green-100 text-green-600 scale-110 shadow-green-100' : 'bg-white text-slate-200 border border-slate-100'}`}>
+                <div className={`p-2 rounded-xl mr-3 shadow-sm transition-all duration-500 ${inadimplenciaRankingBonus > 0 ? 'bg-green-500 text-white scale-110 shadow-green-100' : 'bg-white text-slate-200 border border-slate-100'}`}>
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                    <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" strokeWidth="2" />
                   </svg>
                 </div>
                 <span className={`text-[10px] font-black uppercase tracking-widest ${inadimplenciaRankingBonus > 0 ? 'text-slate-800' : 'text-slate-400'}`}>Ranking Inadimplência {inadimplenciaRank ? `(${inadimplenciaRank}º)` : ''}</span>
@@ -136,9 +138,8 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
             <div className="flex justify-between items-center p-4 bg-[#003B71]/5 rounded-2xl border border-[#003B71]/10">
               <div className="flex items-center">
                 <div className="bg-[#003B71] p-2.5 rounded-xl mr-4 shadow-lg shadow-[#003B71]/20">
-                  <svg className="w-6 h-6 text-[#FDB813]" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M18 2H6v2h12V2zm1 3H5c-1.1 0-2 .9-2 2v3c0 2.5 1.8 4.6 4.2 5.2.8 1.4 2.2 2.4 3.8 2.7V20H8v2h8v-2h-3v-2.1c1.6-.3 3-1.3 3.8-2.7 2.4-.6 4.2-2.7 4.2-5.2V7c0-1.1-.9-2-2-2zM5 10V7h2v5.1C5.8 11.6 5 10.9 5 10zm14 0c0 .9-.8 1.6-2 2.1V7h2v3z" />
-                    <circle cx="12" cy="10" r="3" fill="none" stroke="currentColor" strokeWidth="1" />
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18 2H6v2h12V2zM19 5H5c-1.1 0-2 .9-2 2v3c0 2.5 1.8 4.6 4.2 5.2.8 1.4 2.2 2.4 3.8 2.7V20H8v2h8v-2h-3v-2.1c1.6-.3 3-1.3 3.8-2.7 2.4-.6 4.2-2.7 4.2-5.2V7c0-1.1-.9-2-2-2zM5 10V7h2v5.1C5.8 11.6 5 10.9 5 10zm14 0c0 .9-.8 1.6-2 2.1V7h2v3z" />
                   </svg>
                 </div>
                 <div className="flex flex-col">
@@ -152,9 +153,9 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
             {/* Repasse Vice - Estrela */}
             <div className="flex justify-between items-center px-4 py-3 bg-[#FDB813]/5 rounded-2xl border border-[#FDB813]/20">
               <div className="flex items-center">
-                <div className="bg-[#FDB813] p-2 rounded-xl mr-4 shadow-md">
-                  <svg className="w-5 h-5 text-[#003B71]" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                <div className="bg-[#FDB813] p-2.5 rounded-xl mr-4 shadow-md">
+                  <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18 2H6v2h12V2zM19 5H5c-1.1 0-2 .9-2 2v3c0 2.5 1.8 4.6 4.2 5.2.8 1.4 2.2 2.4 3.8 2.7V20H8v2h8v-2h-3v-2.1c1.6-.3 3-1.3 3.8-2.7 2.4-.6 4.2-2.7 4.2-5.2V7c0-1.1-.9-2-2-2z" />
                   </svg>
                 </div>
                 <div className="flex flex-col">

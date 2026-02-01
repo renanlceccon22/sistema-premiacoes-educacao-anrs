@@ -145,7 +145,7 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
                 <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
-                Consolidado
+                Finalizado
               </span>
             )}
           </h2>
@@ -203,7 +203,7 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
         </div>
       )}
 
-      <div className="space-y-8">
+      <div className="space-y-6">
         {localCategories.map((category) => {
           const isMetric = !!category.isMetric;
           const target = schoolTargets[category.id] || 0;
@@ -214,7 +214,7 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
             : selections[category.id];
 
           return (
-            <div key={category.id} className="border-b border-slate-100 pb-6 last:border-0 last:pb-0">
+            <div key={category.id} className="border-b border-slate-100 pb-4 last:border-0 last:pb-0">
               {isEditMode ? (
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
@@ -228,7 +228,7 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
                   </div>
 
                   {isMetric && (
-                    <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-blue-50/50 p-3 rounded-xl border border-blue-100 grid grid-cols-1 md:grid-cols-2 gap-3">
                       {category.id === 'inadimplencia_mes' && (
                         <>
                           <div>
@@ -278,13 +278,13 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
                   )}
                 </div>
               ) : (
-                <div className="flex flex-col md:flex-row md:items-center justify-between mb-5 gap-4">
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-3 gap-3">
                   <h3 className="text-lg font-black text-[#003B71] uppercase tracking-wide flex items-center">
                     <span className="w-1 h-4 bg-[#003B71] mr-3 rounded-full opacity-30"></span>
                     {category.name}
                   </h3>
                   {isMetric && !isEditMode && (
-                    <div className="flex items-center gap-4 bg-white p-2 rounded-xl border border-slate-100 shadow-sm">
+                    <div className="flex items-center gap-3 bg-white p-1.5 rounded-xl border border-slate-100 shadow-sm">
                       {(category.id === 'orcamento_bi' || category.id === 'descontos_concedidos') && (
                         <>
                           <div className="flex flex-col">
@@ -330,32 +330,32 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
                 </div>
               )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                 {category.options.map((option) => {
                   const isSelected = effectiveSelectionId === option.id;
 
                   if (isEditMode) {
                     return (
-                      <div key={option.id} className="p-4 rounded-2xl border-2 border-slate-100 bg-white flex flex-col space-y-3 hover:border-slate-200 transition-all shadow-sm">
+                      <div key={option.id} className="p-3 rounded-xl border-2 border-slate-100 bg-white flex flex-col space-y-2 hover:border-slate-200 transition-all shadow-sm">
                         <div className="flex flex-col gap-1">
                           <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Descrição da Opção</label>
                           <input
                             type="text"
                             value={option.label}
                             onChange={(e) => handleUpdateOption(category.id, option.id, { label: e.target.value })}
-                            className="text-sm font-bold p-3 bg-slate-50 border border-slate-100 rounded-xl focus:bg-white focus:ring-2 focus:ring-[#003B71] transition-all"
+                            className="text-xs font-bold p-2 bg-slate-50 border border-slate-100 rounded-lg focus:bg-white focus:ring-2 focus:ring-[#003B71] transition-all"
                           />
                         </div>
-                        <div className="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-100">
-                          <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pontuação:</label>
+                        <div className="flex items-center justify-between bg-white p-2 rounded-lg border border-slate-100">
+                          <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Pontuação:</label>
                           <div className="flex items-center gap-2">
                             <input
                               type="number"
                               value={option.points}
                               onChange={(e) => handleUpdateOption(category.id, option.id, { points: Number(e.target.value) })}
-                              className="w-24 text-sm font-black p-2 bg-white border border-slate-200 rounded-lg text-[#003B71] text-center focus:outline-none focus:ring-2 focus:ring-[#003B71]"
+                              className="w-16 text-xs font-black p-1 bg-white border border-slate-200 rounded-md text-[#003B71] text-center focus:outline-none focus:ring-2 focus:ring-[#003B71]"
                             />
-                            <span className="text-[10px] font-black text-slate-300 uppercase">Pts</span>
+                            <span className="text-[9px] font-black text-slate-300 uppercase">Pts</span>
                           </div>
                         </div>
                       </div>
@@ -367,16 +367,16 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
                       key={option.id}
                       disabled={isReadOnly || isMetric}
                       onClick={() => !isReadOnly && !isMetric && onSelect(category.id, option.id)}
-                      className={`flex justify-between items-center p-5 rounded-2xl border-2 transition-all duration-300 text-left relative overflow-hidden group ${isSelected
-                        ? 'bg-[#003B71] border-[#003B71] text-white shadow-xl scale-[1.02] z-10'
+                      className={`flex justify-between items-center p-3.5 rounded-xl border-2 transition-all duration-300 text-left relative overflow-hidden group ${isSelected
+                        ? 'bg-[#003B71] border-[#003B71] text-white shadow-lg scale-[1.01] z-10'
                         : 'bg-white border-slate-100 text-slate-500 hover:border-blue-200 hover:bg-blue-50/30'
                         } ${isReadOnly && !isSelected ? 'opacity-40 cursor-not-allowed' : ''} ${isMetric ? 'cursor-default' : ''}`}
                     >
                       {isSelected && (
                         <div className="absolute right-0 top-0 bottom-0 w-1 bg-[#FDB813]"></div>
                       )}
-                      <span className="text-sm font-bold pr-4 leading-tight">{option.label}</span>
-                      <span className={`text-[10px] font-black px-3 py-1.5 rounded-full whitespace-nowrap tracking-widest uppercase transition-colors shadow-sm border border-transparent ${isSelected ? 'bg-white text-[#003B71] border-white/20' : 'bg-slate-100 text-slate-400 group-hover:bg-blue-100 group-hover:text-blue-600'
+                      <span className="text-xs font-bold pr-3 leading-tight">{option.label}</span>
+                      <span className={`text-[8px] font-black px-2 py-0.5 rounded-full whitespace-nowrap tracking-widest uppercase transition-colors shadow-sm border border-transparent ${isSelected ? 'bg-white text-[#003B71] border-white/20' : 'bg-slate-100 text-slate-400 group-hover:bg-blue-100 group-hover:text-blue-600'
                         }`}>
                         {option.points} <span className="opacity-25">pts</span>
                       </span>

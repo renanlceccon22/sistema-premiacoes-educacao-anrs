@@ -8,6 +8,7 @@ import SchoolManager from './components/SchoolManager';
 import SummaryTable from './components/SummaryTable';
 import PeriodManager from './components/PeriodManager';
 import CostAnalysis from './components/CostAnalysis';
+import EmptyState from './components/EmptyState';
 import Footer from './components/Footer';
 import ConfirmModal from './components/ConfirmModal';
 import Auth from './components/Auth';
@@ -114,7 +115,7 @@ const App: React.FC = () => {
 
   const saveLocally = (key: string, data: any) => {
     if (!isConfigured) {
-      localStorage.setItem(`premacao_${key}`, JSON.stringify(data));
+      localStorage.setItem(`premacao_${key} `, JSON.stringify(data));
     }
   };
 
@@ -521,7 +522,7 @@ const App: React.FC = () => {
     const school = schools.find(s => s.id === id);
     showConfirm(
       'Remover Unidade',
-      `Deseja realmente remover a unidade "${school?.name}"? Isso apagará todas as avaliações e metas associadas.`,
+      `Deseja realmente remover a unidade "${school?.name}" ? Isso apagará todas as avaliações e metas associadas.`,
       async () => {
         setSyncing(true);
         if (isConfigured && supabase) {
@@ -608,106 +609,112 @@ const App: React.FC = () => {
 
 
       {/* Syncing indicator removed as per user request */}
-      <main className="mx-auto px-4 pb-20 dashboard-container">
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-wrap items-center gap-6 w-full md:w-auto">
+      {/* Barra de Filtros (Oculta na aba de Cadastro de Premiações) */}
+      {activeTab !== AppTab.MASTER_VALUES && (
+        <main className="mx-auto px-4 dashboard-container relative z-20">
+          <div className="bg-white rounded-[1.5rem] border border-slate-200 shadow-sm p-3.5 mb-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
 
-            {/* Dropdown Unidade Escolar Customizado */}
-            <div className="flex flex-col flex-1 min-w-[280px] md:w-80 relative" ref={schoolDropdownRef}>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 flex items-center">
-                <svg className="w-3.5 h-3.5 mr-1.5 text-[#003B71]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-                Unidade Escolar Ativa
-              </label>
-              <button
-                onClick={() => setIsSchoolDropdownOpen(!isSchoolDropdownOpen)}
-                className={`w-full flex justify-between items-center bg-slate-50 border-2 rounded-2xl px-5 py-4 text-sm font-black transition-all outline-none ${activeSchoolId ? 'border-[#003B71] text-[#003B71] bg-white ring-4 ring-[#003B71]/5 shadow-lg shadow-[#003B71]/10' : 'border-slate-100 text-slate-400'
-                  }`}
-              >
-                <span className="truncate">{activeSchool ? activeSchool.name : "Selecione a Unidade..."}</span>
-                <svg className={`w-5 h-5 transition-transform duration-300 ${isSchoolDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+              {/* Dropdown Unidade Escolar Customizado */}
+              <div className="flex flex-col flex-1 min-w-[200px] md:w-64 relative" ref={schoolDropdownRef}>
+                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1 flex items-center">
+                  <svg className="w-3 h-3 mr-1.5 text-[#003B71]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  Unidade Escolar Ativa
+                </label>
+                <button
+                  onClick={() => setIsSchoolDropdownOpen(!isSchoolDropdownOpen)}
+                  className={`w-full flex justify-between items-center bg-slate-50 border-2 rounded-xl px-3.5 py-2 text-xs font-black transition-all outline-none ${activeSchoolId ? 'border-[#003B71] text-[#003B71] bg-white ring-4 ring-[#003B71]/5 shadow-lg shadow-[#003B71]/10' : 'border-slate-100 text-slate-400'
+                    }`}
+                >
+                  <span className="truncate">{activeSchool ? activeSchool.name : "Selecione a Unidade..."}</span>
+                  <svg className={`w-4 h-4 transition-transform duration-300 ${isSchoolDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
 
-              {isSchoolDropdownOpen && (
-                <ul className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white border border-slate-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-64 overflow-y-auto">
-                  <li
-                    onClick={() => { setActiveSchoolId(null); setIsSchoolDropdownOpen(false); }}
-                    className="px-5 py-3 text-sm font-black text-slate-400 hover:bg-slate-50 cursor-pointer transition-colors"
-                  >
-                    Selecione a Unidade...
-                  </li>
-                  {schools.map(s => (
+                {isSchoolDropdownOpen && (
+                  <ul className="absolute left-0 right-0 top-[calc(100%+4px)] bg-white border border-slate-100 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-64 overflow-y-auto">
                     <li
-                      key={s.id}
-                      onClick={() => { setActiveSchoolId(s.id); setIsSchoolDropdownOpen(false); }}
-                      className={`px-5 py-3 text-sm font-black cursor-pointer transition-colors flex items-center justify-between ${activeSchoolId === s.id ? 'bg-[#003B71] text-white' : 'text-slate-700 hover:bg-blue-50 hover:text-[#003B71]'
-                        }`}
+                      onClick={() => { setActiveSchoolId(null); setIsSchoolDropdownOpen(false); }}
+                      className="px-3.5 py-1.5 text-xs font-black text-slate-400 hover:bg-slate-50 cursor-pointer transition-colors"
                     >
-                      {s.name}
-                      {activeSchoolId === s.id && (
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      )}
+                      Selecione a Unidade...
                     </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+                    {schools.map(s => (
+                      <li
+                        key={s.id}
+                        onClick={() => { setActiveSchoolId(s.id); setIsSchoolDropdownOpen(false); }}
+                        className={`px-3.5 py-1.5 text-xs font-black cursor-pointer transition-colors flex items-center justify-between ${activeSchoolId === s.id ? 'bg-[#003B71] text-white' : 'text-slate-700 hover:bg-blue-50 hover:text-[#003B71]'
+                          }`}
+                      >
+                        {s.name}
+                        {activeSchoolId === s.id && (
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
 
-            {/* Dropdown Período Contábil Customizado */}
-            <div className="flex flex-col flex-1 min-w-[200px] md:w-64 relative" ref={periodDropdownRef}>
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 flex items-center">
-                <svg className="w-3.5 h-3.5 mr-1.5 text-[#FDB813]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z" />
-                </svg>
-                Período Contábil
-              </label>
-              <button
-                onClick={() => setIsPeriodDropdownOpen(!isPeriodDropdownOpen)}
-                className={`w-full flex justify-between items-center bg-slate-50 border-2 rounded-2xl px-5 py-4 text-sm font-black transition-all outline-none ${activePeriodId ? 'border-[#FDB813] text-slate-800 bg-white ring-4 ring-[#FDB813]/5 shadow-lg shadow-[#FDB813]/10' : 'border-slate-100 text-slate-400'
-                  }`}
-              >
-                <span className="truncate">{activePeriod ? `${activePeriod.label} ${activePeriod.status === 'closed' ? '🔒' : ''}` : "Consolidado (Todos os Meses)"}</span>
-                <svg className={`w-5 h-5 transition-transform duration-300 ${isPeriodDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+              {/* Dropdown Período Contábil Customizado */}
+              <div className="flex flex-col flex-1 min-w-[150px] md:w-48 relative" ref={periodDropdownRef}>
+                <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1 flex items-center">
+                  <svg className="w-3 h-3 mr-1.5 text-[#FDB813]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z" />
+                  </svg>
+                  Período Contábil
+                </label>
+                <button
+                  onClick={() => setIsPeriodDropdownOpen(!isPeriodDropdownOpen)}
+                  className={`w-full flex justify-between items-center bg-slate-50 border-2 rounded-xl px-3.5 py-2 text-xs font-black transition-all outline-none ${activePeriodId ? 'border-[#FDB813] text-slate-800 bg-white ring-4 ring-[#FDB813]/5 shadow-lg shadow-[#FDB813]/10' : 'border-slate-100 text-slate-400'
+                    }`}
+                >
+                  <span className="truncate">{activePeriod ? `${activePeriod.label} ${activePeriod.status === 'closed' ? '🔒' : ''}` : "Finalizado"}</span>
+                  <svg className={`w-4 h-4 transition-transform duration-300 ${isPeriodDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
 
-              {isPeriodDropdownOpen && (
-                <ul className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white border border-slate-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-64 overflow-y-auto">
-                  <li
-                    onClick={() => { setActivePeriodId(null); setIsPeriodDropdownOpen(false); }}
-                    className={`px-5 py-3 text-sm font-black cursor-pointer transition-colors ${!activePeriodId ? 'bg-[#FDB813] text-[#003B71]' : 'text-slate-400 hover:bg-slate-50'}`}
-                  >
-                    Consolidado (Todos os Meses)
-                  </li>
-                  {periods.map(p => (
+                {isPeriodDropdownOpen && (
+                  <ul className="absolute left-0 right-0 top-[calc(100%+4px)] bg-white border border-slate-100 rounded-xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-64 overflow-y-auto">
                     <li
-                      key={p.id}
-                      onClick={() => { setActivePeriodId(p.id); setIsPeriodDropdownOpen(false); }}
-                      className={`px-5 py-3 text-sm font-black cursor-pointer transition-colors flex items-center justify-between ${activePeriodId === p.id ? 'bg-[#FDB813] text-[#003B71]' : 'text-slate-700 hover:bg-yellow-50 hover:text-[#003B71]'
-                        }`}
+                      onClick={() => { setActivePeriodId(null); setIsPeriodDropdownOpen(false); }}
+                      className={`px-3.5 py-1.5 text-xs font-black cursor-pointer transition-colors ${!activePeriodId ? 'bg-[#FDB813] text-[#003B71]' : 'text-slate-400 hover:bg-slate-50'}`}
                     >
-                      <span className="flex items-center gap-2">
-                        {p.label}
-                        {p.status === 'closed' && <span className="opacity-50">🔒</span>}
-                      </span>
-                      {activePeriodId === p.id && (
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                      )}
+                      Finalizado
                     </li>
-                  ))}
-                </ul>
-              )}
+                    {periods.map(p => (
+                      <li
+                        key={p.id}
+                        onClick={() => { setActivePeriodId(p.id); setIsPeriodDropdownOpen(false); }}
+                        className={`px-3.5 py-1.5 text-xs font-black cursor-pointer transition-colors flex items-center justify-between ${activePeriodId === p.id ? 'bg-[#FDB813] text-[#003B71]' : 'text-slate-700 hover:bg-yellow-50 hover:text-[#003B71]'
+                          }`}
+                      >
+                        <span className="flex items-center gap-2">
+                          {p.label}
+                          {p.status === 'closed' && <span className="opacity-50">🔒</span>}
+                        </span>
+                        {activePeriodId === p.id && (
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        </main>
+      )}
+
+      <main className="mx-auto px-4 pb-20 dashboard-container relative z-10">
 
 
         {activeTab === AppTab.UNITIES && (
@@ -785,9 +792,15 @@ const App: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="p-20 text-center bg-white border-2 border-dashed border-slate-200 rounded-3xl text-slate-400">
-                <p className="font-black text-xl text-slate-600 uppercase tracking-widest">Selecione Unidade e Período Ativo</p>
-              </div>
+              <EmptyState
+                icon={
+                  <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                }
+                title="Aguardando Seleção"
+                description="Selecione Unidade e Período Ativo para iniciar"
+              />
             )}
           </div>
         )}
@@ -805,9 +818,15 @@ const App: React.FC = () => {
                 allPeriodEvaluations={allPeriodEvaluationsForPrizes}
               />
             ) : (
-              <div className="p-20 text-center bg-white border-2 border-dashed border-slate-200 rounded-3xl text-slate-400">
-                <p className="font-black text-xl text-slate-600 uppercase tracking-widest">Selecione um Período no Filtro Principal</p>
-              </div>
+              <EmptyState
+                icon={
+                  <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z" />
+                  </svg>
+                }
+                title="Relatório não Carregado"
+                description="Selecione um Período no Filtro Principal acima"
+              />
             )}
           </div>
         )}
