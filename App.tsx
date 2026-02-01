@@ -659,7 +659,7 @@ const App: React.FC = () => {
       {/* Syncing indicator removed as per user request */}
       {/* Barra de Filtros (Oculta na aba de Cadastro de Premiações) */}
       {activeTab !== AppTab.MASTER_VALUES && (
-        <main className="mx-auto px-4 dashboard-container relative z-20">
+        <main className="mx-auto px-2 sm:px-4 md:px-6 lg:px-8 dashboard-container relative z-20">
           <div className="bg-white rounded-[1.5rem] border border-slate-200 shadow-sm p-3.5 mb-4 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
 

@@ -65,7 +65,7 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
   };
 
   return (
-    <div className="sticky top-6">
+    <div className="lg:sticky lg:top-6">
       <div className={`bg-[#003B71] text-white rounded-2xl shadow-xl overflow-hidden transition-all duration-500 ${isFinalized ? 'ring-4 ring-green-400 ring-offset-4' : ''}`}>
         <div className="p-8 text-center border-b border-white/10 relative overflow-hidden">
           {isFinalized && (

@@ -116,17 +116,17 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
         </span>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex gap-2 mb-8">
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 mb-8">
         <input
           type="text"
           value={newSchoolName}
           onChange={(e) => setNewSchoolName(e.target.value)}
-          placeholder="Nome da Unidade (Ex: Colégio Adventista de...)"
+          placeholder="Nome da Unidade..."
           className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all"
         />
         <button
           type="submit"
-          className="bg-[#003B71] text-white px-8 py-3 rounded-xl font-bold hover:bg-[#002a51] transition-all flex items-center shadow-lg active:scale-95"
+          className="bg-[#003B71] text-white px-6 py-3 rounded-xl font-bold hover:bg-[#002a51] transition-all flex items-center justify-center shadow-lg active:scale-95 whitespace-nowrap"
         >
           <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
