@@ -575,13 +575,7 @@ const App: React.FC = () => {
       />
 
 
-      {syncing && (
-        <div className="fixed top-4 right-4 z-[60] bg-[#003B71] text-white px-4 py-2 rounded-full shadow-2xl flex items-center gap-2 animate-bounce">
-          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          <span className="text-[10px] font-black uppercase tracking-widest">Salvando...</span>
-        </div>
-      )}
-
+      {/* Syncing indicator removed as per user request */}
       <main className="mx-auto px-4 pb-20 dashboard-container">
         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-wrap items-center gap-6 w-full md:w-auto">
