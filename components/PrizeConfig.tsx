@@ -1,0 +1,340 @@
+
+import React, { useState, useEffect } from 'react';
+import { AwardLevel, Thresholds, InadimplenciaRankingConfig, ManagementBonusConfig, AnrsBonusConfig } from '../types';
+
+interface PrizeConfigProps {
+  // Removido: prizeValues: PrizeValues;
+  thresholds: Thresholds;
+  inadimplenciaRankingConfig: InadimplenciaRankingConfig;
+  managementBonusConfig: ManagementBonusConfig;
+  anrsBonusConfig: AnrsBonusConfig;
+  onUpdateAllBonusConfig: (
+    // Removido: values: PrizeValues,
+    thresholds: Thresholds,
+    inadimplenciaRanking: InadimplenciaRankingConfig,
+    managementBonus: ManagementBonusConfig,
+    anrsBonus: AnrsBonusConfig
+  ) => void;
+}
+
+const PrizeConfig: React.FC<PrizeConfigProps> = ({
+  // Removido: prizeValues, 
+  thresholds,
+  inadimplenciaRankingConfig,
+  managementBonusConfig,
+  anrsBonusConfig,
+  onUpdateAllBonusConfig
+}) => {
+  const [isLocked, setIsLocked] = useState(true);
+  // Removido: const [localValues, setLocalValues] = useState<PrizeValues>(prizeValues);
+  const [localThresholds, setLocalThresholds] = useState<Thresholds>(thresholds);
+  const [localInadimplenciaRankingConfig, setLocalInadimplenciaRankingConfig] = useState<InadimplenciaRankingConfig>(inadimplenciaRankingConfig);
+  const [localManagementBonusConfig, setLocalManagementBonusConfig] = useState<ManagementBonusConfig>(managementBonusConfig);
+  const [localAnrsBonusConfig, setLocalAnrsBonusConfig] = useState<AnrsBonusConfig>(anrsBonusConfig);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const [displayValues, setDisplayValues] = useState<Record<string, string>>({
+    // Removido: [AwardLevel.GOLD]: (prizeValues[AwardLevel.GOLD] || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+    // Removido: [AwardLevel.SILVER]: (prizeValues[AwardLevel.SILVER] || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+    // Removido: [AwardLevel.BRONZE]: (prizeValues[AwardLevel.BRONZE] || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+    'inad_rank_1': (inadimplenciaRankingConfig.firstPlace || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+    'inad_rank_2': (inadimplenciaRankingConfig.secondPlace || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+    'inad_rank_3': (inadimplenciaRankingConfig.thirdPlace || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+    'management_bonus': (managementBonusConfig.bonusValue || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+    'anrs_bonus': (anrsBonusConfig.bonusValue || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+  });
+
+  useEffect(() => {
+    // Removido: setLocalValues(prizeValues);
+    setLocalThresholds(thresholds);
+    setLocalInadimplenciaRankingConfig(inadimplenciaRankingConfig);
+    setLocalManagementBonusConfig(managementBonusConfig);
+    setLocalAnrsBonusConfig(anrsBonusConfig);
+
+    setDisplayValues({
+      // Removido: [AwardLevel.GOLD]: (prizeValues[AwardLevel.GOLD] || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+      // Removido: [AwardLevel.SILVER]: (prizeValues[AwardLevel.SILVER] || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+      // Removido: [AwardLevel.BRONZE]: (prizeValues[AwardLevel.BRONZE] || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+      'inad_rank_1': (inadimplenciaRankingConfig.firstPlace || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+      'inad_rank_2': (inadimplenciaRankingConfig.secondPlace || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+      'inad_rank_3': (inadimplenciaRankingConfig.thirdPlace || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+      'management_bonus': (managementBonusConfig.bonusValue || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+      'anrs_bonus': (anrsBonusConfig.bonusValue || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
+    });
+  }, [/* Removido: prizeValues, */ thresholds, inadimplenciaRankingConfig, managementBonusConfig, anrsBonusConfig]);
+
+  const handleSave = () => {
+    onUpdateAllBonusConfig(
+      // Removido: localValues,
+      localThresholds,
+      localInadimplenciaRankingConfig,
+      localManagementBonusConfig,
+      localAnrsBonusConfig
+    );
+    setShowSuccess(true);
+    setIsLocked(true);
+    setTimeout(() => setShowSuccess(false), 3000);
+  };
+
+  const handleCurrencyChange = (key: string, value: string) => {
+    const cleanValue = value.replace(/\D/g, '');
+    const numericValue = Number(cleanValue) / 100;
+
+    if (key.startsWith('inad_rank')) {
+      if (key === 'inad_rank_1') setLocalInadimplenciaRankingConfig(prev => ({ ...prev, firstPlace: numericValue }));
+      if (key === 'inad_rank_2') setLocalInadimplenciaRankingConfig(prev => ({ ...prev, secondPlace: numericValue }));
+      if (key === 'inad_rank_3') setLocalInadimplenciaRankingConfig(prev => ({ ...prev, thirdPlace: numericValue }));
+    } else if (key === 'management_bonus') {
+      setLocalManagementBonusConfig(prev => ({ ...prev, bonusValue: numericValue }));
+    } else if (key === 'anrs_bonus') {
+      setLocalAnrsBonusConfig(prev => ({ ...prev, bonusValue: numericValue }));
+    } else {
+      // Removido: setLocalValues(prev => ({ ...prev, [key]: numericValue }));
+    }
+
+    const formatted = numericValue.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+    setDisplayValues(prev => ({ ...prev, [key]: formatted }));
+  };
+
+  // Removido: rankingLevels, pois a seção de ranking principal foi removida.
+
+  return (
+    <div className={`bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8 relative overflow-hidden transition-all duration-500 ${isLocked ? 'opacity-95' : 'ring-2 ring-blue-500/20 shadow-xl'}`}>
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+        <div className="flex items-center">
+          <span className="w-2 h-8 bg-[#003B71] rounded-full mr-3"></span>
+          <div>
+            <h2 className="text-xl font-bold text-slate-800 uppercase">CADASTRO DE PREMIAÇÕES</h2>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Configuração de Premiação e Ranking</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          {showSuccess && (
+            <span className="text-green-600 font-bold text-sm animate-pulse flex items-center">
+              <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+              </svg>
+              Atualizado!
+            </span>
+          )}
+
+          {isLocked ? (
+            <button
+              onClick={() => setIsLocked(false)}
+              className="bg-slate-100 text-slate-600 px-5 py-2.5 rounded-lg font-black text-xs hover:bg-slate-200 transition-all flex items-center gap-2 uppercase tracking-widest"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              Editar Valores
+            </button>
+          ) : (
+            <div className="flex gap-2">
+              <button
+                onClick={() => setIsLocked(true)}
+                className="text-slate-400 px-4 py-2.5 rounded-lg font-bold text-xs hover:text-slate-600 transition-all uppercase tracking-widest"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleSave}
+                className="bg-[#003B71] text-white px-6 py-2.5 rounded-lg font-bold hover:bg-[#002a51] shadow-lg active:scale-95 transition-all flex items-center gap-2 uppercase text-xs tracking-widest"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                </svg>
+                Gravar Configuração
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Removido: Bloco Ranking de Desempenho (Pontuação Total) */}
+      {/*
+      <div className="mb-8">
+        <h3 className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 flex items-center">
+           <span className="w-4 h-[1px] bg-slate-200 mr-2"></span>
+           Ranking de Desempenho (Pontuação Total)
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {rankingLevels.map((level) => (
+            <div key={level.key} className={`p-5 rounded-2xl border-2 transition-all ${level.color} ${isLocked ? 'border-dashed' : ''}`}>
+              <h3 className="font-black text-[11px] uppercase tracking-[0.2em] mb-6 border-b border-current/20 pb-3 flex justify-between items-center">
+                Nível {level.label}
+              </h3>
+              
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">Valor Repasse (R$)</label>
+                  {isLocked ? (
+                    <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">
+                      <span className="text-xs text-slate-300 mr-1">R$</span> {displayValues[level.key]}
+                    </div>
+                  ) : (
+                    <div className="relative group">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold opacity-30 group-focus-within:opacity-100 transition-opacity">R$</span>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        value={displayValues[level.key]}
+                        onChange={(e) => handleCurrencyChange(level.key, e.target.value)}
+                        className="w-full bg-white border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-lg font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-sm"
+                      />
+                    </div>
+                  )}
+                </div>
+                
+                <div>
+                  <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">Mínimo para Pontuação</label>
+                  {isLocked ? (
+                    <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">
+                      {localThresholds[level.key]} <span className="text-[10px] text-slate-300 uppercase">pts</span>
+                    </div>
+                  ) : (
+                    <input
+                      type="number"
+                      value={localThresholds[level.key]}
+                      onChange={(e) => setLocalThresholds({ ...localThresholds, [level.key]: Number(e.target.value) })}
+                      className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-lg font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-sm"
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      */}
+
+      {/* Novo Bloco: Premiação Inadimpl. Ranking */}
+      <div className="mb-8 p-6 rounded-2xl border border-blue-200 bg-blue-50/20">
+        <h3 className="text-[9px] font-black text-blue-700 uppercase tracking-[0.2em] mb-4 flex items-center">
+          <span className="w-4 h-[1px] bg-blue-200 mr-2"></span>
+          Premiação Ranking de Inadimplência (Escolas com menor %)
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            { key: 'inad_rank_1', label: '1º Lugar', value: localInadimplenciaRankingConfig.firstPlace },
+            { key: 'inad_rank_2', label: '2º Lugar', value: localInadimplenciaRankingConfig.secondPlace },
+            { key: 'inad_rank_3', label: '3º Lugar', value: localInadimplenciaRankingConfig.thirdPlace },
+          ].map((item) => (
+            <div key={item.key} className="p-4 rounded-xl border border-blue-100 bg-white shadow-sm">
+              <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">{item.label}</label>
+              {isLocked ? (
+                <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">
+                  <span className="text-xs text-slate-300 mr-1">R$</span> {displayValues[item.key]}
+                </div>
+              ) : (
+                <div className="relative group">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold opacity-30 group-focus-within:opacity-100 transition-opacity">R$</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={displayValues[item.key]}
+                    onChange={(e) => handleCurrencyChange(item.key, e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-lg font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-sm"
+                  />
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Novo Bloco: Premiação de Gestão */}
+      <div className="mb-8 p-6 rounded-2xl border border-green-200 bg-green-50/20">
+        <h3 className="text-[9px] font-black text-green-700 uppercase tracking-[0.2em] mb-4 flex items-center">
+          <span className="w-4 h-[1px] bg-green-200 mr-2"></span>
+          Premiação de Gestão (*Adiantamentos e Cartão em Dia*)
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-4 rounded-xl border border-green-100 bg-white shadow-sm">
+            <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">Mín. Pontos (Adiant. + Cartão)</label>
+            {isLocked ? (
+              <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">
+                {localManagementBonusConfig.pointThreshold} <span className="text-[10px] text-slate-300 uppercase">pts</span>
+              </div>
+            ) : (
+              <input
+                type="number"
+                value={localManagementBonusConfig.pointThreshold}
+                onChange={(e) => setLocalManagementBonusConfig(prev => ({ ...prev, pointThreshold: Number(e.target.value) }))}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-lg font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-sm"
+              />
+            )}
+          </div>
+          <div className="p-4 rounded-xl border border-green-100 bg-white shadow-sm">
+            <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">Valor Bônus (R$)</label>
+            {isLocked ? (
+              <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">
+                <span className="text-xs text-slate-300 mr-1">R$</span> {displayValues['management_bonus']}
+              </div>
+            ) : (
+              <div className="relative group">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold opacity-30 group-focus-within:opacity-100 transition-opacity">R$</span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={displayValues['management_bonus']}
+                  onChange={(e) => handleCurrencyChange('management_bonus', e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-lg font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-sm"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Novo Bloco: Premiação Meta ANRS */}
+      <div className="p-6 rounded-2xl border border-purple-200 bg-purple-50/20">
+        <h3 className="text-[9px] font-black text-purple-700 uppercase tracking-[0.2em] mb-4 flex items-center">
+          <span className="w-4 h-[1px] bg-purple-200 mr-2"></span>
+          Premiação Meta ANRS (*Inadimplência, Orçamento e Descontos*)
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="p-4 rounded-xl border border-purple-100 bg-white shadow-sm">
+            <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">Mín. Pontos (Inadim. + Orçam. + Desc.)</label>
+            {isLocked ? (
+              <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">
+                {localAnrsBonusConfig.pointThreshold} <span className="text-[10px] text-slate-300 uppercase">pts</span>
+              </div>
+            ) : (
+              <input
+                type="number"
+                value={localAnrsBonusConfig.pointThreshold}
+                onChange={(e) => setLocalAnrsBonusConfig(prev => ({ ...prev, pointThreshold: Number(e.target.value) }))}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-lg font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-sm"
+              />
+            )}
+          </div>
+          <div className="p-4 rounded-xl border border-purple-100 bg-white shadow-sm">
+            <label className="block text-[9px] font-black uppercase text-slate-400 mb-2 tracking-widest">Valor Bônus (R$)</label>
+            {isLocked ? (
+              <div className="text-xl font-black text-slate-800 py-2 border-b-2 border-slate-100">
+                <span className="text-xs text-slate-300 mr-1">R$</span> {displayValues['anrs_bonus']}
+              </div>
+            ) : (
+              <div className="relative group">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold opacity-30 group-focus-within:opacity-100 transition-opacity">R$</span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={displayValues['anrs_bonus']}
+                  onChange={(e) => handleCurrencyChange('anrs_bonus', e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-11 pr-4 py-3 text-lg font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-sm"
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default PrizeConfig;

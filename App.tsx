@@ -1,0 +1,732 @@
+
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import Header from './components/Header';
+import PrizeConfig from './components/PrizeConfig';
+import CriteriaEvaluator from './components/CriteriaEvaluator';
+import ResultsPanel from './components/ResultsPanel';
+import SchoolManager from './components/SchoolManager';
+import SummaryTable from './components/SummaryTable';
+import PeriodManager from './components/PeriodManager';
+import CostAnalysis from './components/CostAnalysis';
+import Footer from './components/Footer';
+import { supabase, isConfigured } from './src/lib/supabase';
+import {
+  INITIAL_THRESHOLDS,
+  INITIAL_CATEGORIES,
+  INITIAL_INADIMPLENCIA_RANKING_CONFIG,
+  INITIAL_MANAGEMENT_BONUS_CONFIG,
+  INITIAL_ANRS_BONUS_CONFIG
+} from './constants';
+import {
+  AwardLevel,
+  Thresholds,
+  Category,
+  SchoolUnit,
+  Period,
+  Evaluation,
+  InadimplenciaRankingConfig,
+  ManagementBonusConfig,
+  AnrsBonusConfig
+} from './types';
+import { calculatePoints, getAwardLevel, calculateAllPrizes } from './utils/calculations';
+
+enum AppTab {
+  UNITIES = 'UNITIES',
+  MASTER_VALUES = 'MASTER_VALUES',
+  EVALUATION = 'EVALUATION',
+  REPORT = 'REPORT',
+  COST_ANALYSIS = 'COST_ANALYSIS'
+}
+
+const App: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<AppTab>(AppTab.UNITIES);
+  const [thresholds, setThresholds] = useState<Thresholds>(INITIAL_THRESHOLDS);
+  const [inadimplenciaRankingConfig, setInadimplenciaRankingConfig] = useState<InadimplenciaRankingConfig>(INITIAL_INADIMPLENCIA_RANKING_CONFIG);
+  const [managementBonusConfig, setManagementBonusConfig] = useState<ManagementBonusConfig>(INITIAL_MANAGEMENT_BONUS_CONFIG);
+  const [anrsBonusConfig, setAnrsBonusConfig] = useState<AnrsBonusConfig>(INITIAL_ANRS_BONUS_CONFIG);
+  const [schoolCustomCategories, setSchoolCustomCategories] = useState<Record<string, Category[]>>({});
+  const [schools, setSchools] = useState<SchoolUnit[]>([]);
+  const [periods, setPeriods] = useState<Period[]>([]);
+  const [evaluations, setEvaluations] = useState<Evaluation[]>([]);
+  const [activeSchoolId, setActiveSchoolId] = useState<string | null>(null);
+  const [activePeriodId, setActivePeriodId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
+
+  // Estados para Dropdowns customizados
+  const [isSchoolDropdownOpen, setIsSchoolDropdownOpen] = useState(false);
+  const [isPeriodDropdownOpen, setIsPeriodDropdownOpen] = useState(false);
+  const schoolDropdownRef = useRef<HTMLDivElement>(null);
+  const periodDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (schoolDropdownRef.current && !schoolDropdownRef.current.contains(event.target as Node)) {
+        setIsSchoolDropdownOpen(false);
+      }
+      if (periodDropdownRef.current && !periodDropdownRef.current.contains(event.target as Node)) {
+        setIsPeriodDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const saveLocally = (key: string, data: any) => {
+    if (!isConfigured) {
+      localStorage.setItem(`premacao_${key}`, JSON.stringify(data));
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        if (isConfigured && supabase) {
+          const [
+            { data: schoolsData },
+            { data: periodsData },
+            { data: evaluationsData },
+            { data: configData }
+          ] = await Promise.all([
+            supabase.from('schools').select('*'),
+            supabase.from('periods').select('*'),
+            supabase.from('evaluations').select('*'),
+            supabase.from('app_config').select('*').single()
+          ]);
+
+          if (schoolsData) {
+            const mappedSchools: SchoolUnit[] = schoolsData.map((s: any) => ({
+              id: s.id,
+              name: s.name,
+              targets: s.targets || {},
+              treasurerName: s.treasurer_name,
+              treasurerCpf: s.treasurer_cpf,
+              viceTreasurerName: s.vice_treasurer_name,
+              viceTreasurerCpf: s.vice_treasurer_cpf,
+              isLocked: s.is_locked,
+              custom_categories: s.custom_categories
+            }));
+            setSchools(mappedSchools);
+
+            const customCats: Record<string, Category[]> = {};
+            mappedSchools.forEach((s) => {
+              if (s.custom_categories) customCats[s.id] = s.custom_categories;
+            });
+            setSchoolCustomCategories(customCats);
+          }
+
+          if (periodsData) setPeriods(periodsData as Period[]);
+
+          if (evaluationsData) {
+            const mappedEvals: Evaluation[] = evaluationsData.map((e: any) => ({
+              schoolId: e.school_id,
+              periodId: e.period_id,
+              selections: e.selections || {},
+              realizedValues: e.realized_values || {},
+              inadimplenciaRankingPercentage: e.inadimplencia_ranking_percentage,
+              isFinalized: e.is_finalized,
+              calculatedAt: e.calculated_at
+            }));
+            setEvaluations(mappedEvals);
+          }
+
+          if (configData) {
+            if (configData.thresholds) setThresholds(configData.thresholds);
+            if (configData.inadimplencia_ranking_config) setInadimplenciaRankingConfig(configData.inadimplencia_ranking_config);
+            if (configData.management_bonus_config) setManagementBonusConfig(configData.management_bonus_config);
+            if (configData.anrs_bonus_config) setAnrsBonusConfig(configData.anrs_bonus_config);
+          }
+        } else {
+          // Fallback LocalStorage
+          const localSchools = localStorage.getItem('premacao_schools');
+          const localPeriods = localStorage.getItem('premacao_periods');
+          const localEvals = localStorage.getItem('premacao_evaluations');
+          const localConfig = localStorage.getItem('premacao_config');
+
+          if (localSchools) {
+            const parsedSchools = JSON.parse(localSchools);
+            setSchools(parsedSchools);
+            const customCats: Record<string, Category[]> = {};
+            parsedSchools.forEach((s: any) => {
+              if (s.custom_categories) customCats[s.id] = s.custom_categories;
+            });
+            setSchoolCustomCategories(customCats);
+          }
+          if (localPeriods) setPeriods(JSON.parse(localPeriods));
+          if (localEvals) setEvaluations(JSON.parse(localEvals));
+          if (localConfig) {
+            const cfg = JSON.parse(localConfig);
+            setThresholds(cfg.thresholds || INITIAL_THRESHOLDS);
+            setInadimplenciaRankingConfig(cfg.inadimplencia_ranking_config || INITIAL_INADIMPLENCIA_RANKING_CONFIG);
+            setManagementBonusConfig(cfg.management_bonus_config || INITIAL_MANAGEMENT_BONUS_CONFIG);
+            setAnrsBonusConfig(cfg.anrs_bonus_config || INITIAL_ANRS_BONUS_CONFIG);
+          }
+        }
+      } catch (e) {
+        console.error("Erro ao carregar dados:", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const activePeriod = useMemo(() => periods.find(p => p.id === activePeriodId) || null, [periods, activePeriodId]);
+  const activeSchool = useMemo(() => schools.find(s => s.id === activeSchoolId) || null, [schools, activeSchoolId]);
+
+  const activeCategories = useMemo(() => {
+    if (!activeSchoolId) return INITIAL_CATEGORIES;
+    return schoolCustomCategories[activeSchoolId] || INITIAL_CATEGORIES;
+  }, [activeSchoolId, schoolCustomCategories]);
+
+  const metricCategories = useMemo(() => activeCategories.filter(c => c.isMetric), [activeCategories]);
+
+  const currentEvaluation = useMemo(() => {
+    if (!activeSchoolId || !activePeriodId) return null;
+    return evaluations.find(e => e.schoolId === activeSchoolId && e.periodId === activePeriodId) || null;
+  }, [evaluations, activeSchoolId, activePeriodId]);
+
+  const selections = useMemo(() => currentEvaluation?.selections || {}, [currentEvaluation]);
+  const realizedValues = useMemo(() => currentEvaluation?.realizedValues || {}, [currentEvaluation]);
+  const inadimplenciaRankingPercentage = useMemo(() => currentEvaluation?.inadimplenciaRankingPercentage, [currentEvaluation]);
+
+  const totalPoints = useMemo(() => {
+    const targets = activeSchool?.targets || {};
+    return activeCategories.reduce((acc, cat) => {
+      const p = calculatePoints(cat, selections[cat.id], realizedValues[cat.id], targets[cat.id] || 0, activePeriod?.label);
+      return acc + p;
+    }, 0);
+  }, [selections, realizedValues, activeCategories, activeSchool, activePeriod]);
+
+  const schoolsForSummary = useMemo(() => {
+    if (!activePeriodId) return [];
+    return schools.map(s => {
+      const evalData = evaluations.find(e => e.schoolId === s.id && e.periodId === activePeriodId);
+      return {
+        ...s,
+        selections: evalData?.selections || {},
+        realizedValues: evalData?.realizedValues || {},
+        inadimplenciaRankingPercentage: evalData?.inadimplenciaRankingPercentage,
+        isFinalized: evalData?.isFinalized || false,
+        categories: schoolCustomCategories[s.id] || INITIAL_CATEGORIES
+      };
+    });
+  }, [schools, evaluations, activePeriodId, schoolCustomCategories]);
+
+  const allPeriodEvaluationsForPrizes = useMemo(() => {
+    if (!activePeriodId) return [];
+    return schoolsForSummary.map(s => ({
+      schoolId: s.id,
+      inadimplenciaRankingPercentage: s.inadimplenciaRankingPercentage,
+      categories: s.categories,
+      selections: s.selections,
+      realizedValues: s.realizedValues,
+      targets: s.targets,
+      periodLabel: activePeriod?.label
+    }));
+  }, [schoolsForSummary, activePeriodId, activePeriod]);
+
+  const { inadimplenciaRankingBonus, managementBonus, anrsBonus, totalTreasurerPrize, vicePrize, level, inadimplenciaRank } = useMemo(() => {
+    if (!activeSchoolId || !activePeriodId) {
+      return {
+        inadimplenciaRankingBonus: 0, managementBonus: 0, anrsBonus: 0,
+        totalTreasurerPrize: 0, vicePrize: 0, level: AwardLevel.NONE,
+        inadimplenciaRank: undefined,
+      };
+    }
+    return calculateAllPrizes(
+      totalPoints, thresholds, inadimplenciaRankingConfig, managementBonusConfig, anrsBonusConfig,
+      allPeriodEvaluationsForPrizes, activeSchoolId, activePeriod?.label
+    );
+  }, [totalPoints, thresholds, inadimplenciaRankingConfig, managementBonusConfig, anrsBonusConfig, allPeriodEvaluationsForPrizes, activeSchoolId, activePeriodId, activePeriod]);
+
+  const awardLevel = level;
+
+  const handleAddPeriod = async (label: string) => {
+    setSyncing(true);
+    const newId = crypto.randomUUID();
+    const newPeriod: Period = { id: newId, label, status: 'open' };
+
+    if (isConfigured && supabase) {
+      const { data } = await supabase.from('periods').insert({ label, status: 'open' }).select().single();
+      if (data) setPeriods(prev => [...prev, data as Period]);
+    } else {
+      const updated = [...periods, newPeriod];
+      setPeriods(updated);
+      saveLocally('periods', updated);
+    }
+    setActivePeriodId(newId);
+    setSyncing(false);
+  };
+
+  const handleRemovePeriod = async (id: string) => {
+    if (confirm(`Deseja realmente excluir este período?`)) {
+      setSyncing(true);
+      if (isConfigured && supabase) {
+        await supabase.from('periods').delete().eq('id', id);
+        await supabase.from('evaluations').delete().eq('period_id', id);
+      }
+      const updatedPeriods = periods.filter(p => p.id !== id);
+      setPeriods(updatedPeriods);
+      const updatedEvals = evaluations.filter(e => e.periodId !== id);
+      setEvaluations(updatedEvals);
+
+      saveLocally('periods', updatedPeriods);
+      saveLocally('evaluations', updatedEvals);
+
+      if (activePeriodId === id) setActivePeriodId(null);
+      setSyncing(false);
+    }
+  };
+
+  const handleTogglePeriodStatus = async (id: string) => {
+    const period = periods.find(p => p.id === id);
+    if (!period) return;
+    const newStatus = period.status === 'open' ? 'closed' : 'open';
+    setSyncing(true);
+    if (isConfigured && supabase) {
+      await supabase.from('periods').update({ status: newStatus }).eq('id', id);
+    }
+    const updated = periods.map(p => p.id === id ? { ...p, status: newStatus } : p);
+    setPeriods(updated);
+    saveLocally('periods', updated);
+    setSyncing(false);
+  };
+
+  const updateEvaluation = async (updates: Partial<Evaluation>) => {
+    if (!activeSchoolId || !activePeriodId) return;
+    setSyncing(true);
+
+    const current = evaluations.find(e => e.schoolId === activeSchoolId && e.periodId === activePeriodId) || {
+      schoolId: activeSchoolId,
+      periodId: activePeriodId,
+      selections: {},
+      realizedValues: {},
+      isFinalized: false
+    };
+
+    const updatedEval = { ...current, ...updates };
+
+    if (isConfigured && supabase) {
+      const dbPayload = {
+        school_id: updatedEval.schoolId,
+        period_id: updatedEval.periodId,
+        selections: updatedEval.selections,
+        realized_values: updatedEval.realizedValues,
+        inadimplencia_ranking_percentage: updatedEval.inadimplenciaRankingPercentage,
+        is_finalized: updatedEval.isFinalized,
+        calculated_at: updatedEval.calculatedAt
+      };
+
+      await supabase.from('evaluations').upsert(dbPayload, { onConflict: 'school_id,period_id' });
+    }
+
+    const newEvaluations = evaluations.some(e => e.schoolId === activeSchoolId && e.periodId === activePeriodId)
+      ? evaluations.map(e => (e.schoolId === activeSchoolId && e.periodId === activePeriodId) ? updatedEval : e)
+      : [...evaluations, updatedEval];
+
+    setEvaluations(newEvaluations);
+    saveLocally('evaluations', newEvaluations);
+    setSyncing(false);
+  };
+
+  const handleSelection = (categoryId: string, optionId: string) => {
+    if (!activeSchoolId || !activePeriodId || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized) return;
+    const newSelections = { ...selections };
+    if (newSelections[categoryId] === optionId) delete newSelections[categoryId];
+    else newSelections[categoryId] = optionId;
+    updateEvaluation({ selections: newSelections });
+  };
+
+  const handleMetricInput = (categoryId: string, value: number) => {
+    if (!activeSchoolId || !activePeriodId || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized) return;
+    updateEvaluation({ realizedValues: { ...realizedValues, [categoryId]: value } });
+  };
+
+  const handleInadimplenciaRankingInput = (value: number) => {
+    if (!activeSchoolId || !activePeriodId || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized) return;
+    updateEvaluation({
+      inadimplenciaRankingPercentage: value,
+      realizedValues: { ...realizedValues, inadimplencia_mes: value }
+    });
+  };
+
+  const handleFinalize = async () => {
+    if (!activeSchoolId || !activePeriodId) return;
+    await updateEvaluation({ isFinalized: true, calculatedAt: new Date().toISOString() });
+  };
+
+  const handleReopenEvaluation = () => {
+    if (!activeSchoolId || !activePeriodId) return;
+    if (confirm("Deseja reabrir esta avaliação para ajustes? Isso permitirá editar critérios e os valores realizados.")) {
+      updateEvaluation({ isFinalized: false });
+    }
+  };
+
+  const handleUpdateCategories = async (updated: Category[]) => {
+    if (!activeSchoolId) return;
+    setSyncing(true);
+    if (isConfigured && supabase) {
+      await supabase.from('schools').update({ custom_categories: updated }).eq('id', activeSchoolId);
+    }
+    setSchoolCustomCategories(prev => {
+      const newState = { ...prev, [activeSchoolId]: updated };
+      setSchools(currentSchools => {
+        const updatedSchools = currentSchools.map(s => s.id === activeSchoolId ? { ...s, custom_categories: updated } : s);
+        saveLocally('schools', updatedSchools);
+        return updatedSchools;
+      });
+      return newState;
+    });
+    setSyncing(false);
+  };
+
+  const handleAddSchool = async (name: string) => {
+    setSyncing(true);
+    const newId = crypto.randomUUID();
+    const newSchool: SchoolUnit = { id: newId, name, targets: {} };
+
+    if (isConfigured && supabase) {
+      const { data } = await supabase.from('schools').insert({ name, targets: {} }).select().single();
+      if (data) {
+        const mapped: SchoolUnit = {
+          id: data.id,
+          name: data.name,
+          targets: data.targets || {},
+          treasurerName: data.treasurer_name,
+          treasurerCpf: data.treasurer_cpf,
+          viceTreasurerName: data.vice_treasurer_name,
+          viceTreasurerCpf: data.vice_treasurer_cpf,
+          isLocked: data.is_locked,
+          custom_categories: data.custom_categories
+        };
+        setSchools(prev => [...prev, mapped]);
+        setActiveSchoolId(mapped.id);
+      }
+    } else {
+      const updated = [...schools, newSchool];
+      setSchools(updated);
+      saveLocally('schools', updated);
+      setActiveSchoolId(newId);
+    }
+    setSyncing(false);
+  };
+
+  const handleUpdateTargets = async (schoolId: string, targets: Record<string, number>, additionalData?: Partial<SchoolUnit>) => {
+    setSyncing(true);
+    if (isConfigured && supabase) {
+      const updatePayload: any = { targets };
+      if (additionalData) {
+        if (additionalData.treasurerName !== undefined) updatePayload.treasurer_name = additionalData.treasurerName;
+        if (additionalData.treasurerCpf !== undefined) updatePayload.treasurer_cpf = additionalData.treasurerCpf;
+        if (additionalData.viceTreasurerName !== undefined) updatePayload.vice_treasurer_name = additionalData.viceTreasurerName;
+        if (additionalData.viceTreasurerCpf !== undefined) updatePayload.vice_treasurer_cpf = additionalData.viceTreasurerCpf;
+        if (additionalData.isLocked !== undefined) updatePayload.is_locked = additionalData.isLocked;
+      }
+      await supabase.from('schools').update(updatePayload).eq('id', schoolId);
+    }
+
+    const updatedSchools = schools.map(s => s.id === schoolId ? { ...s, ...additionalData, targets } : s);
+    setSchools(updatedSchools);
+    saveLocally('schools', updatedSchools);
+    setSyncing(false);
+  };
+
+  const handleRemoveSchool = async (id: string) => {
+    if (confirm(`Remover a unidade?`)) {
+      setSyncing(true);
+      if (isConfigured && supabase) {
+        await supabase.from('schools').delete().eq('id', id);
+        await supabase.from('evaluations').delete().eq('school_id', id);
+      }
+      const updatedSchools = schools.filter(x => x.id !== id);
+      setSchools(updatedSchools);
+      const updatedEvals = evaluations.filter(x => x.schoolId !== id);
+      setEvaluations(updatedEvals);
+
+      saveLocally('schools', updatedSchools);
+      saveLocally('evaluations', updatedEvals);
+
+      if (activeSchoolId === id) setActiveSchoolId(null);
+      setSyncing(false);
+    }
+  };
+
+  const handleUpdateAllBonusConfig = async (
+    newThresholds: Thresholds,
+    newInadRanking: InadimplenciaRankingConfig,
+    newMgmtBonus: ManagementBonusConfig,
+    newAnrsBonus: AnrsBonusConfig
+  ) => {
+    setSyncing(true);
+    if (isConfigured && supabase) {
+      await supabase.from('app_config').upsert({
+        id: 1,
+        thresholds: newThresholds,
+        inadimplencia_ranking_config: newInadRanking,
+        management_bonus_config: newMgmtBonus,
+        anrs_bonus_config: newAnrsBonus,
+        updated_at: new Date().toISOString()
+      });
+    }
+    setThresholds(newThresholds);
+    setInadimplenciaRankingConfig(newInadRanking);
+    setManagementBonusConfig(newMgmtBonus);
+    setAnrsBonusConfig(newAnrsBonus);
+
+    saveLocally('config', {
+      thresholds: newThresholds,
+      inadimplencia_ranking_config: newInadRanking,
+      management_bonus_config: newMgmtBonus,
+      anrs_bonus_config: newAnrsBonus
+    });
+    setSyncing(false);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center space-y-4">
+        <div className="w-12 h-12 border-4 border-[#003B71] border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-[#003B71] font-black uppercase tracking-widest text-xs">Carregando Sistema...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-50 text-slate-900">
+      <Header activeTab={activeTab} onTabChange={setActiveTab} isCloudConfigured={isConfigured} />
+
+
+      {syncing && (
+        <div className="fixed top-4 right-4 z-[60] bg-[#003B71] text-white px-4 py-2 rounded-full shadow-2xl flex items-center gap-2 animate-bounce">
+          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+          <span className="text-[10px] font-black uppercase tracking-widest">Salvando...</span>
+        </div>
+      )}
+
+      <main className="mx-auto px-4 pb-20 dashboard-container">
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 mb-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-wrap items-center gap-6 w-full md:w-auto">
+
+            {/* Dropdown Unidade Escolar Customizado */}
+            <div className="flex flex-col flex-1 min-w-[280px] md:w-80 relative" ref={schoolDropdownRef}>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 flex items-center">
+                <svg className="w-3.5 h-3.5 mr-1.5 text-[#003B71]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                Unidade Escolar Ativa
+              </label>
+              <button
+                onClick={() => setIsSchoolDropdownOpen(!isSchoolDropdownOpen)}
+                className={`w-full flex justify-between items-center bg-slate-50 border-2 rounded-2xl px-5 py-4 text-sm font-black transition-all outline-none ${activeSchoolId ? 'border-[#003B71] text-[#003B71] bg-white ring-4 ring-[#003B71]/5 shadow-lg shadow-[#003B71]/10' : 'border-slate-100 text-slate-400'
+                  }`}
+              >
+                <span className="truncate">{activeSchool ? activeSchool.name : "Selecione a Unidade..."}</span>
+                <svg className={`w-5 h-5 transition-transform duration-300 ${isSchoolDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {isSchoolDropdownOpen && (
+                <ul className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white border border-slate-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-64 overflow-y-auto">
+                  <li
+                    onClick={() => { setActiveSchoolId(null); setIsSchoolDropdownOpen(false); }}
+                    className="px-5 py-3 text-sm font-black text-slate-400 hover:bg-slate-50 cursor-pointer transition-colors"
+                  >
+                    Selecione a Unidade...
+                  </li>
+                  {schools.map(s => (
+                    <li
+                      key={s.id}
+                      onClick={() => { setActiveSchoolId(s.id); setIsSchoolDropdownOpen(false); }}
+                      className={`px-5 py-3 text-sm font-black cursor-pointer transition-colors flex items-center justify-between ${activeSchoolId === s.id ? 'bg-[#003B71] text-white' : 'text-slate-700 hover:bg-blue-50 hover:text-[#003B71]'
+                        }`}
+                    >
+                      {s.name}
+                      {activeSchoolId === s.id && (
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {/* Dropdown Período Contábil Customizado */}
+            <div className="flex flex-col flex-1 min-w-[200px] md:w-56 relative" ref={periodDropdownRef}>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 flex items-center">
+                <svg className="w-3.5 h-3.5 mr-1.5 text-[#FDB813]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z" />
+                </svg>
+                Período Contábil
+              </label>
+              <button
+                onClick={() => setIsPeriodDropdownOpen(!isPeriodDropdownOpen)}
+                className={`w-full flex justify-between items-center bg-slate-50 border-2 rounded-2xl px-5 py-4 text-sm font-black transition-all outline-none ${activePeriodId ? 'border-[#FDB813] text-slate-800 bg-white ring-4 ring-[#FDB813]/5 shadow-lg shadow-[#FDB813]/10' : 'border-slate-100 text-slate-400'
+                  }`}
+              >
+                <span className="truncate">{activePeriod ? `${activePeriod.label} ${activePeriod.status === 'closed' ? '🔒' : ''}` : "Selecione o Mês..."}</span>
+                <svg className={`w-5 h-5 transition-transform duration-300 ${isPeriodDropdownOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {isPeriodDropdownOpen && (
+                <ul className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white border border-slate-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200 max-h-64 overflow-y-auto">
+                  <li
+                    onClick={() => { setActivePeriodId(null); setIsPeriodDropdownOpen(false); }}
+                    className="px-5 py-3 text-sm font-black text-slate-400 hover:bg-slate-50 cursor-pointer transition-colors"
+                  >
+                    Selecione o Mês...
+                  </li>
+                  {periods.map(p => (
+                    <li
+                      key={p.id}
+                      onClick={() => { setActivePeriodId(p.id); setIsPeriodDropdownOpen(false); }}
+                      className={`px-5 py-3 text-sm font-black cursor-pointer transition-colors flex items-center justify-between ${activePeriodId === p.id ? 'bg-[#FDB813] text-[#003B71]' : 'text-slate-700 hover:bg-yellow-50 hover:text-[#003B71]'
+                        }`}
+                    >
+                      <span className="flex items-center gap-2">
+                        {p.label}
+                        {p.status === 'closed' && <span className="opacity-50">🔒</span>}
+                      </span>
+                      {activePeriodId === p.id && (
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        </div>
+
+
+        {activeTab === AppTab.UNITIES && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <SchoolManager
+              schools={schools}
+              activeSchoolId={activeSchoolId}
+              metricCategories={metricCategories}
+              onAddSchool={handleAddSchool}
+              onRemoveSchool={handleRemoveSchool}
+              onSelectSchool={setActiveSchoolId}
+              onUpdateTargets={handleUpdateTargets}
+            />
+            <PeriodManager
+              periods={periods}
+              activePeriodId={activePeriodId}
+              schoolsCount={schools.length}
+              onAddPeriod={handleAddPeriod}
+              onRemovePeriod={handleRemovePeriod}
+              onSelectPeriod={setActivePeriodId}
+              onToggleStatus={handleTogglePeriodStatus}
+            />
+          </div>
+        )}
+
+        {activeTab === AppTab.MASTER_VALUES && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <PrizeConfig
+              thresholds={thresholds}
+              inadimplenciaRankingConfig={inadimplenciaRankingConfig}
+              managementBonusConfig={managementBonusConfig}
+              anrsBonusConfig={anrsBonusConfig}
+              onUpdateAllBonusConfig={handleUpdateAllBonusConfig}
+            />
+          </div>
+        )}
+
+        {activeTab === AppTab.EVALUATION && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {activeSchoolId && activePeriodId ? (
+              <div className="flex flex-col lg:flex-row gap-8">
+                <div className="w-full lg:w-2/3">
+                  <CriteriaEvaluator
+                    categories={activeCategories}
+                    schoolName={activeSchool?.name || ''}
+                    selections={selections}
+                    realizedValues={realizedValues}
+                    schoolTargets={activeSchool?.targets || {}}
+                    inadimplenciaRankingPercentage={inadimplenciaRankingPercentage}
+                    isReadOnly={activePeriod?.status === 'closed' || currentEvaluation?.isFinalized || false}
+                    onSelect={handleSelection}
+                    onMetricInput={handleMetricInput}
+                    onInadimplenciaRankingInput={handleInadimplenciaRankingInput}
+                    onUpdateCategories={handleUpdateCategories}
+                    activePeriodLabel={activePeriod?.label}
+                  />
+                </div>
+                <div className="w-full lg:w-1/3">
+                  <ResultsPanel
+                    totalPoints={totalPoints}
+                    awardLevel={awardLevel}
+                    inadimplenciaRankingBonus={inadimplenciaRankingBonus}
+                    managementBonus={managementBonus}
+                    anrsBonus={anrsBonus}
+                    totalTreasurerPrize={totalTreasurerPrize}
+                    vicePrize={vicePrize}
+                    isFinalized={currentEvaluation?.isFinalized || false}
+                    isReadOnly={activePeriod?.status === 'closed' || false}
+                    inadimplenciaRank={inadimplenciaRank}
+                    onFinalize={handleFinalize}
+                    onReopen={handleReopenEvaluation}
+                    schoolName={activeSchool?.name}
+                    periodLabel={activePeriod?.label}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="p-20 text-center bg-white border-2 border-dashed border-slate-200 rounded-3xl text-slate-400">
+                <p className="font-black text-xl text-slate-600 uppercase tracking-widest">Selecione Unidade e Período Ativo</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === AppTab.REPORT && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {activePeriodId ? (
+              <SummaryTable
+                schools={schoolsForSummary as any[]}
+                thresholds={thresholds}
+                inadimplenciaRankingConfig={inadimplenciaRankingConfig}
+                managementBonusConfig={managementBonusConfig}
+                anrsBonusConfig={anrsBonusConfig}
+                activePeriodLabel={activePeriod?.label || ''}
+                allPeriodEvaluations={allPeriodEvaluationsForPrizes}
+              />
+            ) : (
+              <div className="p-20 text-center bg-white border-2 border-dashed border-slate-200 rounded-3xl text-slate-400">
+                <p className="font-black text-xl text-slate-600 uppercase tracking-widest">Selecione um Período no Filtro Principal</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === AppTab.COST_ANALYSIS && (
+          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <CostAnalysis
+              schools={schools}
+              periods={periods}
+              evaluations={evaluations}
+              thresholds={thresholds}
+              inadimplenciaRankingConfig={inadimplenciaRankingConfig}
+              managementBonusConfig={managementBonusConfig}
+              anrsBonusConfig={anrsBonusConfig}
+            />
+          </div>
+        )}
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default App;

@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8fafc;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.animate-shimmer {
+    animation: shimmer 2s infinite;
+}
+
+/* Redução de escala para o Dashboard (~15-30% menor) */
+.dashboard-container {
+    transform: scale(0.9);
+    /* 10% de redução é mais seguro para não quebrar fontes */
+    transform-origin: top center;
+    width: 100%;
+    max-width: 1422px;
+    /* 1280px / 0.9 */
+    margin: 0 auto;
+}
+
+/* Ajuste para telas menores */
+@media (max-width: 1280px) {
+    .dashboard-container {
+        transform: none;
+        max-width: 100%;
+        margin: 0;
+    }
+}
