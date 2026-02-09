@@ -47,7 +47,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                                 </svg>
                             )}
                         </div>
-                        <h2 className="text-xl font-black text-slate-800 leading-tight uppercase tracking-tight">
+                        <h2 className="text-sm font-black text-slate-800 leading-tight uppercase tracking-tight">
                             {title}
                         </h2>
                     </div>

@@ -29,7 +29,8 @@ import {
   Evaluation,
   InadimplenciaRankingConfig,
   ManagementBonusConfig,
-  AnrsBonusConfig
+  AnrsBonusConfig,
+  EvaluationModel
 } from './types';
 import { calculatePoints, getAwardLevel, calculateAllPrizes } from './utils/calculations';
 
@@ -227,7 +228,7 @@ const App: React.FC = () => {
     return schoolCustomCategories[activeSchoolId] || INITIAL_CATEGORIES;
   }, [activeSchoolId, schoolCustomCategories]);
 
-  const metricCategories = useMemo(() => activeCategories.filter(c => c.isMetric), [activeCategories]);
+  const metricCategories = useMemo(() => activeCategories.filter(c => c.evaluationModel !== EvaluationModel.MANUAL), [activeCategories]);
 
   const currentEvaluation = useMemo(() => {
     if (!activeSchoolId || !activePeriodId) return null;
@@ -498,27 +499,35 @@ const App: React.FC = () => {
     }
   };
 
-  const handleAddSchool = async (name: string) => {
+  const handleAddSchool = async (payload: Partial<SchoolUnit>) => {
     setSyncing(true);
     const newId = crypto.randomUUID();
 
-    // Pega as categorias atuais de qualquer escola existente (já que agora são globais)
-    // Se não houver escolas, usa as iniciais.
     const currentCategories = schools.length > 0
       ? (schools[0].custom_categories || INITIAL_CATEGORIES)
       : INITIAL_CATEGORIES;
 
     const newSchool: SchoolUnit = {
       id: newId,
-      name,
-      targets: {},
+      name: payload.name || 'Nova Unidade',
+      targets: payload.targets || {},
+      treasurerName: payload.treasurerName,
+      treasurerCpf: payload.treasurerCpf,
+      viceTreasurerName: payload.viceTreasurerName,
+      viceTreasurerCpf: payload.viceTreasurerCpf,
+      isLocked: payload.isLocked || false,
       custom_categories: currentCategories
     };
 
     if (isConfigured && supabase) {
       const { data } = await supabase.from('schools').insert({
-        name,
-        targets: {},
+        name: newSchool.name,
+        targets: newSchool.targets,
+        treasurer_name: newSchool.treasurerName,
+        treasurer_cpf: newSchool.treasurerCpf,
+        vice_treasurer_name: newSchool.viceTreasurerName,
+        vice_treasurer_cpf: newSchool.viceTreasurerCpf,
+        is_locked: newSchool.isLocked,
         custom_categories: currentCategories
       }).select().single();
 
@@ -536,8 +545,6 @@ const App: React.FC = () => {
         };
         setSchools(prev => [...prev, mapped]);
         setActiveSchoolId(mapped.id);
-
-        // Atualiza também o cache de categorias
         setSchoolCustomCategories(prev => ({ ...prev, [mapped.id]: currentCategories }));
       }
     } else {

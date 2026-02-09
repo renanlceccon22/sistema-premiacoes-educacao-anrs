@@ -12,12 +12,26 @@ export interface CriterionOption {
   points: number;
 }
 
+export enum EvaluationModel {
+  MANUAL = 'MANUAL',          // Seleção manual de opções
+  METRIC_DIRECT = 'METRIC_DIRECT',    // Comparação direta (ex: inadimplência < 2%)
+  METRIC_RELATIVE = 'METRIC_RELATIVE',  // Comparação relativa ao target (ex: target + 0.25%)
+  METRIC_ACCUMULATED = 'METRIC_ACCUMULATED' // Meta acumulada pelo mês (ex: Orçamento BI)
+}
+
+export enum EvaluationDirection {
+  LOWER_IS_BETTER = 'LOWER_IS_BETTER', // Quanto menor o valor, mais pontos
+  HIGHER_IS_BETTER = 'HIGHER_IS_BETTER' // Quanto maior o valor, mais pontos
+}
+
 export interface Category {
   id: string;
   name: string;
   options: CriterionOption[];
-  isMetric?: boolean; // Se verdadeiro, usa lógica de comparação %
-  metricThresholds?: number[]; // Limites para categorias métricas (ex: [2, 3] para inadimplência)
+  evaluationModel: EvaluationModel;
+  evaluationDirection?: EvaluationDirection;
+  metricThresholds?: number[]; // Limites para as faixas (ex: [2, 3])
+  isMetric?: boolean; // Mantido por compatibilidade temporária se necessário, mas usaremos evaluationModel
 }
 
 export interface Thresholds {

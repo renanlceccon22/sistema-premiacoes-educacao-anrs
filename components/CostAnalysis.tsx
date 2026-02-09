@@ -200,7 +200,7 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
       <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
         <div className="flex items-center gap-3 mb-8">
           <span className="w-1.5 h-6 bg-[#003B71] rounded-full"></span>
-          <h2 className="text-xl font-black text-[#003B71] uppercase tracking-tight">Ranking de Excelência</h2>
+          <h2 className="text-sm font-black text-[#003B71] uppercase tracking-tight">Ranking de Excelência</h2>
           <div className="ml-auto flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-100">
             <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
             <span className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Atualizado</span>
@@ -289,7 +289,7 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <span className="w-1.5 h-6 bg-[#003B71] rounded-full"></span>
-            <h2 className="text-xl font-black text-[#003B71] uppercase tracking-tight">Custos por Unidade</h2>
+            <h2 className="text-sm font-black text-[#003B71] uppercase tracking-tight">Custos por Unidade</h2>
           </div>
           <span className="px-3 py-1 rounded-full bg-slate-50 border border-slate-100 text-[10px] font-black text-slate-400 uppercase tracking-widest">
             {consolidatedData.length} Unidades

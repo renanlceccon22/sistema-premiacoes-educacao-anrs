@@ -344,20 +344,32 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
     <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
       <div className="p-8 border-b border-slate-100 bg-slate-50/50 flex flex-col md:flex-row justify-between items-center gap-6">
         <div>
-          <h2 className="text-2xl font-black text-[#003B71] uppercase tracking-tight">Resumo Finalizado</h2>
+          <h2 className="text-sm font-black text-[#003B71] uppercase tracking-tight">Resumo Finalizado</h2>
           <p className="text-sm text-slate-500 font-medium">Período Ativo: <span className="text-[#FDB813] font-bold">{activePeriodLabel}</span></p>
         </div>
         <div className="flex items-center gap-3">
-          <button onClick={downloadPDF} className="bg-[#003B71] text-white px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-[#002a51] transition-all flex items-center gap-2 shadow-lg">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-            </svg>
-            Exportar PDF
-          </button>
-          <button onClick={downloadExcel} className="bg-green-600 text-white px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-green-700 transition-all flex items-center gap-2 shadow-lg">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" /></svg>
-            Exportar Excel
-          </button>
+          <div className="pdf-adobe-wrapper">
+            <button
+              onClick={downloadPDF}
+              className="pdf-adobe-content"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+              Exportar PDF
+            </button>
+          </div>
+          <div className="swile-button-wrapper">
+            <button
+              onClick={downloadExcel}
+              className="swile-button-content"
+            >
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" />
+              </svg>
+              Arquivo Swile
+            </button>
+          </div>
         </div>
       </div>
 
@@ -365,7 +377,7 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-slate-50 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-              <th className="px-6 py-4 border-b border-slate-100">Unidade / Responsáveis</th>
+              <th className="px-6 py-4 border-b border-slate-100">Unidade</th>
               <th className="px-6 py-4 border-b border-slate-100">Inad. Mês (%)</th>
               <th className="px-6 py-4 border-b border-slate-100">Pontuação</th>
               <th className="px-6 py-4 border-b border-slate-100">Bônus Ranking</th>
@@ -380,21 +392,7 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
             {sortedResults.map((res, idx) => (
               <tr key={res.school.id} className={`hover:bg-slate-50/50 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'}`}>
                 <td className="px-6 py-4 border-b border-slate-100">
-                  <div className="flex flex-col gap-2">
-                    <span className="text-[#003B71] text-base font-black uppercase tracking-tight">{res.school.name}</span>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="flex flex-col">
-                        <span className="text-[8px] text-slate-400 uppercase tracking-widest">Tesoureiro(a)</span>
-                        <span className="text-[10px] text-slate-600 font-bold truncate leading-tight uppercase">{res.school.treasurerName || 'Pendente'}</span>
-                        <span className="text-[9px] text-slate-600 font-medium">{res.school.treasurerCpf || '000.000.000-00'}</span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-[8px] text-slate-400 uppercase tracking-widest">Vice-Tesoureiro(a)</span>
-                        <span className="text-[10px] text-slate-600 font-bold truncate leading-tight uppercase">{res.school.viceTreasurerName || 'Cargo não existente'}</span>
-                        <span className="text-[9px] text-slate-600 font-medium">{res.school.viceTreasurerName ? (res.school.viceTreasurerCpf || '000.000.000-00') : '---'}</span>
-                      </div>
-                    </div>
-                  </div>
+                  <span className="text-[#003B71] text-base font-black uppercase tracking-tight">{res.school.name}</span>
                 </td>
                 <td className="px-6 py-4 border-b border-slate-100">
                   <span className="text-slate-600">{formatPercentage(res.school.realizedValues['inadimplencia_mes'] || 0)}</span>

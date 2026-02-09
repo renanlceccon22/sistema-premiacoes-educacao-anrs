@@ -32,6 +32,22 @@ const PeriodManager: React.FC<PeriodManagerProps> = ({
   const [selectedMonth, setSelectedMonth] = useState(months[new Date().getMonth()]);
   const [selectedYear, setSelectedYear] = useState(currentYear.toString());
 
+  // Estados para Dropdowns Customizados
+  const [isMonthOpen, setIsMonthOpen] = useState(false);
+  const [isYearOpen, setIsYearOpen] = useState(false);
+  const monthRef = React.useRef<HTMLDivElement>(null);
+  const yearRef = React.useRef<HTMLDivElement>(null);
+
+  // Close when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (monthRef.current && !monthRef.current.contains(event.target as Node)) setIsMonthOpen(false);
+      if (yearRef.current && !yearRef.current.contains(event.target as Node)) setIsYearOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleAdd = () => {
     if (schoolsCount === 0) {
       alert('Atenção: Você precisa cadastrar pelo menos uma UNIDADE ESCOLAR antes de abrir um período de avaliação.');
@@ -72,28 +88,54 @@ const PeriodManager: React.FC<PeriodManagerProps> = ({
                 </div>
               )}
 
-              <div className="flex flex-col gap-0.5">
-                <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Mês</label>
-                <select
+              {/* MÊS CUSTOM SELECT */}
+              <div className="flex flex-col gap-0.5 relative" ref={monthRef}>
+                <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">Mês</label>
+                <button
                   disabled={schoolsCount === 0}
-                  value={selectedMonth}
-                  onChange={(e) => setSelectedMonth(e.target.value)}
-                  className="bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all min-w-[110px] disabled:opacity-50"
+                  onClick={() => setIsMonthOpen(!isMonthOpen)}
+                  className="app-select flex justify-between items-center w-full min-w-[140px] px-3 py-1.5 text-xs text-left"
                 >
-                  {months.map(m => <option key={m} value={m}>{m}</option>)}
-                </select>
+                  <span className="truncate">{selectedMonth}</span>
+                </button>
+                {isMonthOpen && (
+                  <ul className="absolute left-0 right-0 top-[calc(100%+4px)] bg-white border border-slate-100 rounded-xl shadow-2xl z-50 py-1 max-h-60 overflow-y-auto">
+                    {months.map(m => (
+                      <li
+                        key={m}
+                        onClick={() => { setSelectedMonth(m); setIsMonthOpen(false); }}
+                        className={`px-3 py-2 text-xs font-bold cursor-pointer transition-colors ${selectedMonth === m ? 'bg-blue-50 text-[#003B71]' : 'text-slate-600 hover:bg-slate-50 hover:text-[#003B71]'}`}
+                      >
+                        {m}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
 
-              <div className="flex flex-col gap-0.5">
-                <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Ano</label>
-                <select
+              {/* ANO CUSTOM SELECT */}
+              <div className="flex flex-col gap-0.5 relative" ref={yearRef}>
+                <label className="text-[8px] font-black text-slate-400 uppercase tracking-widest ml-1">Ano</label>
+                <button
                   disabled={schoolsCount === 0}
-                  value={selectedYear}
-                  onChange={(e) => setSelectedYear(e.target.value)}
-                  className="bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all min-w-[80px] disabled:opacity-50"
+                  onClick={() => setIsYearOpen(!isYearOpen)}
+                  className="app-select flex justify-between items-center w-full min-w-[100px] px-3 py-1.5 text-xs text-left"
                 >
-                  {years.map(y => <option key={y} value={y}>{y}</option>)}
-                </select>
+                  <span className="truncate">{selectedYear}</span>
+                </button>
+                {isYearOpen && (
+                  <ul className="absolute left-0 right-0 top-[calc(100%+4px)] bg-white border border-slate-100 rounded-xl shadow-2xl z-50 py-1">
+                    {years.map(y => (
+                      <li
+                        key={y}
+                        onClick={() => { setSelectedYear(y.toString()); setIsYearOpen(false); }}
+                        className={`px-3 py-2 text-xs font-bold cursor-pointer transition-colors ${selectedYear === y.toString() ? 'bg-blue-50 text-[#003B71]' : 'text-slate-600 hover:bg-slate-50 hover:text-[#003B71]'}`}
+                      >
+                        {y}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
 
               <button

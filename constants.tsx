@@ -1,5 +1,5 @@
 
-import { Category, AwardLevel, Thresholds, InadimplenciaRankingConfig, ManagementBonusConfig, AnrsBonusConfig } from './types';
+import { Category, AwardLevel, Thresholds, InadimplenciaRankingConfig, ManagementBonusConfig, AnrsBonusConfig, EvaluationModel, EvaluationDirection } from './types';
 
 export const INITIAL_THRESHOLDS: Thresholds = {
   [AwardLevel.GOLD]: 700,
@@ -14,12 +14,12 @@ export const INITIAL_INADIMPLENCIA_RANKING_CONFIG: InadimplenciaRankingConfig = 
 };
 
 export const INITIAL_MANAGEMENT_BONUS_CONFIG: ManagementBonusConfig = {
-  pointThreshold: 170, 
+  pointThreshold: 170,
   bonusValue: 100,
 };
 
 export const INITIAL_ANRS_BONUS_CONFIG: AnrsBonusConfig = {
-  pointThreshold: 240, 
+  pointThreshold: 240,
   bonusValue: 150,
 };
 
@@ -27,6 +27,7 @@ export const INITIAL_CATEGORIES: Category[] = [
   {
     id: 'adiantamentos',
     name: 'Adiantamentos',
+    evaluationModel: EvaluationModel.MANUAL,
     options: [
       { id: 'ad_1', label: 'Nenhuma pendência', points: 100 },
       { id: 'ad_2', label: 'Pendência até 30 dias', points: 70 },
@@ -36,6 +37,7 @@ export const INITIAL_CATEGORIES: Category[] = [
   {
     id: 'cartao_corporativo',
     name: 'Cartão Corporativo',
+    evaluationModel: EvaluationModel.MANUAL,
     options: [
       { id: 'cc_1', label: 'Nenhuma pendência', points: 100 },
       { id: 'cc_2', label: 'Pendência até 30 dias', points: 70 },
@@ -45,6 +47,8 @@ export const INITIAL_CATEGORIES: Category[] = [
   {
     id: 'inadimplencia_mes',
     name: 'Inadimplência/Mês',
+    evaluationModel: EvaluationModel.METRIC_DIRECT,
+    evaluationDirection: EvaluationDirection.LOWER_IS_BETTER,
     isMetric: true,
     metricThresholds: [2, 3], // <= 2% e <= 3%
     options: [
@@ -56,6 +60,8 @@ export const INITIAL_CATEGORIES: Category[] = [
   {
     id: 'orcamento_bi',
     name: 'Orçamento BI',
+    evaluationModel: EvaluationModel.METRIC_ACCUMULATED,
+    evaluationDirection: EvaluationDirection.LOWER_IS_BETTER,
     isMetric: true,
     metricThresholds: [0, 10], // Meta e Meta + 10%
     options: [
@@ -67,6 +73,8 @@ export const INITIAL_CATEGORIES: Category[] = [
   {
     id: 'descontos_concedidos',
     name: 'Descontos Concedidos',
+    evaluationModel: EvaluationModel.METRIC_RELATIVE,
+    evaluationDirection: EvaluationDirection.LOWER_IS_BETTER,
     isMetric: true,
     metricThresholds: [0, 0.25], // Meta e Meta + 0.25%
     options: [
