@@ -137,82 +137,58 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
 
       // 1. Definir Colunas
       worksheet.columns = [
-        { header: 'UNIDADE', key: 'unidade', width: 35 },
-        { header: 'TESOUREIRO(A)', key: 'tesoureiro', width: 30 },
-        { header: 'CPF TESOUREIRO', key: 'cpf_tes', width: 20 },
-        { header: 'VICE-TESOUREIRO(A)', key: 'vice', width: 30 },
-        { header: 'CPF VICE', key: 'cpf_vice', width: 20 },
-        { header: 'INAD. MÊS', key: 'inad', width: 12 },
-        { header: 'PONTUAÇÃO', key: 'pontos', width: 12 },
-        { header: 'BÔNUS RANKING', key: 'ranking', width: 18 },
-        { header: 'BÔNUS GESTÃO', key: 'gestao', width: 18 },
-        { header: 'BÔNUS ANRS', key: 'anrs', width: 18 },
-        { header: 'TESOUREIRO(A)', key: 'rep_tes', width: 22 },
-        { header: 'REPASSE VICE', key: 'rep_vice', width: 22 },
-        { header: 'STATUS', key: 'status', width: 15 },
+        { header: 'Nome', key: 'nome', width: 45 },
+        { header: 'CPF', key: 'cpf', width: 20 },
+        { header: 'Saldo Livre', key: 'saldo', width: 20 },
       ];
 
-      // 2. Adicionar Dados
-      const dataRows = sortedResults.map(res => [
-        res.school.name,
-        res.school.treasurerName || 'PENDENTE',
-        res.school.treasurerCpf || '---',
-        res.school.viceTreasurerName || 'Cargo não existente',
-        res.school.viceTreasurerName ? (res.school.viceTreasurerCpf || '---') : '---',
-        (res.school.realizedValues['inadimplencia_mes'] || 0) / 100,
-        res.points,
-        res.inadimplenciaRankingBonus,
-        res.managementBonus,
-        res.anrsBonus,
-        res.totalTreasurerPrize,
-        res.vicePrize,
-        res.statusText.toUpperCase()
-      ]);
+      // 2. Adicionar Dados (Separando Tesoureiro e Vice em linhas diferentes)
+      const dataRows: any[] = [];
 
-      // 3. Formatar como TABELA do Excel
-      worksheet.addTable({
-        name: 'TabelaResumo',
-        ref: 'A1',
-        headerRow: true,
-        totalsRow: true,
-        style: {
-          theme: 'TableStyleMedium9',
-          showRowStripes: true,
-        },
-        columns: [
-          { name: 'UNIDADE', totalsRowLabel: 'TOTAL GERAL:' },
-          { name: 'TESOUREIRO(A)' },
-          { name: 'CPF TESOUREIRO' },
-          { name: 'VICE-TESOUREIRO(A)' },
-          { name: 'CPF VICE' },
-          { name: 'INAD. MÊS' },
-          { name: 'PONTUAÇÃO', totalsRowFunction: 'sum' },
-          { name: 'BÔNUS RANKING', totalsRowFunction: 'sum' },
-          { name: 'BÔNUS GESTÃO', totalsRowFunction: 'sum' },
-          { name: 'BÔNUS ANRS', totalsRowFunction: 'sum' },
-          { name: 'TESOUREIRO(A)', totalsRowFunction: 'sum' },
-          { name: 'REPASSE VICE', totalsRowFunction: 'sum' },
-          { name: 'STATUS' },
-        ],
-        rows: dataRows
-      });
-
-      // 4. Estilização de Células (Moeda, Porcentagem, Alinhamento)
-      worksheet.eachRow((row, rowNumber) => {
-        row.alignment = { vertical: 'middle' };
-
-        if (rowNumber > 1) {
-          // Formatar Porcentagem
-          row.getCell(6).numFmt = '0.00%';
-          // Formatar Moeda
-          for (let i = 8; i <= 12; i++) {
-            row.getCell(i).numFmt = '"R$ "#,##0.00';
-            row.getCell(i).alignment = { horizontal: 'right' };
-          }
+      sortedResults.forEach(res => {
+        // Linha do Tesoureiro
+        if (res.school.treasurerName) {
+          dataRows.push({
+            nome: res.school.treasurerName,
+            cpf: (res.school.treasurerCpf || '').replace(/\D/g, ''),
+            saldo: res.totalTreasurerPrize
+          });
         }
 
-        row.getCell(7).alignment = { horizontal: 'center' };
-        row.getCell(13).alignment = { horizontal: 'center' };
+        // Linha do Vice-Tesoureiro
+        if (res.school.viceTreasurerName) {
+          dataRows.push({
+            nome: res.school.viceTreasurerName,
+            cpf: (res.school.viceTreasurerCpf || '').replace(/\D/g, ''),
+            saldo: res.vicePrize
+          });
+        }
+      });
+
+      // 3. Adicionar as linhas ao worksheet
+      worksheet.addRows(dataRows);
+
+      // 4. Estilização de Células (Tudo Alinhado à ESQUERDA como no exemplo)
+      worksheet.eachRow((row, rowNumber) => {
+        // Alinhamento horizontal à esquerda para TODAS as células
+        row.eachCell((cell) => {
+          cell.alignment = { vertical: 'middle', horizontal: 'left' };
+        });
+
+        if (rowNumber > 1) {
+          // Formatar CPF como Texto (para manter zeros à esquerda)
+          const cpfCell = row.getCell(2);
+          cpfCell.numFmt = '@';
+          cpfCell.value = cpfCell.value?.toString(); // Forçar string
+
+          // Formatar Moeda no Saldo Livre (sem o R$, apenas números com vírgula)
+          const saldoCell = row.getCell(3);
+          // Usamos um formato que garante 2 casas decimais e separador de milhar
+          saldoCell.numFmt = '#,##0.00';
+        } else {
+          // Header bold
+          row.font = { bold: true };
+        }
       });
 
       // 5. Download

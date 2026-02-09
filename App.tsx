@@ -130,10 +130,10 @@ const App: React.FC = () => {
             { data: evaluationsData },
             { data: configData }
           ] = await Promise.all([
-            supabase.from('schools').select('*'),
-            supabase.from('periods').select('*'),
-            supabase.from('evaluations').select('*'),
-            supabase.from('app_config').select('*').single()
+            supabase.from('schools').select('*').eq('user_id', session.user.id),
+            supabase.from('periods').select('*').eq('user_id', session.user.id),
+            supabase.from('evaluations').select('*').eq('user_id', session.user.id),
+            supabase.from('app_config').select('*').eq('user_id', session.user.id).maybeSingle()
           ]);
 
           if (schoolsData) {
@@ -212,8 +212,12 @@ const App: React.FC = () => {
       }
     };
 
-    fetchData();
-  }, []);
+    if (session) {
+      fetchData();
+    } else if (!authLoading) {
+      setLoading(false);
+    }
+  }, [session, authLoading]);
 
   const activePeriod = useMemo(() => periods.find(p => p.id === activePeriodId) || null, [periods, activePeriodId]);
   const activeSchool = useMemo(() => schools.find(s => s.id === activeSchoolId) || null, [schools, activeSchoolId]);
@@ -600,9 +604,9 @@ const App: React.FC = () => {
     newAnrsBonus: AnrsBonusConfig
   ) => {
     setSyncing(true);
-    if (isConfigured && supabase) {
+    if (isConfigured && supabase && session?.user?.id) {
       await supabase.from('app_config').upsert({
-        id: 1,
+        user_id: session.user.id,
         thresholds: newThresholds,
         inadimplencia_ranking_config: newInadRanking,
         management_bonus_config: newMgmtBonus,
