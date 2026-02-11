@@ -159,17 +159,36 @@ const App: React.FC = () => {
           ]);
 
           if (schoolsData) {
-            const mappedSchools: SchoolUnit[] = schoolsData.map((s: any) => ({
-              id: s.id,
-              name: s.name,
-              targets: s.targets || {},
-              treasurerName: s.treasurer_name,
-              treasurerCpf: s.treasurer_cpf,
-              viceTreasurerName: s.vice_treasurer_name,
-              viceTreasurerCpf: s.vice_treasurer_cpf,
-              isLocked: s.is_locked,
-              custom_categories: s.custom_categories
-            }));
+            const mappedSchools: SchoolUnit[] = schoolsData.map((s: any) => {
+              let cats = s.custom_categories || INITIAL_CATEGORIES;
+
+              // MIGRATION: Ensure 'inadimplencia_mes' uses latest constants
+              const latestInadimplencia = INITIAL_CATEGORIES.find(c => c.id === 'inadimplencia_mes');
+              if (latestInadimplencia && cats) {
+                const idx = cats.findIndex((c: Category) => c.id === 'inadimplencia_mes');
+                if (idx !== -1) {
+                  const currentThresholds = cats[idx].metricThresholds || [];
+                  const latestThresholds = latestInadimplencia.metricThresholds || [];
+                  if (JSON.stringify(currentThresholds) !== JSON.stringify(latestThresholds)) {
+                    const newCats = [...cats];
+                    newCats[idx] = latestInadimplencia;
+                    cats = newCats;
+                  }
+                }
+              }
+
+              return {
+                id: s.id,
+                name: s.name,
+                targets: s.targets || {},
+                treasurerName: s.treasurer_name,
+                treasurerCpf: s.treasurer_cpf,
+                viceTreasurerName: s.vice_treasurer_name,
+                viceTreasurerCpf: s.vice_treasurer_cpf,
+                isLocked: s.is_locked,
+                custom_categories: cats
+              };
+            });
             setSchools(mappedSchools);
 
             const customCats: Record<string, Category[]> = {};
@@ -457,14 +476,60 @@ const App: React.FC = () => {
 
   const handleInadimplenciaRankingInput = (value: number) => {
     if (!activeSchoolId || !activePeriodId || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized) return;
-    updateEvaluation({
+
+    // Atualiza tanto o ranking quanto o realizado da categoria inadimplencia_mes
+    const updatedRealizedValues = { ...realizedValues, inadimplencia_mes: value };
+
+    const evaluationUpdates: Partial<Evaluation> = {
       inadimplenciaRankingPercentage: value,
-      realizedValues: { ...realizedValues, inadimplencia_mes: value }
-    });
+      realizedValues: updatedRealizedValues
+    };
+
+    updateEvaluation(evaluationUpdates);
   };
 
   const handleFinalize = async () => {
     if (!activeSchoolId || !activePeriodId || !activeSchool) return;
+
+    // Validação: Verificar se todos os campos estão preenchidos
+    const missingFields: string[] = [];
+
+    // 1. Verificar Ranking de Inadimplência
+    if (inadimplenciaRankingPercentage === undefined || inadimplenciaRankingPercentage === null) {
+      missingFields.push("Inadimplência para Ranking");
+    }
+
+    // 2. Verificar Categorias Ativas
+    activeCategories.forEach(cat => {
+      // Pula validação se o alvo for obrigatório e estiver faltando (o critério estaria desabilitado/não avaliado)
+      // Mas se o usuário deve ignorar, ele não preenche. Se a regra é "toda a avaliação", assumimos que
+      // critérios habilitados devem ter valor.
+
+      const isTargetRequired = cat.id === 'orcamento_bi' || cat.id === 'descontos_concedidos';
+      const target = activeSchool.targets?.[cat.id] || 0;
+
+      // Se falta meta obrigatória, tecnicamente não dá pra avaliar. Vamos considerar que se não tem meta,
+      // ele não bloqueia o salvamento (pois o critério conta como 0 pts).
+      if (isTargetRequired && target <= 0) return;
+
+      const model = cat.evaluationModel;
+
+      if (model === EvaluationModel.MANUAL || !model) {
+        if (!selections[cat.id]) {
+          missingFields.push(cat.name);
+        }
+      } else {
+        // Modelos métricos
+        if (realizedValues[cat.id] === undefined || realizedValues[cat.id] === null) {
+          missingFields.push(cat.name);
+        }
+      }
+    });
+
+    if (missingFields.length > 0) {
+      alert(`Não é possível finalizar a avaliação. Os seguintes itens não foram preenchidos:\n\n- ${missingFields.join('\n- ')}\n\nPor favor, complete todas as avaliações.`);
+      return;
+    }
 
     const snapshot = {
       treasurerName: activeSchool.treasurerName,
@@ -478,13 +543,7 @@ const App: React.FC = () => {
       vicePrize: vicePrize,
       totalPoints: totalPoints,
       inadimplenciaRank: inadimplenciaRank,
-      awardLevel: awardLevel,
-      bonusConfigs: {
-        managementBonusConfig,
-        anrsBonusConfig,
-        inadimplenciaRankingConfig,
-        thresholds
-      }
+      awardLevel: awardLevel
     };
 
     await updateEvaluation({
