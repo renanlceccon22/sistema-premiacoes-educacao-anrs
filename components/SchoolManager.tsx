@@ -12,6 +12,7 @@ interface SchoolManagerProps {
   onRemoveSchool: (id: string) => void;
   onSelectSchool: (id: string) => void;
   onUpdateTargets: (schoolId: string, targets: Record<string, number>, additionalData?: Partial<SchoolUnit>) => void;
+  isReadOnly?: boolean;
 }
 
 const SchoolManager: React.FC<SchoolManagerProps> = ({
@@ -21,7 +22,8 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
   onAddSchool,
   onRemoveSchool,
   onSelectSchool,
-  onUpdateTargets
+  onUpdateTargets,
+  isReadOnly
 }) => {
   const [newSchoolName, setNewSchoolName] = useState('');
   const [newTreasurerName, setNewTreasurerName] = useState('');
@@ -87,7 +89,12 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
 
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (newSchoolName.trim()) {
+
+    const isFormValid = newSchoolName.trim() &&
+      newTreasurerName.trim() &&
+      newTreasurerCpf.length === 14;
+
+    if (isFormValid) {
       const payload: Partial<SchoolUnit> = {
         name: newSchoolName.trim(),
         treasurerName: newTreasurerName,
@@ -168,7 +175,10 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
                   01. Identificação da Unidade
                 </h4>
                 <div>
-                  <label className="block text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1.5 ml-1">Nome da Unidade</label>
+                  <label className="block text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1.5 ml-1 flex items-center gap-1">
+                    Nome da Unidade
+                    <span className="text-red-500 animate-pulse">*</span>
+                  </label>
                   <input
                     autoFocus
                     type="text"
@@ -189,7 +199,10 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
                   </h4>
                   <div className="space-y-3 bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
                     <div>
-                      <label className="block text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Nome Completo</label>
+                      <label className="block text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1 flex items-center gap-1">
+                        Nome Completo
+                        <span className="text-red-500 animate-pulse">*</span>
+                      </label>
                       <input
                         type="text"
                         value={newTreasurerName}
@@ -198,7 +211,10 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
                       />
                     </div>
                     <div>
-                      <label className="block text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">CPF</label>
+                      <label className="block text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1 flex items-center gap-1">
+                        CPF
+                        <span className="text-red-500 animate-pulse">*</span>
+                      </label>
                       <input
                         type="text"
                         value={newTreasurerCpf}
@@ -283,7 +299,7 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
               </button>
               <button
                 onClick={() => handleSubmit()}
-                disabled={!newSchoolName.trim()}
+                disabled={!newSchoolName.trim() || !newTreasurerName.trim() || newTreasurerCpf.length !== 14}
                 className="flex-[2] bg-[#003B71] text-white px-6 py-3 rounded-xl font-black text-[9px] uppercase tracking-widest hover:bg-[#002a51] transition-all shadow-xl shadow-blue-900/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -307,15 +323,17 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
           <span className="hidden sm:inline-block text-[10px] font-black uppercase text-slate-400 bg-slate-50 px-4 py-2 rounded-full border border-slate-100 tracking-widest">
             {schools.length} Unidades Registradas
           </span>
-          <button
-            onClick={handleOpenCreateModal}
-            className="flex-1 md:flex-none bg-[#003B71] text-white px-8 py-3.5 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-[#002a51] transition-all flex items-center justify-center shadow-xl shadow-blue-900/10 active:scale-95"
-          >
-            <svg className="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            Registrar Unidade
-          </button>
+          {!isReadOnly && (
+            <button
+              onClick={handleOpenCreateModal}
+              className="flex-1 md:flex-none bg-[#003B71] text-white px-8 py-3.5 rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-[#002a51] transition-all flex items-center justify-center shadow-xl shadow-blue-900/10 active:scale-95"
+            >
+              <svg className="w-5 h-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Registrar Unidade
+            </button>
+          )}
         </div>
       </div>
 
@@ -341,37 +359,39 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
                 </span>
               </div>
 
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleOpenEditModal(school.id);
-                  }}
-                  className={`p-2 rounded-xl transition-all opacity-0 group-hover:opacity-100 hover:scale-110 ${activeSchoolId === school.id
-                    ? 'text-white/40 hover:text-white hover:bg-white/10'
-                    : 'text-slate-300 hover:text-[#003B71] hover:bg-blue-50'}`}
-                  title="Editar Unidade"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                </button>
+              {!isReadOnly && (
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenEditModal(school.id);
+                    }}
+                    className={`p-2 rounded-xl transition-all opacity-0 group-hover:opacity-100 hover:scale-110 ${activeSchoolId === school.id
+                      ? 'text-white/40 hover:text-white hover:bg-white/10'
+                      : 'text-slate-300 hover:text-[#003B71] hover:bg-blue-50'}`}
+                    title="Editar Unidade"
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
 
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onRemoveSchool(school.id);
-                  }}
-                  className={`p-2 rounded-xl transition-all opacity-0 group-hover:opacity-100 hover:scale-110 ${activeSchoolId === school.id
-                    ? 'text-white/40 hover:text-red-300 hover:bg-white/10'
-                    : 'text-slate-300 hover:text-red-500 hover:bg-red-50'}`}
-                  title="Excluir Unidade"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                </button>
-              </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRemoveSchool(school.id);
+                    }}
+                    className={`p-2 rounded-xl transition-all opacity-0 group-hover:opacity-100 hover:scale-110 ${activeSchoolId === school.id
+                      ? 'text-white/40 hover:text-red-300 hover:bg-white/10'
+                      : 'text-slate-300 hover:text-red-500 hover:bg-red-50'}`}
+                    title="Excluir Unidade"
+                  >
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         ))}

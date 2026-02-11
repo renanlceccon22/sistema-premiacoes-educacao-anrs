@@ -15,6 +15,7 @@ interface PrizeConfigProps {
     managementBonus: ManagementBonusConfig,
     anrsBonus: AnrsBonusConfig
   ) => void;
+  isReadOnly?: boolean;
 }
 
 const PrizeConfig: React.FC<PrizeConfigProps> = ({
@@ -23,7 +24,8 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
   inadimplenciaRankingConfig,
   managementBonusConfig,
   anrsBonusConfig,
-  onUpdateAllBonusConfig
+  onUpdateAllBonusConfig,
+  isReadOnly
 }) => {
   const [isLocked, setIsLocked] = useState(true);
   // Removido: const [localValues, setLocalValues] = useState<PrizeValues>(prizeValues);
@@ -112,46 +114,48 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          {showSuccess && (
-            <span className="text-green-600 font-bold text-sm animate-pulse flex items-center">
-              <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-              </svg>
-              Atualizado!
-            </span>
-          )}
+        {!isReadOnly && (
+          <div className="flex items-center gap-3">
+            {showSuccess && (
+              <span className="text-green-600 font-bold text-sm animate-pulse flex items-center">
+                <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+                Atualizado!
+              </span>
+            )}
 
-          {isLocked ? (
-            <button
-              onClick={() => setIsLocked(false)}
-              className="bg-slate-100 text-slate-600 px-5 py-2.5 rounded-lg font-black text-xs hover:bg-slate-200 transition-all flex items-center gap-2 uppercase tracking-widest"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-              Editar Valores
-            </button>
-          ) : (
-            <div className="flex gap-2">
+            {isLocked ? (
               <button
-                onClick={() => setIsLocked(true)}
-                className="text-slate-400 px-4 py-2.5 rounded-lg font-bold text-xs hover:text-slate-600 transition-all uppercase tracking-widest"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleSave}
-                className="bg-[#003B71] text-white px-6 py-2.5 rounded-lg font-bold hover:bg-[#002a51] shadow-lg active:scale-95 transition-all flex items-center gap-2 uppercase text-xs tracking-widest"
+                onClick={() => setIsLocked(false)}
+                className="bg-slate-100 text-slate-600 px-5 py-2.5 rounded-lg font-black text-xs hover:bg-slate-200 transition-all flex items-center gap-2 uppercase tracking-widest"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
-                Gravar Configuração
+                Editar Valores
               </button>
-            </div>
-          )}
-        </div>
+            ) : (
+              <div className="flex gap-2">
+                <button
+                  onClick={() => setIsLocked(true)}
+                  className="text-slate-400 px-4 py-2.5 rounded-lg font-bold text-xs hover:text-slate-600 transition-all uppercase tracking-widest"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleSave}
+                  className="bg-[#003B71] text-white px-6 py-2.5 rounded-lg font-bold hover:bg-[#002a51] shadow-lg active:scale-95 transition-all flex items-center gap-2 uppercase text-xs tracking-widest"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                  </svg>
+                  Gravar Configuração
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Removido: Bloco Ranking de Desempenho (Pontuação Total) */}

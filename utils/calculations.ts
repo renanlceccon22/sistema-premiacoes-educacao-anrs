@@ -41,7 +41,7 @@ export const calculatePoints = (
   if (cat.evaluationModel === EvaluationModel.METRIC_RELATIVE) {
     limit1 = target + (thresholds[0] ?? 0);
     limit2 = target + (thresholds[1] ?? 0);
-  } else if (cat.evaluationModel === EvaluationModel.METRIC_ACCUMULATED) {
+  } else if (cat.evaluationModel === EvaluationModel.METRIC_ACCUMULATED || cat.id === 'orcamento_bi') {
     if (!periodLabel) return 0;
     const monthIndex = getMonthIndexFromLabel(periodLabel);
     const accumulatedTarget = (target / 12) * monthIndex;

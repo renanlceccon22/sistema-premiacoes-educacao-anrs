@@ -117,3 +117,10 @@ export interface AppState {
   activeSchoolId: string | null;
   activePeriodId: string | null;
 }
+
+export interface User {
+  id: string;
+  email: string;
+  role?: string;
+  full_name?: string;
+}
