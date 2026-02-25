@@ -266,24 +266,47 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
       doc.setFillColor(253, 184, 19); // Gold #FDB813
       doc.rect(15, 33, 50, 2, 'F');
 
-      const body = sortedResults.map(res => [
-        {
-          content: `${res.school.name}\nTESOUREIRO(A): ${res.school.treasurerName || 'PENDENTE'} (${res.school.treasurerCpf || '---'})\nVICE-TESOUREIRO(A): ${res.school.viceTreasurerName || 'CARGO NÃO EXISTENTE'} ${res.school.viceTreasurerName ? `(${res.school.viceTreasurerCpf || '---'})` : ''}`,
-          styles: { fontStyle: 'bold' }
-        },
-        formatPercentage(res.school.realizedValues['inadimplencia_mes'] || 0),
-        `${res.points} PTS`,
-        formatBRL(res.inadimplenciaRankingBonus),
-        formatBRL(res.managementBonus),
-        formatBRL(res.anrsBonus),
-        formatBRL(res.totalTreasurerPrize),
-        formatBRL(res.vicePrize),
-        res.statusText.toUpperCase()
-      ]);
+      const headRow = ['Unidade / Responsáveis', 'Inad. %', 'Pontos'];
+      if (inadimplenciaRankingConfig.enabled) headRow.push('Bônus Ranking');
+      if (managementBonusConfig.enabled) headRow.push('Bônus Gestão');
+      if (anrsBonusConfig.enabled) headRow.push('Bônus ANRS');
+      headRow.push('Tesoureiro(a)', 'Rep. Vice', 'Status');
+
+      const body = sortedResults.map(res => {
+        const row: any[] = [
+          {
+            content: `${res.school.name}\nTESOUREIRO(A): ${res.school.treasurerName || 'PENDENTE'} (${res.school.treasurerCpf || '---'})\nVICE-TESOUREIRO(A): ${res.school.viceTreasurerName || 'CARGO NÃO EXISTENTE'} ${res.school.viceTreasurerName ? `(${res.school.viceTreasurerCpf || '---'})` : ''}`,
+            styles: { fontStyle: 'bold' }
+          },
+          formatPercentage(res.school.realizedValues['inadimplencia_mes'] || 0),
+          `${res.points} PTS`
+        ];
+        if (inadimplenciaRankingConfig.enabled) row.push(formatBRL(res.inadimplenciaRankingBonus));
+        if (managementBonusConfig.enabled) row.push(formatBRL(res.managementBonus));
+        if (anrsBonusConfig.enabled) row.push(formatBRL(res.anrsBonus));
+        row.push(formatBRL(res.totalTreasurerPrize), formatBRL(res.vicePrize), res.statusText.toUpperCase());
+        return row;
+      });
+
+      // Calcular larguras e estilos dinâmicos
+      const dynamicColumnStyles: Record<number, any> = {
+        0: { cellWidth: 95, overflow: 'linebreak' },
+        1: { halign: 'center', cellWidth: 18 },
+        2: { halign: 'center', cellWidth: 18 }
+      };
+
+      let currentIdx = 3;
+      if (inadimplenciaRankingConfig.enabled) dynamicColumnStyles[currentIdx++] = { halign: 'right', cellWidth: 22 };
+      if (managementBonusConfig.enabled) dynamicColumnStyles[currentIdx++] = { halign: 'right', cellWidth: 22 };
+      if (anrsBonusConfig.enabled) dynamicColumnStyles[currentIdx++] = { halign: 'right', cellWidth: 22 };
+
+      dynamicColumnStyles[currentIdx++] = { halign: 'right', fontStyle: 'bold', cellWidth: 25 };
+      dynamicColumnStyles[currentIdx++] = { halign: 'right', cellWidth: 25 };
+      dynamicColumnStyles[currentIdx++] = { halign: 'center', fontSize: 6.5, cellWidth: 20 };
 
       autoTable(doc, {
         startY: 50,
-        head: [['Unidade / Responsáveis', 'Inad. %', 'Pontos', 'Bônus Ranking', 'Bônus Gestão', 'Bônus ANRS', 'Tesoureiro(a)', 'Rep. Vice', 'Status']],
+        head: [headRow],
         body: body,
         theme: 'striped',
         headStyles: {
@@ -293,17 +316,7 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
           fontStyle: 'bold',
           halign: 'center'
         },
-        columnStyles: {
-          0: { cellWidth: 95, overflow: 'linebreak' },
-          1: { halign: 'center', cellWidth: 18 },
-          2: { halign: 'center', cellWidth: 18 },
-          3: { halign: 'right', cellWidth: 22 },
-          4: { halign: 'right', cellWidth: 22 },
-          5: { halign: 'right', cellWidth: 22 },
-          6: { halign: 'right', fontStyle: 'bold', cellWidth: 25 },
-          7: { halign: 'right', cellWidth: 25 },
-          8: { halign: 'center', fontSize: 6.5, cellWidth: 20 }
-        },
+        columnStyles: dynamicColumnStyles,
         styles: {
           fontSize: 7,
           cellPadding: 2.5,
@@ -380,9 +393,9 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
               <th className="px-6 py-4 border-b border-slate-100">Unidade</th>
               <th className="px-6 py-4 border-b border-slate-100">Inad. Mês (%)</th>
               <th className="px-6 py-4 border-b border-slate-100">Pontuação</th>
-              <th className="px-6 py-4 border-b border-slate-100">Bônus Ranking</th>
-              <th className="px-6 py-4 border-b border-slate-100">Bônus Gestão</th>
-              <th className="px-6 py-4 border-b border-slate-100">Bônus ANRS</th>
+              {inadimplenciaRankingConfig.enabled && <th className="px-6 py-4 border-b border-slate-100">Bônus Ranking</th>}
+              {managementBonusConfig.enabled && <th className="px-6 py-4 border-b border-slate-100">Bônus Gestão</th>}
+              {anrsBonusConfig.enabled && <th className="px-6 py-4 border-b border-slate-100">Bônus ANRS</th>}
               <th className="px-6 py-4 border-b border-slate-100 text-right">Tesoureiro(a)</th>
               <th className="px-6 py-4 border-b border-slate-100 text-right">Vice-Tesoureiro(a)</th>
               <th className="px-6 py-4 border-b border-slate-100 text-center">Status</th>
@@ -402,20 +415,26 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
                     {res.points} PTS
                   </span>
                 </td>
-                <td className="px-6 py-4 border-b border-slate-100">
-                  {res.inadimplenciaRankingBonus > 0 ? (
-                    <div className="flex flex-col">
-                      <span className="text-green-600 text-sm font-black">+{formatBRL(res.inadimplenciaRankingBonus)}</span>
-                      <span className="text-[10px] text-[#003B71] font-black uppercase tracking-widest">{res.inadimplenciaRank}º Lugar</span>
-                    </div>
-                  ) : <span className="text-slate-200">---</span>}
-                </td>
-                <td className="px-6 py-4 border-b border-slate-100">
-                  {res.managementBonus > 0 ? <span className="text-green-600 text-sm font-black">+{formatBRL(res.managementBonus)}</span> : <span className="text-slate-200">---</span>}
-                </td>
-                <td className="px-6 py-4 border-b border-slate-100">
-                  {res.anrsBonus > 0 ? <span className="text-green-600 text-sm font-black">+{formatBRL(res.anrsBonus)}</span> : <span className="text-slate-200">---</span>}
-                </td>
+                {inadimplenciaRankingConfig.enabled && (
+                  <td className="px-6 py-4 border-b border-slate-100">
+                    {res.inadimplenciaRankingBonus > 0 ? (
+                      <div className="flex flex-col">
+                        <span className="text-green-600 text-sm font-black">+{formatBRL(res.inadimplenciaRankingBonus)}</span>
+                        <span className="text-[10px] text-[#003B71] font-black uppercase tracking-widest">{res.inadimplenciaRank}º Lugar</span>
+                      </div>
+                    ) : <span className="text-slate-200">---</span>}
+                  </td>
+                )}
+                {managementBonusConfig.enabled && (
+                  <td className="px-6 py-4 border-b border-slate-100">
+                    {res.managementBonus > 0 ? <span className="text-green-600 text-sm font-black">+{formatBRL(res.managementBonus)}</span> : <span className="text-slate-200">---</span>}
+                  </td>
+                )}
+                {anrsBonusConfig.enabled && (
+                  <td className="px-6 py-4 border-b border-slate-100">
+                    {res.anrsBonus > 0 ? <span className="text-green-600 text-sm font-black">+{formatBRL(res.anrsBonus)}</span> : <span className="text-slate-200">---</span>}
+                  </td>
+                )}
                 <td className="px-6 py-4 border-b border-slate-100 text-right font-black text-slate-600">
                   {formatBRL(res.totalTreasurerPrize)}
                 </td>
@@ -432,7 +451,7 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
           </tbody>
           <tfoot>
             <tr className="bg-slate-900 text-white font-black">
-              <td colSpan={6} className="px-6 py-6 text-right uppercase tracking-[0.2em] text-[10px]">Total de Repasses no Período</td>
+              <td colSpan={3 + (inadimplenciaRankingConfig.enabled ? 1 : 0) + (managementBonusConfig.enabled ? 1 : 0) + (anrsBonusConfig.enabled ? 1 : 0)} className="px-6 py-6 text-right uppercase tracking-[0.2em] text-[10px]">Total de Repasses no Período</td>
               <td className="px-6 py-6 text-right text-lg border-l border-white/10">{formatBRL(totalTreasurer)}</td>
               <td className="px-6 py-6 text-right text-lg border-l border-white/10">{formatBRL(totalVice)}</td>
               <td className="bg-[#FDB813] text-[#003B71] text-center text-xs uppercase tracking-widest p-0">

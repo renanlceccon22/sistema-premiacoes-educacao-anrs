@@ -216,11 +216,33 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
       */}
 
       {/* Novo Bloco: Premiação Inadimpl. Ranking */}
-      <div className="mb-4 p-3.5 rounded-2xl border border-blue-100/50 bg-blue-50/50">
-        <h3 className="text-[10px] font-black text-[#003B71]/60 uppercase tracking-[0.2em] mb-2.5 flex items-center">
-          <span className="w-6 h-[1px] bg-blue-200 mr-3"></span>
-          Ranking de Inadimplência
-        </h3>
+      <div className={`mb-4 p-3.5 rounded-2xl border border-blue-100/50 transition-all ${localInadimplenciaRankingConfig.enabled ? 'bg-blue-50/50' : 'bg-slate-50 opacity-60'}`}>
+        <div className="flex justify-between items-center mb-2.5">
+          <h3 className="text-[10px] font-black text-[#003B71]/60 uppercase tracking-[0.2em] flex items-center">
+            <span className="w-6 h-[1px] bg-blue-200 mr-3"></span>
+            Ranking de Inadimplência
+          </h3>
+          {!isReadOnly && !isLocked && (
+            <label className="flex items-center cursor-pointer gap-2">
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{localInadimplenciaRankingConfig.enabled ? 'Ativo' : 'Inativo'}</span>
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  className="sr-only"
+                  checked={localInadimplenciaRankingConfig.enabled}
+                  onChange={(e) => setLocalInadimplenciaRankingConfig(prev => ({ ...prev, enabled: e.target.checked }))}
+                />
+                <div className={`block w-8 h-4 rounded-full transition-colors ${localInadimplenciaRankingConfig.enabled ? 'bg-blue-600' : 'bg-slate-300'}`}></div>
+                <div className={`absolute left-0.5 top-0.5 bg-white w-3 h-3 rounded-full transition-transform ${localInadimplenciaRankingConfig.enabled ? 'translate-x-4' : ''}`}></div>
+              </div>
+            </label>
+          )}
+          {isLocked && (
+            <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full ${localInadimplenciaRankingConfig.enabled ? 'bg-blue-100 text-blue-600' : 'bg-slate-200 text-slate-500'}`}>
+              {localInadimplenciaRankingConfig.enabled ? 'Ativo' : 'Inativo'}
+            </span>
+          )}
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           {[
             { key: 'inad_rank_1', label: '1º Lugar', value: localInadimplenciaRankingConfig.firstPlace },
@@ -239,9 +261,10 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
                   <input
                     type="text"
                     inputMode="numeric"
+                    disabled={!localInadimplenciaRankingConfig.enabled}
                     value={displayValues[item.key]}
                     onChange={(e) => handleCurrencyChange(item.key, e.target.value)}
-                    className="w-full bg-blue-50/30 border border-blue-100 rounded-lg pl-9 pr-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner"
+                    className={`w-full bg-blue-50/30 border border-blue-100 rounded-lg pl-9 pr-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner ${!localInadimplenciaRankingConfig.enabled ? 'opacity-50 grayscale' : ''}`}
                   />
                 </div>
               )}
@@ -251,11 +274,33 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
       </div>
 
       {/* Novo Bloco: Premiação de Gestão */}
-      <div className="mb-4 p-3.5 rounded-2xl border border-blue-100/50 bg-blue-50/50">
-        <h3 className="text-[10px] font-black text-[#003B71]/60 uppercase tracking-[0.2em] mb-2.5 flex items-center">
-          <span className="w-6 h-[1px] bg-blue-200 mr-3"></span>
-          Premiação de Gestão
-        </h3>
+      <div className={`mb-4 p-3.5 rounded-2xl border border-blue-100/50 transition-all ${localManagementBonusConfig.enabled ? 'bg-blue-50/50' : 'bg-slate-50 opacity-60'}`}>
+        <div className="flex justify-between items-center mb-2.5">
+          <h3 className="text-[10px] font-black text-[#003B71]/60 uppercase tracking-[0.2em] flex items-center">
+            <span className="w-6 h-[1px] bg-blue-200 mr-3"></span>
+            Premiação de Gestão
+          </h3>
+          {!isReadOnly && !isLocked && (
+            <label className="flex items-center cursor-pointer gap-2">
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{localManagementBonusConfig.enabled ? 'Ativo' : 'Inativo'}</span>
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  className="sr-only"
+                  checked={localManagementBonusConfig.enabled}
+                  onChange={(e) => setLocalManagementBonusConfig(prev => ({ ...prev, enabled: e.target.checked }))}
+                />
+                <div className={`block w-8 h-4 rounded-full transition-colors ${localManagementBonusConfig.enabled ? 'bg-blue-600' : 'bg-slate-300'}`}></div>
+                <div className={`absolute left-0.5 top-0.5 bg-white w-3 h-3 rounded-full transition-transform ${localManagementBonusConfig.enabled ? 'translate-x-4' : ''}`}></div>
+              </div>
+            </label>
+          )}
+          {isLocked && (
+            <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full ${localManagementBonusConfig.enabled ? 'bg-blue-100 text-blue-600' : 'bg-slate-200 text-slate-500'}`}>
+              {localManagementBonusConfig.enabled ? 'Ativo' : 'Inativo'}
+            </span>
+          )}
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="p-3.5 rounded-xl bg-white shadow-sm border border-white transition-all hover:shadow-md">
             <label className="block text-[10px] font-bold uppercase text-blue-400/70 mb-1.5 tracking-[0.15em]">Mínimo para Bônus</label>
@@ -266,9 +311,10 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
             ) : (
               <input
                 type="number"
+                disabled={!localManagementBonusConfig.enabled}
                 value={localManagementBonusConfig.pointThreshold}
                 onChange={(e) => setLocalManagementBonusConfig(prev => ({ ...prev, pointThreshold: Number(e.target.value) }))}
-                className="w-full bg-blue-50/30 border border-blue-100 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner"
+                className={`w-full bg-blue-50/30 border border-blue-100 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner ${!localManagementBonusConfig.enabled ? 'opacity-50 grayscale' : ''}`}
               />
             )}
           </div>
@@ -284,9 +330,10 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
                 <input
                   type="text"
                   inputMode="numeric"
+                  disabled={!localManagementBonusConfig.enabled}
                   value={displayValues['management_bonus']}
                   onChange={(e) => handleCurrencyChange('management_bonus', e.target.value)}
-                  className="w-full bg-blue-50/30 border border-blue-100 rounded-lg pl-9 pr-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner"
+                  className={`w-full bg-blue-50/30 border border-blue-100 rounded-lg pl-9 pr-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner ${!localManagementBonusConfig.enabled ? 'opacity-50 grayscale' : ''}`}
                 />
               </div>
             )}
@@ -295,11 +342,33 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
       </div>
 
       {/* Novo Bloco: Premiação Meta ANRS */}
-      <div className="p-3.5 rounded-2xl border border-blue-100/50 bg-blue-50/50">
-        <h3 className="text-[10px] font-black text-[#003B71]/60 uppercase tracking-[0.2em] mb-2.5 flex items-center">
-          <span className="w-6 h-[1px] bg-blue-200 mr-3"></span>
-          Premiação Meta ANRS
-        </h3>
+      <div className={`p-3.5 rounded-2xl border border-blue-100/50 transition-all ${localAnrsBonusConfig.enabled ? 'bg-blue-50/50' : 'bg-slate-50 opacity-60'}`}>
+        <div className="flex justify-between items-center mb-2.5">
+          <h3 className="text-[10px] font-black text-[#003B71]/60 uppercase tracking-[0.2em] flex items-center">
+            <span className="w-6 h-[1px] bg-blue-200 mr-3"></span>
+            Premiação Meta ANRS
+          </h3>
+          {!isReadOnly && !isLocked && (
+            <label className="flex items-center cursor-pointer gap-2">
+              <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{localAnrsBonusConfig.enabled ? 'Ativo' : 'Inativo'}</span>
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  className="sr-only"
+                  checked={localAnrsBonusConfig.enabled}
+                  onChange={(e) => setLocalAnrsBonusConfig(prev => ({ ...prev, enabled: e.target.checked }))}
+                />
+                <div className={`block w-8 h-4 rounded-full transition-colors ${localAnrsBonusConfig.enabled ? 'bg-blue-600' : 'bg-slate-300'}`}></div>
+                <div className={`absolute left-0.5 top-0.5 bg-white w-3 h-3 rounded-full transition-transform ${localAnrsBonusConfig.enabled ? 'translate-x-4' : ''}`}></div>
+              </div>
+            </label>
+          )}
+          {isLocked && (
+            <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded-full ${localAnrsBonusConfig.enabled ? 'bg-blue-100 text-blue-600' : 'bg-slate-200 text-slate-500'}`}>
+              {localAnrsBonusConfig.enabled ? 'Ativo' : 'Inativo'}
+            </span>
+          )}
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="p-3.5 rounded-xl bg-white shadow-sm border border-white transition-all hover:shadow-md">
             <label className="block text-[10px] font-bold uppercase text-blue-400/70 mb-1.5 tracking-[0.15em]">Mínimo para Bônus</label>
@@ -310,9 +379,10 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
             ) : (
               <input
                 type="number"
+                disabled={!localAnrsBonusConfig.enabled}
                 value={localAnrsBonusConfig.pointThreshold}
                 onChange={(e) => setLocalAnrsBonusConfig(prev => ({ ...prev, pointThreshold: Number(e.target.value) }))}
-                className="w-full bg-blue-50/30 border border-blue-100 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner"
+                className={`w-full bg-blue-50/30 border border-blue-100 rounded-lg px-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner ${!localAnrsBonusConfig.enabled ? 'opacity-50 grayscale' : ''}`}
               />
             )}
           </div>
@@ -328,9 +398,10 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
                 <input
                   type="text"
                   inputMode="numeric"
+                  disabled={!localAnrsBonusConfig.enabled}
                   value={displayValues['anrs_bonus']}
                   onChange={(e) => handleCurrencyChange('anrs_bonus', e.target.value)}
-                  className="w-full bg-blue-50/30 border border-blue-100 rounded-lg pl-9 pr-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner"
+                  className={`w-full bg-blue-50/30 border border-blue-100 rounded-lg pl-9 pr-3 py-1.5 text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all shadow-inner ${!localAnrsBonusConfig.enabled ? 'opacity-50 grayscale' : ''}`}
                 />
               </div>
             )}

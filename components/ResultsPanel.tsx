@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { AwardLevel } from '../types';
+import { AwardLevel, ManagementBonusConfig, AnrsBonusConfig, InadimplenciaRankingConfig } from '../types';
 import { formatBRL } from '../utils/formatting';
 
 interface ResultsPanelProps {
@@ -18,6 +18,9 @@ interface ResultsPanelProps {
   onReopen: () => void;
   schoolName?: string;
   periodLabel?: string;
+  managementBonusConfig: ManagementBonusConfig;
+  anrsBonusConfig: AnrsBonusConfig;
+  inadimplenciaRankingConfig: InadimplenciaRankingConfig;
 }
 
 const ResultsPanel: React.FC<ResultsPanelProps> = ({
@@ -34,7 +37,10 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
   onFinalize,
   onReopen,
   schoolName = "Unidade Escolar",
-  periodLabel = ""
+  periodLabel = "",
+  managementBonusConfig,
+  anrsBonusConfig,
+  inadimplenciaRankingConfig
 }) => {
   const [isReopening, setIsReopening] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
@@ -90,46 +96,52 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
             <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 border-b border-slate-200 pb-3">Detalhamento das Conquistas</h3>
 
             {/* Premiação Gestão - Medalha */}
-            <div className="flex justify-between items-center group">
-              <div className="flex items-center">
-                <div className={`p-2 rounded-xl mr-3 shadow-sm transition-all duration-500 ${managementBonus > 0 ? 'bg-green-500 text-white scale-110 shadow-green-100' : 'bg-white text-slate-200 border border-slate-100'}`}>
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-                    <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" strokeWidth="2" />
-                  </svg>
+            {managementBonusConfig.enabled && (
+              <div className="flex justify-between items-center group">
+                <div className="flex items-center">
+                  <div className={`p-2 rounded-xl mr-3 shadow-sm transition-all duration-500 ${managementBonus > 0 ? 'bg-green-500 text-white scale-110 shadow-green-100' : 'bg-white text-slate-200 border border-slate-100'}`}>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                      <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" strokeWidth="2" />
+                    </svg>
+                  </div>
+                  <span className={`text-[10px] font-black uppercase tracking-widest ${managementBonus > 0 ? 'text-slate-800' : 'text-slate-400'}`}>Premiação Gestão</span>
                 </div>
-                <span className={`text-[10px] font-black uppercase tracking-widest ${managementBonus > 0 ? 'text-slate-800' : 'text-slate-400'}`}>Premiação Gestão</span>
+                <p className={`text-sm font-black ${managementBonus > 0 ? 'text-green-600' : 'text-slate-300'}`}>{formatBRL(managementBonus)}</p>
               </div>
-              <p className={`text-sm font-black ${managementBonus > 0 ? 'text-green-600' : 'text-slate-300'}`}>{formatBRL(managementBonus)}</p>
-            </div>
+            )}
 
             {/* Premiação Meta ANRS - Troféu */}
-            <div className="flex justify-between items-center group">
-              <div className="flex items-center">
-                <div className={`p-2 rounded-xl mr-3 shadow-sm transition-all duration-500 ${anrsBonus > 0 ? 'bg-green-500 text-white scale-110 shadow-green-100' : 'bg-white text-slate-200 border border-slate-100'}`}>
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-                    <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" strokeWidth="2" />
-                  </svg>
+            {anrsBonusConfig.enabled && (
+              <div className="flex justify-between items-center group">
+                <div className="flex items-center">
+                  <div className={`p-2 rounded-xl mr-3 shadow-sm transition-all duration-500 ${anrsBonus > 0 ? 'bg-green-500 text-white scale-110 shadow-green-100' : 'bg-white text-slate-200 border border-slate-100'}`}>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                      <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" strokeWidth="2" />
+                    </svg>
+                  </div>
+                  <span className={`text-[10px] font-black uppercase tracking-widest ${anrsBonus > 0 ? 'text-slate-800' : 'text-slate-400'}`}>Premiação Meta ANRS</span>
                 </div>
-                <span className={`text-[10px] font-black uppercase tracking-widest ${anrsBonus > 0 ? 'text-slate-800' : 'text-slate-400'}`}>Premiação Meta ANRS</span>
+                <p className={`text-sm font-black ${anrsBonus > 0 ? 'text-green-600' : 'text-slate-300'}`}>{formatBRL(anrsBonus)}</p>
               </div>
-              <p className={`text-sm font-black ${anrsBonus > 0 ? 'text-green-600' : 'text-slate-300'}`}>{formatBRL(anrsBonus)}</p>
-            </div>
+            )}
 
             {/* Premiação Ranking - Podium/Estrela */}
-            <div className="flex justify-between items-center group">
-              <div className="flex items-center">
-                <div className={`p-2 rounded-xl mr-3 shadow-sm transition-all duration-500 ${inadimplenciaRankingBonus > 0 ? 'bg-green-500 text-white scale-110 shadow-green-100' : 'bg-white text-slate-200 border border-slate-100'}`}>
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-                    <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" strokeWidth="2" />
-                  </svg>
+            {inadimplenciaRankingConfig.enabled && (
+              <div className="flex justify-between items-center group">
+                <div className="flex items-center">
+                  <div className={`p-2 rounded-xl mr-3 shadow-sm transition-all duration-500 ${inadimplenciaRankingBonus > 0 ? 'bg-green-500 text-white scale-110 shadow-green-100' : 'bg-white text-slate-200 border border-slate-100'}`}>
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+                      <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" strokeWidth="2" />
+                    </svg>
+                  </div>
+                  <span className={`text-[10px] font-black uppercase tracking-widest ${inadimplenciaRankingBonus > 0 ? 'text-slate-800' : 'text-slate-400'}`}>Ranking Inadimplência {inadimplenciaRank ? `(${inadimplenciaRank}º)` : ''}</span>
                 </div>
-                <span className={`text-[10px] font-black uppercase tracking-widest ${inadimplenciaRankingBonus > 0 ? 'text-slate-800' : 'text-slate-400'}`}>Ranking Inadimplência {inadimplenciaRank ? `(${inadimplenciaRank}º)` : ''}</span>
+                <p className={`text-sm font-black ${inadimplenciaRankingBonus > 0 ? 'text-green-600' : 'text-slate-300'}`}>{formatBRL(inadimplenciaRankingBonus)}</p>
               </div>
-              <p className={`text-sm font-black ${inadimplenciaRankingBonus > 0 ? 'text-green-600' : 'text-slate-300'}`}>{formatBRL(inadimplenciaRankingBonus)}</p>
-            </div>
+            )}
 
             <div className="h-px bg-slate-200 w-full opacity-50 my-2"></div>
 

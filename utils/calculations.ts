@@ -109,7 +109,7 @@ export const calculateAllPrizes = (
   let inadimplenciaRankingBonus = 0;
 
   // 1. Cálculo do Ranking de Inadimplência
-  if (allSchoolsEvaluations.length > 0) {
+  if (inadimplenciaRankingConfig.enabled && allSchoolsEvaluations.length > 0) {
     const rankedEvaluations = allSchoolsEvaluations
       .filter(e => typeof e.inadimplenciaRankingPercentage === 'number' && e.inadimplenciaRankingPercentage >= 0)
       .sort((a, b) => a.inadimplenciaRankingPercentage! - b.inadimplenciaRankingPercentage!);
@@ -130,7 +130,7 @@ export const calculateAllPrizes = (
 
   // 2. Cálculo do Bônus de Gestão
   let managementBonus = 0;
-  if (activeSchoolEvaluationForBonus) {
+  if (managementBonusConfig.enabled && activeSchoolEvaluationForBonus) {
     const categories = activeSchoolEvaluationForBonus.categories;
     const adiantamentosCategory = categories.find(c => c.id === 'adiantamentos');
     const cartaoCorporativoCategory = categories.find(c => c.id === 'cartao_corporativo');
@@ -150,7 +150,7 @@ export const calculateAllPrizes = (
 
   // 3. Cálculo do Bônus Meta ANRS
   let anrsBonus = 0;
-  if (activeSchoolEvaluationForBonus) {
+  if (anrsBonusConfig.enabled && activeSchoolEvaluationForBonus) {
     const categories = activeSchoolEvaluationForBonus.categories;
     const inadimplenciaCategory = categories.find(c => c.id === 'inadimplencia_mes');
     const orcamentoCategory = categories.find(c => c.id === 'orcamento_bi');

@@ -11,16 +11,19 @@ export const INITIAL_INADIMPLENCIA_RANKING_CONFIG: InadimplenciaRankingConfig = 
   firstPlace: 200,
   secondPlace: 150,
   thirdPlace: 100,
+  enabled: true,
 };
 
 export const INITIAL_MANAGEMENT_BONUS_CONFIG: ManagementBonusConfig = {
   pointThreshold: 170,
   bonusValue: 100,
+  enabled: true,
 };
 
 export const INITIAL_ANRS_BONUS_CONFIG: AnrsBonusConfig = {
   pointThreshold: 240,
   bonusValue: 150,
+  enabled: true,
 };
 
 export const INITIAL_CATEGORIES: Category[] = [

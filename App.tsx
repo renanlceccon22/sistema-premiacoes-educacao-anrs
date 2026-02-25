@@ -969,6 +969,9 @@ const App: React.FC = () => {
                     onInadimplenciaRankingInput={handleInadimplenciaRankingInput}
                     onUpdateCategories={handleUpdateCategories}
                     activePeriodLabel={activePeriod?.label}
+                    managementBonusConfig={managementBonusConfig}
+                    anrsBonusConfig={anrsBonusConfig}
+                    inadimplenciaRankingConfig={inadimplenciaRankingConfig}
                   />
                 </div>
                 <div className="w-full lg:w-1/3">
@@ -981,12 +984,15 @@ const App: React.FC = () => {
                     totalTreasurerPrize={totalTreasurerPrize}
                     vicePrize={vicePrize}
                     isFinalized={currentEvaluation?.isFinalized || false}
-                    isReadOnly={isReadOnlyMode || activePeriod?.status === 'closed' || false}
+                    isReadOnly={isReadOnlyMode}
                     inadimplenciaRank={inadimplenciaRank}
                     onFinalize={handleFinalize}
                     onReopen={handleReopenEvaluation}
                     schoolName={activeSchool?.name}
                     periodLabel={activePeriod?.label}
+                    managementBonusConfig={managementBonusConfig}
+                    anrsBonusConfig={anrsBonusConfig}
+                    inadimplenciaRankingConfig={inadimplenciaRankingConfig}
                   />
                 </div>
               </div>

@@ -44,16 +44,19 @@ export interface InadimplenciaRankingConfig {
   firstPlace: number;
   secondPlace: number;
   thirdPlace: number;
+  enabled: boolean;
 }
 
 export interface ManagementBonusConfig {
   pointThreshold: number;
   bonusValue: number;
+  enabled: boolean;
 }
 
 export interface AnrsBonusConfig {
   pointThreshold: number;
   bonusValue: number;
+  enabled: boolean;
 }
 
 export interface Period {

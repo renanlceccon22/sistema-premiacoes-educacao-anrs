@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Category, CriterionOption, EvaluationModel, EvaluationDirection } from '../types';
+import { Category, CriterionOption, EvaluationModel, EvaluationDirection, ManagementBonusConfig, AnrsBonusConfig, InadimplenciaRankingConfig } from '../types';
 import { formatBRL, formatPercentage, formatCurrencyInput, parseCurrencyString } from '../utils/formatting';
 import { getMonthIndexFromLabel } from '../utils/calculations';
 
@@ -17,6 +17,9 @@ interface CriteriaEvaluatorProps {
   onInadimplenciaRankingInput: (value: number) => void;
   onUpdateCategories: (categories: Category[]) => void;
   activePeriodLabel?: string;
+  managementBonusConfig: ManagementBonusConfig;
+  anrsBonusConfig: AnrsBonusConfig;
+  inadimplenciaRankingConfig: InadimplenciaRankingConfig;
 }
 
 const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
@@ -31,7 +34,10 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
   onMetricInput,
   onInadimplenciaRankingInput,
   onUpdateCategories,
-  activePeriodLabel
+  activePeriodLabel,
+  managementBonusConfig,
+  anrsBonusConfig,
+  inadimplenciaRankingConfig
 }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [localCategories, setLocalCategories] = useState<Category[]>(categories);
@@ -42,6 +48,22 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
   React.useEffect(() => {
     setLocalCategories(categories);
   }, [categories]);
+
+  // CATEGORIAS FILTRADAS PARA EXIBIÇÃO
+  const visibleCategories = React.useMemo(() => {
+    return localCategories.filter(cat => {
+      // Se estiver em modo de edição, mostra tudo para permitir configurar
+      if (isEditMode) return true;
+
+      if (!managementBonusConfig.enabled) {
+        if (cat.id === 'adiantamentos' || cat.id === 'cartao_corporativo') return false;
+      }
+      if (!anrsBonusConfig.enabled) {
+        if (cat.id === 'inadimplencia_mes' || cat.id === 'orcamento_bi' || cat.id === 'descontos_concedidos') return false;
+      }
+      return true;
+    });
+  }, [localCategories, managementBonusConfig.enabled, anrsBonusConfig.enabled, isEditMode]);
 
   // Close when clicking outside
   React.useEffect(() => {
@@ -180,7 +202,7 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
         )}
       </div>
 
-      {!isReadOnly && (
+      {(inadimplenciaRankingConfig.enabled || isEditMode) && !isReadOnly && (
         <div className="mb-8 p-4 rounded-xl border border-blue-200 bg-blue-50/20">
           <label className="block text-[10px] font-black text-blue-700 uppercase tracking-widest mb-2">
             Inadimplência para Ranking entre Escolas (%)
@@ -203,7 +225,7 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
       )}
 
       <div className="space-y-6" ref={dropdownRef}>
-        {localCategories.map((category) => {
+        {visibleCategories.map((category) => {
           const isMetricMode = category.evaluationModel !== EvaluationModel.MANUAL;
           const target = schoolTargets[category.id] || 0;
           const realized = realizedValues[category.id] || 0;
