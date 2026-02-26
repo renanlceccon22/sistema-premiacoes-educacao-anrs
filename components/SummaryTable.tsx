@@ -253,22 +253,22 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
 
       // 1. Cabeçalho Institucional (Design Executivo)
       pdf.setFillColor(0, 59, 113); // Azul Marinho ANRS (#003B71)
-      pdf.rect(0, 0, pageWidth, 80, 'F');
+      pdf.rect(0, 0, pageWidth, 90, 'F');
 
       pdf.setTextColor(253, 184, 19); // Dourado (#FDB813)
       pdf.setFontSize(22);
       pdf.setFont('helvetica', 'bold');
-      pdf.text('RELATÓRIO DE PREMIAÇÕES', 40, 45);
+      pdf.text('RELATÓRIO DE PREMIAÇÕES', 40, 40);
 
       pdf.setTextColor(255, 255, 255);
       pdf.setFontSize(10);
       pdf.setFont('helvetica', 'normal');
-      pdf.text(`PERÍODO DE REFERÊNCIA: ${activePeriodLabel.toUpperCase()}`, 40, 65);
-      pdf.text(`EMISSÃO: ${new Date().toLocaleDateString('pt-BR')}`, pageWidth - 40, 65, { align: 'right' });
+      pdf.text(`PERÍODO DE REFERÊNCIA: ${activePeriodLabel.toUpperCase()}`, 40, 58);
+      pdf.text(`EMISSÃO: ${new Date().toLocaleDateString('pt-BR')}`, 40, 78);
 
       // Injeta a logo acima da emissão
       try {
-        const response = await fetch('/ea-logo.png');
+        const response = await fetch('/logo.png');
         const blob = await response.blob();
         const reader = new FileReader();
         const base64data = await new Promise<string | null>((resolve) => {
@@ -298,10 +298,9 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
         });
 
         if (base64data) {
-          const logoWidth = 130;  // Logo EA costuma ser retangular
-          const logoHeight = 40;
-          // Alinhar a logo à direita
-          pdf.addImage(base64data, 'PNG', pageWidth - 40 - logoWidth, 15, logoWidth, logoHeight);
+          const logoSize = 60;
+          // Alinhar a logo à direita, centralizada verticalmente no header
+          pdf.addImage(base64data, 'PNG', pageWidth - 40 - logoSize, 15, logoSize, logoSize);
         }
       } catch (err) {
         console.warn("Erro ao carregar a logo para o PDF:", err);
@@ -372,8 +371,8 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
       autoTable(pdf, {
         head: [tableHeaders],
         body: tableRows,
-        startY: 100,
-        margin: { top: 100, right: 40, bottom: 60, left: 40 },
+        startY: 110,
+        margin: { top: 110, right: 40, bottom: 60, left: 40 },
         styles: {
           fontSize: 8,
           font: 'helvetica',
