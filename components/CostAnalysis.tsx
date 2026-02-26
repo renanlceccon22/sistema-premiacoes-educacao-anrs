@@ -95,6 +95,15 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
         // Se estiver finalizado e tiver snapshot, usar os dados congelados para evitar que mudanças futuras afetem o passado
         if (evaluation.snapshot) {
           const snap = evaluation.snapshot;
+
+          // RECALCULAMOS os bônus do snapshot com base nas configurações ATIVAS atuais
+          const inadBonus = inadimplenciaRankingConfig.enabled ? (snap.inadimplenciaRankingBonusValue || 0) : 0;
+          const mgmtBonus = managementBonusConfig.enabled ? (snap.managementBonusValue || 0) : 0;
+          const anrsBonus = anrsBonusConfig.enabled ? (snap.anrsBonusValue || 0) : 0;
+
+          const totalT = inadBonus + mgmtBonus + anrsBonus;
+          const totalV = totalT * 0.5;
+
           if (!resultsBySchool[school.id]) {
             resultsBySchool[school.id] = {
               schoolName: school.name,
@@ -106,16 +115,23 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
               evaluationsCount: 0
             };
           }
-          resultsBySchool[school.id].totalTreasurer += snap.totalTreasurerPrize;
-          resultsBySchool[school.id].totalVice += snap.vicePrize;
+          resultsBySchool[school.id].totalTreasurer += totalT;
+          resultsBySchool[school.id].totalVice += totalV;
           resultsBySchool[school.id].totalPoints += snap.totalPoints;
           resultsBySchool[school.id].evaluationsCount += 1;
           return;
         }
 
         // Caso não tenha snapshot (avaliações antigas), faz o cálculo dinâmico
-        const currentCategories = school.custom_categories || INITIAL_CATEGORIES;
-        const points = currentCategories.reduce((acc, cat) => {
+        // Filtramos as categorias ativas baseado na configuração ATUAL dos bônus
+        const activeCategories = (school.custom_categories || INITIAL_CATEGORIES).filter(cat => {
+          if (cat.id === 'adiantamentos' || cat.id === 'cartao_corporativo') return managementBonusConfig.enabled;
+          if (cat.id === 'orcamento_bi' || cat.id === 'descontos_concedidos') return anrsBonusConfig.enabled;
+          if (cat.id === 'inadimplencia_mes') return inadimplenciaRankingConfig.enabled || anrsBonusConfig.enabled;
+          return true;
+        });
+
+        const points = activeCategories.reduce((acc, cat) => {
           const pnt = calculatePoints(
             cat,
             evaluation.selections[cat.id],
@@ -133,7 +149,10 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
           inadimplenciaRankingConfig,
           managementBonusConfig,
           anrsBonusConfig,
-          periodEvalsForPrizes,
+          periodEvalsForPrizes.map(e => ({
+            ...e,
+            isFinalized: evaluations.find(ev => ev.schoolId === e.schoolId && ev.periodId === p.id)?.isFinalized || false
+          })),
           school.id,
           p.label
         );
@@ -171,6 +190,20 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
   return (
     <div className="space-y-8">
       {/* Filtros removidos por estarem unificados no topo */}
+
+      {consolidatedData.length === 0 && (
+        <div className="bg-blue-50 border border-blue-100 p-4 rounded-2xl flex items-start gap-3 animate-in fade-in slide-in-from-top-4">
+          <svg className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <h4 className="text-sm font-black text-blue-900 uppercase tracking-tight">Aviso de Exibição</h4>
+            <p className="text-xs font-medium text-blue-700 mt-1 leading-relaxed">
+              Para que os cálculos e o ranking sejam carregados nesta tela de análise, certifique-se de que a unidade possui o status de <strong className="font-black uppercase tracking-widest text-[10px] ml-1">Avaliação Finalizada</strong> no período selecionado.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Cards de Resumo Financeiro */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

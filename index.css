@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+:root {
+    --tw-bg-opacity: 1 !important;
+    --tw-text-opacity: 1 !important;
+    --tw-border-opacity: 1 !important;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     background-color: #f8fafc;
@@ -107,7 +113,6 @@ body {
     letter-spacing: 0.02em;
     height: 100%;
     width: 100%;
-    text-transform: uppercase;
 }
 
 .pdf-adobe-content svg {
@@ -146,4 +151,102 @@ body {
     opacity: 0.5;
     cursor: not-allowed;
     background-color: #f1f5f9;
+}
+
+/* Print/PDF Helper Classes */
+.pdf-only {
+    display: none !important;
+}
+
+.screen-only {
+    display: flex !important;
+}
+
+/* Usado durante a geração do canvas para mostrar o cabeçalho profissional */
+.is-generating-pdf .pdf-only {
+    display: block !important;
+}
+
+.is-generating-pdf .screen-only {
+    display: none !important;
+}
+
+.is-generating-pdf.print-container {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.is-generating-pdf table {
+    border: 1px solid #e2e8f0 !important;
+}
+
+.is-generating-pdf th {
+    background-color: #f8fafc !important;
+    color: #003B71 !important;
+    font-size: 12px !important;
+    border-bottom: 2px solid #003B71 !important;
+}
+
+.is-generating-pdf td {
+    padding: 12px 16px !important;
+    font-size: 13px !important;
+}
+
+/* 
+   Simplificação Extrema para Exportação (Preto no Branco)
+   Garante compatibilidade total e legibilidade máxima
+*/
+.is-generating-pdf * {
+    text-shadow: none !important;
+    animation: none !important;
+    transition: none !important;
+}
+
+.is-generating-pdf .pdf-only {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-bottom: 2px solid #000000 !important;
+}
+
+.is-generating-pdf .pdf-only h1,
+.is-generating-pdf .pdf-only h2,
+.is-generating-pdf .pdf-only p {
+    color: #000000 !important;
+}
+
+.is-generating-pdf table {
+    background: #fff !important;
+    color: #000 !important;
+}
+
+.is-generating-pdf tr {
+    background: #fff !important;
+}
+
+.is-generating-pdf th,
+.is-generating-pdf td {
+    color: #000 !important;
+    border-color: #eee !important;
+}
+
+.is-generating-pdf tfoot tr {
+    background: #000 !important;
+    color: #fff !important;
+}
+
+@media print {
+    body {
+        background: #fff !important;
+    }
+
+    .print-container {
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
 }

@@ -21,6 +21,7 @@ interface ResultsPanelProps {
   managementBonusConfig: ManagementBonusConfig;
   anrsBonusConfig: AnrsBonusConfig;
   inadimplenciaRankingConfig: InadimplenciaRankingConfig;
+  entityInitials: string;
 }
 
 const ResultsPanel: React.FC<ResultsPanelProps> = ({
@@ -40,7 +41,8 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
   periodLabel = "",
   managementBonusConfig,
   anrsBonusConfig,
-  inadimplenciaRankingConfig
+  inadimplenciaRankingConfig,
+  entityInitials
 }) => {
   const [isReopening, setIsReopening] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
@@ -53,22 +55,6 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
     setIsReopening(false);
   };
 
-  const exportIndividualPDF = async () => {
-    setIsExporting(true);
-    try {
-      const { jsPDF } = await import('jspdf');
-      const doc = new jsPDF();
-      doc.setFillColor(0, 59, 113);
-      doc.rect(0, 0, 210, 40, 'F');
-      doc.setFontSize(18);
-      doc.setTextColor(255, 255, 255);
-      doc.text("COMPROVANTE DE PREMIAÇÃO", 105, 18, { align: 'center' });
-      doc.text(`TESOURARIA - EDUCAÇÃO ADVENTISTA - ${periodLabel}`, 105, 28, { align: 'center' });
-      doc.setTextColor(0, 0, 0);
-      doc.text(`Unidade: ${schoolName}`, 14, 55);
-      doc.save(`Premiacao_${schoolName.replace(/\s+/g, '_')}_${periodLabel.replace('/', '_')}.pdf`);
-    } catch (e) { alert("Erro ao gerar PDF."); } finally { setIsExporting(false); }
-  };
 
   return (
     <div className="lg:sticky lg:top-6">
@@ -121,7 +107,7 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
                       <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" strokeWidth="2" />
                     </svg>
                   </div>
-                  <span className={`text-[10px] font-black uppercase tracking-widest ${anrsBonus > 0 ? 'text-slate-800' : 'text-slate-400'}`}>Premiação Meta ANRS</span>
+                  <span className={`text-[10px] font-black uppercase tracking-widest ${anrsBonus > 0 ? 'text-slate-800' : 'text-slate-400'}`}>Premiação Meta {entityInitials}</span>
                 </div>
                 <p className={`text-sm font-black ${anrsBonus > 0 ? 'text-green-600' : 'text-slate-300'}`}>{formatBRL(anrsBonus)}</p>
               </div>
@@ -184,14 +170,10 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
               {!isFinalized ? (
                 <button onClick={onFinalize} className="w-full py-4 rounded-2xl font-black text-sm shadow-xl active:scale-95 transition-all flex items-center justify-center space-x-2 bg-[#003B71] text-white hover:bg-[#002a51] border-2 border-[#003B71]">
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
-                  <span>CALCULAR E GRAVAR REPASSE</span>
+                  <span>GRAVAR PREMIAÇÃO</span>
                 </button>
               ) : (
                 <>
-                  <button onClick={exportIndividualPDF} disabled={isExporting} className="w-full py-3 rounded-xl font-black text-[10px] tracking-[0.2em] shadow-lg active:scale-95 transition-all flex items-center justify-center space-x-2 bg-green-600 text-white hover:bg-green-700 uppercase">
-                    {isExporting ? <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> : <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>}
-                    <span>Baixar Comprovante PDF</span>
-                  </button>
                   <button onClick={handleReopenClick} disabled={isReopening} className={`w-full py-3 rounded-xl font-bold text-xs border-2 transition-all flex items-center justify-center space-x-2 ${isReopening ? 'bg-orange-100 text-orange-400 cursor-not-allowed' : 'border-orange-100 text-orange-600 hover:bg-orange-50'}`}>
                     {isReopening ? 'Reabrindo...' : 'REABRIR PARA AJUSTES'}
                   </button>

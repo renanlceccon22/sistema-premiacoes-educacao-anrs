@@ -126,4 +126,18 @@ export interface User {
   email: string;
   role?: string;
   full_name?: string;
+  selected_entity_id?: string | null;
+}
+
+export interface Entity {
+  id: string;
+  name: string;
+  initials: string;
+  cnpj: string;
+  created_at?: string;
+}
+
+export interface UserEntity {
+  user_id: string;
+  entity_id: string;
 }

@@ -21,7 +21,7 @@ export const INITIAL_MANAGEMENT_BONUS_CONFIG: ManagementBonusConfig = {
 };
 
 export const INITIAL_ANRS_BONUS_CONFIG: AnrsBonusConfig = {
-  pointThreshold: 240,
+  pointThreshold: 140,
   bonusValue: 150,
   enabled: true,
 };
@@ -55,8 +55,8 @@ export const INITIAL_CATEGORIES: Category[] = [
     isMetric: true,
     metricThresholds: [4, 6], // <= 4% e <= 6%
     options: [
-      { id: 'im_1', label: 'Inadimplência <= 4%', points: 100 },
-      { id: 'im_2', label: 'Inadimplência entre 4,1% e 6%', points: 70 },
+      { id: 'im_1', label: 'Inadimplência <= 4%', points: 0 },
+      { id: 'im_2', label: 'Inadimplência entre 4,1% e 6%', points: 0 },
       { id: 'im_3', label: 'Inadimplência > 6,01%', points: 0 },
     ]
   },

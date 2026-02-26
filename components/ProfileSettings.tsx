@@ -5,34 +5,30 @@ import { User } from '../types';
 
 interface ProfileSettingsProps {
     session: any;
+    targetUser?: { id: string, email: string, full_name?: string } | null;
+    isReadOnly?: boolean;
     onClose: () => void;
     onProfileUpdate?: (data: any) => void;
 }
 
-const ProfileSettings: React.FC<ProfileSettingsProps> = ({ session, onClose, onProfileUpdate }) => {
-    const [fullName, setFullName] = useState('');
-    const [email, setEmail] = useState(session?.user?.email || '');
+const ProfileSettings: React.FC<ProfileSettingsProps> = ({ session, targetUser, isReadOnly, onClose, onProfileUpdate }) => {
+    const isImpersonating = !!targetUser && targetUser.id !== session?.user?.id;
+    const [fullName, setFullName] = useState(targetUser?.full_name || '');
+    const [email, setEmail] = useState(targetUser?.email || session?.user?.email || '');
     const [newPassword, setNewPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
     useEffect(() => {
         const fetchProfile = async () => {
-            if (session?.user?.id) {
+            const userId = targetUser?.id || session?.user?.id;
+            if (userId) {
                 try {
                     const { data, error } = await supabase
                         .from('profiles')
                         .select('full_name')
-                        .eq('id', session.user.id)
+                        .eq('id', userId)
                         .maybeSingle();
-
-                    if (error) {
-                        if (error.code === 'PGRST116' || error.message.includes('profiles')) {
-                            console.warn("Tabela profiles não encontrada.");
-                        } else {
-                            throw error;
-                        }
-                    }
 
                     if (data) {
                         setFullName(data.full_name || '');
@@ -43,7 +39,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ session, onClose, onP
             }
         };
         fetchProfile();
-    }, [session]);
+    }, [session, targetUser]);
 
     const handleUpdateProfile = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -51,8 +47,9 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ session, onClose, onP
         setMessage(null);
 
         try {
+            const userId = targetUser?.id || session.user.id;
             const updates = {
-                id: session.user.id,
+                id: userId,
                 full_name: fullName,
                 email: email,
                 updated_at: new Date().toISOString(),
@@ -121,22 +118,25 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ session, onClose, onP
                     <input
                         type="email"
                         value={email}
+                        readOnly={isImpersonating || isReadOnly}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="seu@email.com"
-                        className="w-full bg-slate-50 border-2 border-slate-50 focus:border-[#003B71] focus:bg-white rounded-xl px-4 py-3 text-xs font-bold text-slate-700 outline-none transition-all"
+                        className={`w-full bg-slate-50 border-2 border-slate-50 rounded-xl px-4 py-3 text-xs font-bold text-slate-700 outline-none transition-all ${isImpersonating ? 'opacity-60 cursor-not-allowed' : 'focus:border-[#003B71] focus:bg-white'}`}
                     />
                 </div>
 
-                <div>
-                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nova Senha (deixe vazio para manter)</label>
-                    <input
-                        type="password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                        placeholder="••••••••"
-                        className="w-full bg-slate-50 border-2 border-slate-50 focus:border-[#003B71] focus:bg-white rounded-xl px-4 py-3 text-xs font-bold text-slate-700 outline-none transition-all"
-                    />
-                </div>
+                {!isImpersonating && (
+                    <div>
+                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nova Senha (deixe vazio para manter)</label>
+                        <input
+                            type="password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            placeholder="••••••••"
+                            className="w-full bg-slate-50 border-2 border-slate-50 focus:border-[#003B71] focus:bg-white rounded-xl px-4 py-3 text-xs font-bold text-slate-700 outline-none transition-all"
+                        />
+                    </div>
+                )}
 
                 {message && (
                     <div className={`p-4 rounded-xl text-xs font-bold flex flex-col gap-2 ${message.type === 'success' ? 'bg-green-50 text-green-600 border border-green-100' : 'bg-red-50 text-red-600 border border-red-100'

@@ -10,6 +10,7 @@ interface ConfirmModalProps {
     confirmLabel?: string;
     cancelLabel?: string;
     isDanger?: boolean;
+    showCancel?: boolean;
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -20,7 +21,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     onCancel,
     confirmLabel = "Confirmar",
     cancelLabel = "Cancelar",
-    isDanger = false
+    isDanger = false,
+    showCancel = true
 }) => {
     if (!isOpen) return null;
 
@@ -57,12 +59,14 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-3">
-                        <button
-                            onClick={onCancel}
-                            className="flex-1 px-6 py-3.5 rounded-2xl text-sm font-black text-slate-500 bg-slate-100 hover:bg-slate-200 transition-all uppercase tracking-widest active:scale-95"
-                        >
-                            {cancelLabel}
-                        </button>
+                        {showCancel && (
+                            <button
+                                onClick={onCancel}
+                                className="flex-1 px-6 py-3.5 rounded-2xl text-sm font-black text-slate-500 bg-slate-100 hover:bg-slate-200 transition-all uppercase tracking-widest active:scale-95"
+                            >
+                                {cancelLabel}
+                            </button>
+                        )}
                         <button
                             onClick={onConfirm}
                             className={`flex-1 px-6 py-3.5 rounded-2xl text-sm font-black text-white shadow-lg shadow-blue-900/10 transition-all uppercase tracking-widest active:scale-95 ${isDanger ? 'bg-red-500 hover:bg-red-600' : 'bg-[#003B71] hover:bg-[#002a51]'

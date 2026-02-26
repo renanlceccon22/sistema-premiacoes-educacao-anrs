@@ -1,9 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { AwardLevel, Thresholds, InadimplenciaRankingConfig, ManagementBonusConfig, AnrsBonusConfig } from '../types';
+import { AwardLevel, Thresholds, InadimplenciaRankingConfig, ManagementBonusConfig, AnrsBonusConfig, SchoolUnit } from '../types';
+import ConfirmModal from './ConfirmModal';
 
 interface PrizeConfigProps {
   // Removido: prizeValues: PrizeValues;
+  schools: SchoolUnit[];
   thresholds: Thresholds;
   inadimplenciaRankingConfig: InadimplenciaRankingConfig;
   managementBonusConfig: ManagementBonusConfig;
@@ -16,16 +18,19 @@ interface PrizeConfigProps {
     anrsBonus: AnrsBonusConfig
   ) => void;
   isReadOnly?: boolean;
+  entityInitials: string;
 }
 
 const PrizeConfig: React.FC<PrizeConfigProps> = ({
   // Removido: prizeValues, 
+  schools,
   thresholds,
   inadimplenciaRankingConfig,
   managementBonusConfig,
   anrsBonusConfig,
   onUpdateAllBonusConfig,
-  isReadOnly
+  isReadOnly = false,
+  entityInitials
 }) => {
   const [isLocked, setIsLocked] = useState(true);
   // Removido: const [localValues, setLocalValues] = useState<PrizeValues>(prizeValues);
@@ -34,6 +39,7 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
   const [localManagementBonusConfig, setLocalManagementBonusConfig] = useState<ManagementBonusConfig>(managementBonusConfig);
   const [localAnrsBonusConfig, setLocalAnrsBonusConfig] = useState<AnrsBonusConfig>(anrsBonusConfig);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [validationModal, setValidationModal] = useState<{ show: boolean, title: string, message: string }>({ show: false, title: '', message: '' });
 
   const [displayValues, setDisplayValues] = useState<Record<string, string>>({
     // Removido: [AwardLevel.GOLD]: (prizeValues[AwardLevel.GOLD] || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 }),
@@ -288,7 +294,20 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
                   type="checkbox"
                   className="sr-only"
                   checked={localManagementBonusConfig.enabled}
-                  onChange={(e) => setLocalManagementBonusConfig(prev => ({ ...prev, enabled: e.target.checked }))}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      const missingSchools = schools.filter(s => (s.targets?.['orcamento_bi'] || 0) <= 0);
+                      if (missingSchools.length > 0) {
+                        setValidationModal({
+                          show: true,
+                          title: 'Configuração Incompleta',
+                          message: 'Para ativar a Premiação de Gestão, é necessário preencher o ORÇAMENTO ANUAL no cadastro das seguintes unidades: ' + missingSchools.map(s => s.name).join(', ') + '.'
+                        });
+                        return;
+                      }
+                    }
+                    setLocalManagementBonusConfig(prev => ({ ...prev, enabled: e.target.checked }));
+                  }}
                 />
                 <div className={`block w-8 h-4 rounded-full transition-colors ${localManagementBonusConfig.enabled ? 'bg-blue-600' : 'bg-slate-300'}`}></div>
                 <div className={`absolute left-0.5 top-0.5 bg-white w-3 h-3 rounded-full transition-transform ${localManagementBonusConfig.enabled ? 'translate-x-4' : ''}`}></div>
@@ -346,7 +365,7 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
         <div className="flex justify-between items-center mb-2.5">
           <h3 className="text-[10px] font-black text-[#003B71]/60 uppercase tracking-[0.2em] flex items-center">
             <span className="w-6 h-[1px] bg-blue-200 mr-3"></span>
-            Premiação Meta ANRS
+            Premiação Meta {entityInitials}
           </h3>
           {!isReadOnly && !isLocked && (
             <label className="flex items-center cursor-pointer gap-2">
@@ -356,7 +375,20 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
                   type="checkbox"
                   className="sr-only"
                   checked={localAnrsBonusConfig.enabled}
-                  onChange={(e) => setLocalAnrsBonusConfig(prev => ({ ...prev, enabled: e.target.checked }))}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      const missingSchools = schools.filter(s => (s.targets?.['descontos_concedidos'] || 0) <= 0);
+                      if (missingSchools.length > 0) {
+                        setValidationModal({
+                          show: true,
+                          title: 'Configuração Incompleta',
+                          message: `Para ativar a Premiação Meta ${entityInitials}, é necessário preencher a META DE DESCONTO no cadastro das seguintes unidades: ` + missingSchools.map(s => s.name).join(', ') + '.'
+                        });
+                        return;
+                      }
+                    }
+                    setLocalAnrsBonusConfig(prev => ({ ...prev, enabled: e.target.checked }));
+                  }}
                 />
                 <div className={`block w-8 h-4 rounded-full transition-colors ${localAnrsBonusConfig.enabled ? 'bg-blue-600' : 'bg-slate-300'}`}></div>
                 <div className={`absolute left-0.5 top-0.5 bg-white w-3 h-3 rounded-full transition-transform ${localAnrsBonusConfig.enabled ? 'translate-x-4' : ''}`}></div>
@@ -408,6 +440,16 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
           </div>
         </div>
       </div>
+
+      <ConfirmModal
+        isOpen={validationModal.show}
+        onCancel={() => setValidationModal({ ...validationModal, show: false })}
+        onConfirm={() => setValidationModal({ ...validationModal, show: false })}
+        title={validationModal.title}
+        message={validationModal.message}
+        confirmLabel="Entendi"
+        showCancel={false}
+      />
     </div>
   );
 };

@@ -234,7 +234,10 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
                   </h4>
                   <div className="space-y-3 bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
                     <div>
-                      <label className="block text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Nome Completo</label>
+                      <label className="block text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1 flex items-center justify-between">
+                        Nome Completo
+                        <span className="text-[7px] text-slate-300 font-bold ml-2">(Opcional)</span>
+                      </label>
                       <input
                         type="text"
                         value={newViceTreasurerName}
@@ -243,7 +246,10 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
                       />
                     </div>
                     <div>
-                      <label className="block text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">CPF</label>
+                      <label className="block text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1 flex items-center justify-between">
+                        CPF
+                        <span className="text-[7px] text-slate-300 font-bold ml-2">(Opcional)</span>
+                      </label>
                       <input
                         type="text"
                         value={newViceTreasurerCpf}
@@ -268,8 +274,9 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
                     .filter(cat => cat.id === 'descontos_concedidos' || cat.id === 'orcamento_bi')
                     .map(cat => (
                       <div key={cat.id} className="flex flex-col gap-1.5">
-                        <label className="block text-[8px] font-black text-slate-500 uppercase tracking-widest ml-1">
-                          {cat.id === 'orcamento_bi' ? 'ORÇAMENTO ANUAL' : `META: ${cat.name.toUpperCase()}`} ({cat.id === 'orcamento_bi' ? 'R$' : '%'})
+                        <label className="block text-[8px] font-black text-slate-500 uppercase tracking-widest ml-1 flex items-center justify-between">
+                          <span>{cat.id === 'orcamento_bi' ? 'ORÇAMENTO ANUAL' : `META: ${cat.name.toUpperCase()}`} ({cat.id === 'orcamento_bi' ? 'R$' : '%'})</span>
+                          <span className="text-[7px] text-slate-300 font-bold ml-2">(Opcional)</span>
                         </label>
                         <div className="relative">
                           <input

@@ -21,6 +21,8 @@ export const calculatePoints = (
   target: number,
   periodLabel?: string
 ): number => {
+  if (cat.id === 'inadimplencia_mes') return 0;
+
   // Modelo Manual (Seleção de Opções)
   if (cat.evaluationModel === EvaluationModel.MANUAL || !cat.evaluationModel) {
     const option = cat.options.find(o => o.id === selection);
@@ -91,6 +93,7 @@ interface SchoolEvaluationForPrizeCalculation {
   realizedValues: Record<string, number>;
   targets: Record<string, number>;
   periodLabel?: string;
+  isFinalized?: boolean;
 }
 
 export const calculateAllPrizes = (
@@ -101,32 +104,46 @@ export const calculateAllPrizes = (
   anrsBonusConfig: AnrsBonusConfig,
   allSchoolsEvaluations: SchoolEvaluationForPrizeCalculation[],
   activeSchoolId: string,
-  currentPeriodLabel?: string
+  currentPeriodLabel?: string,
+  hasViceTreasurer: boolean = true
 ): AllPrizesResult => {
   const level = getAwardLevel(totalPoints, thresholds);
 
+  const activeSchoolEvaluationForBonus = allSchoolsEvaluations.find(e => e.schoolId === activeSchoolId);
   let currentSchoolInadimplenciaRank: number | undefined = undefined;
   let inadimplenciaRankingBonus = 0;
 
   // 1. Cálculo do Ranking de Inadimplência
   if (inadimplenciaRankingConfig.enabled && allSchoolsEvaluations.length > 0) {
-    const rankedEvaluations = allSchoolsEvaluations
-      .filter(e => typeof e.inadimplenciaRankingPercentage === 'number' && e.inadimplenciaRankingPercentage >= 0)
-      .sort((a, b) => a.inadimplenciaRankingPercentage! - b.inadimplenciaRankingPercentage!);
+    // Verifica se TODAS as unidades da entidade já possuem o valor de inadimplência inserido
+    const evaluationsWithRanking = allSchoolsEvaluations.filter(e => typeof e.inadimplenciaRankingPercentage === 'number');
+    const allUnitsFilled = evaluationsWithRanking.length === allSchoolsEvaluations.length;
 
-    for (let i = 0; i < rankedEvaluations.length && i < 3; i++) {
-      const rankedSchool = rankedEvaluations[i];
-      if (rankedSchool.schoolId === activeSchoolId) {
-        currentSchoolInadimplenciaRank = i + 1;
-        if (i === 0) inadimplenciaRankingBonus = inadimplenciaRankingConfig.firstPlace;
-        else if (i === 1) inadimplenciaRankingBonus = inadimplenciaRankingConfig.secondPlace;
-        else if (i === 2) inadimplenciaRankingBonus = inadimplenciaRankingConfig.thirdPlace;
-        break;
+    if (allUnitsFilled) {
+      // 1. Pegamos todos os valores de inadimplência únicos e ordenamos (menor para o maior)
+      const uniqueValues = Array.from(new Set(allSchoolsEvaluations.map(e => e.inadimplenciaRankingPercentage || 0)))
+        .sort((a, b) => a - b);
+
+      const firstPlaceValue = uniqueValues[0];
+      const secondPlaceValue = uniqueValues[1];
+      const thirdPlaceValue = uniqueValues[2];
+
+      const currentSchoolValue = activeSchoolEvaluationForBonus?.inadimplenciaRankingPercentage;
+
+      if (currentSchoolValue !== undefined) {
+        if (currentSchoolValue === firstPlaceValue) {
+          currentSchoolInadimplenciaRank = 1;
+          inadimplenciaRankingBonus = inadimplenciaRankingConfig.firstPlace;
+        } else if (currentSchoolValue === secondPlaceValue) {
+          currentSchoolInadimplenciaRank = 2;
+          inadimplenciaRankingBonus = inadimplenciaRankingConfig.secondPlace;
+        } else if (currentSchoolValue === thirdPlaceValue) {
+          currentSchoolInadimplenciaRank = 3;
+          inadimplenciaRankingBonus = inadimplenciaRankingConfig.thirdPlace;
+        }
       }
     }
   }
-
-  const activeSchoolEvaluationForBonus = allSchoolsEvaluations.find(e => e.schoolId === activeSchoolId);
 
   // 2. Cálculo do Bônus de Gestão
   let managementBonus = 0;
@@ -172,8 +189,11 @@ export const calculateAllPrizes = (
     }
   }
 
-  const totalTreasurerPrize = inadimplenciaRankingBonus + managementBonus + anrsBonus;
-  const vicePrize = totalTreasurerPrize * 0.5;
+  const totalTreasurerPrize =
+    (inadimplenciaRankingConfig.enabled ? inadimplenciaRankingBonus : 0) +
+    (managementBonusConfig.enabled ? managementBonus : 0) +
+    (anrsBonusConfig.enabled ? anrsBonus : 0);
+  const vicePrize = hasViceTreasurer ? totalTreasurerPrize * 0.5 : 0;
 
   return {
     inadimplenciaRankingBonus,
