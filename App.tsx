@@ -83,10 +83,19 @@ const App: React.FC = () => {
     const emailToCheck = impersonatedUser?.email || session?.user?.email;
     if (!emailToCheck) return false;
     const email = emailToCheck.toLowerCase().trim();
+
+    // Prioridade: Verifica se o perfil tem a role de ADMIN definida no banco
+    const currentProfile = impersonatedUser || userProfile;
+    const role = currentProfile?.role?.toUpperCase();
+    if (role === 'ADMIN' || role === 'SUPER_ADMIN') {
+      return true;
+    }
+
+    // Fallback: Lista de e-mails hardcoded
     return email === 'cecconjunior@yahoo.com.br' ||
       email === 'renanlceccon@yahoo.com.br' ||
       email.endsWith('@anrs.com.br');
-  }, [session, impersonatedUser]);
+  }, [session, impersonatedUser, userProfile]);
 
   const selectedEntity = useMemo(() => {
     return entities.find(e => e.id === selectedEntityId) || null;
