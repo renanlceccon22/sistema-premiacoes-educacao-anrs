@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { createPortal } from 'react-dom';
 
 interface ConfirmModalProps {
     isOpen: boolean;
@@ -26,18 +26,18 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 }) => {
     if (!isOpen) return null;
 
-    return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+    return createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
             <div
-                className="bg-white rounded-3xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden animate-in zoom-in-95 duration-300"
+                className="bg-white rounded-[24px] shadow-2xl border border-slate-200 w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-300"
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Header decorativo */}
                 <div className={`h-2 w-full ${isDanger ? 'bg-red-500' : 'bg-[#003B71]'}`}></div>
 
-                <div className="p-8">
-                    <div className="flex items-center gap-4 mb-6">
-                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${isDanger ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-[#003B71]'
+                <div className="p-6">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${isDanger ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-[#003B71]'
                             }`}>
                             {isDanger ? (
                                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -49,12 +49,12 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                                 </svg>
                             )}
                         </div>
-                        <h2 className="text-sm font-black text-slate-800 leading-tight uppercase tracking-tight">
+                        <h2 className="text-xs font-black text-slate-800 leading-tight uppercase tracking-tight">
                             {title}
                         </h2>
                     </div>
 
-                    <p className="text-slate-500 font-medium leading-relaxed mb-8">
+                    <p className="text-slate-500 font-medium leading-relaxed mb-6 text-xs">
                         {message}
                     </p>
 
@@ -62,14 +62,14 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                         {showCancel && (
                             <button
                                 onClick={onCancel}
-                                className="flex-1 px-6 py-3.5 rounded-2xl text-sm font-black text-slate-500 bg-slate-100 hover:bg-slate-200 transition-all uppercase tracking-widest active:scale-95"
+                                className="flex-1 px-4 py-2.5 rounded-xl text-[10px] font-black text-slate-500 bg-slate-100 hover:bg-slate-200 transition-all uppercase tracking-widest active:scale-95"
                             >
                                 {cancelLabel}
                             </button>
                         )}
                         <button
                             onClick={onConfirm}
-                            className={`flex-1 px-6 py-3.5 rounded-2xl text-sm font-black text-white shadow-lg shadow-blue-900/10 transition-all uppercase tracking-widest active:scale-95 ${isDanger ? 'bg-red-500 hover:bg-red-600' : 'bg-[#003B71] hover:bg-[#002a51]'
+                            className={`flex-1 px-4 py-2.5 rounded-xl text-[10px] font-black text-white shadow-lg shadow-blue-900/10 transition-all uppercase tracking-widest active:scale-95 ${isDanger ? 'bg-red-500 hover:bg-red-600' : 'bg-[#003B71] hover:bg-[#002a51]'
                                 }`}
                         >
                             {confirmLabel}
@@ -77,7 +77,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 };
 

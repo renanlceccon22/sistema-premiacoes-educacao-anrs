@@ -398,48 +398,48 @@ const UserManager: React.FC<UserManagerProps> = ({ onImpersonate, currentImperso
             {/* Modal de Criar Usuário */}
             {showCreateModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
-                    <div className="bg-white rounded-3xl shadow-xl w-full max-w-sm overflow-hidden p-6 animate-in zoom-in-95 duration-200">
-                        <div className="flex justify-between items-start mb-6">
+                    <div className="bg-white rounded-[24px] shadow-xl w-full max-w-sm overflow-hidden p-5 animate-in zoom-in-95 duration-200">
+                        <div className="flex justify-between items-start mb-4">
                             <div>
-                                <h3 className="text-lg font-black text-slate-800 uppercase">Novo Usuário</h3>
-                                <p className="text-slate-500 text-xs mt-1">Prencha os dados abaixo.</p>
+                                <h3 className="text-sm font-black text-slate-800 uppercase">Novo Usuário</h3>
+                                <p className="text-slate-500 text-[10px] mt-0.5">Preencha os dados abaixo.</p>
                             </div>
-                            <button onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-slate-600 bg-slate-100/50 hover:bg-slate-100 p-2 rounded-xl transition-all">
-                                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                            <button onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-slate-600 bg-slate-100/50 hover:bg-slate-100 p-1.5 rounded-lg transition-all">
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                             </button>
                         </div>
 
-                        <form onSubmit={adminCreateUser} className="space-y-4">
+                        <form onSubmit={adminCreateUser} className="space-y-3">
                             <div>
-                                <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Nome Completo</label>
+                                <label className="block text-[7px] font-black text-slate-500 uppercase tracking-widest mb-1 ml-1">Nome Completo</label>
                                 <input
                                     type="text"
                                     value={createName}
                                     onChange={(e) => setCreateName(e.target.value)}
                                     placeholder="Ex: João Silva"
-                                    className="w-full bg-slate-50 border border-slate-200 focus:border-[#003B71] rounded-xl px-4 py-2.5 text-sm font-bold text-slate-700 outline-none transition-all placeholder:font-normal"
+                                    className="w-full bg-slate-50 border border-slate-200 focus:border-[#003B71] rounded-lg px-3 py-1.5 text-[10px] font-bold text-slate-700 outline-none transition-all placeholder:font-normal"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">E-mail</label>
+                                <label className="block text-[7px] font-black text-slate-500 uppercase tracking-widest mb-1 ml-1">E-mail</label>
                                 <input
                                     type="email"
                                     value={createEmail}
                                     onChange={(e) => setCreateEmail(e.target.value)}
                                     placeholder="exemplo@adventistas.org"
-                                    className="w-full bg-slate-50 border border-slate-200 focus:border-[#003B71] rounded-xl px-4 py-2.5 text-sm font-bold text-slate-700 outline-none transition-all placeholder:font-normal"
+                                    className="w-full bg-slate-50 border border-slate-200 focus:border-[#003B71] rounded-lg px-3 py-1.5 text-[10px] font-bold text-slate-700 outline-none transition-all placeholder:font-normal"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Senha Provisória</label>
+                                <label className="block text-[7px] font-black text-slate-500 uppercase tracking-widest mb-1 ml-1">Senha Provisória</label>
                                 <input
                                     type="password"
                                     value={createPassword}
                                     onChange={(e) => setCreatePassword(e.target.value)}
                                     placeholder="••••••••"
-                                    className="w-full bg-slate-50 border border-slate-200 focus:border-[#003B71] rounded-xl px-4 py-2.5 text-sm font-bold text-slate-700 outline-none transition-all placeholder:font-normal"
+                                    className="w-full bg-slate-50 border border-slate-200 focus:border-[#003B71] rounded-lg px-3 py-1.5 text-[10px] font-bold text-slate-700 outline-none transition-all placeholder:font-normal"
                                     minLength={6}
                                     required
                                 />
@@ -455,7 +455,7 @@ const UserManager: React.FC<UserManagerProps> = ({ onImpersonate, currentImperso
                                 <button
                                     type="submit"
                                     disabled={creatingUser}
-                                    className={`w-full bg-[#003B71] text-white py-3 rounded-xl font-black uppercase tracking-widest text-[11px] hover:bg-[#002a51] transition-all flex items-center justify-center gap-2 ${creatingUser ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                    className={`w-full bg-[#003B71] text-white py-2.5 rounded-xl font-black uppercase tracking-widest text-[9px] hover:bg-[#002a51] transition-all flex items-center justify-center gap-2 ${creatingUser ? 'opacity-70 cursor-not-allowed' : ''}`}
                                 >
                                     {creatingUser ? (
                                         <>

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Category, CriterionOption, EvaluationModel, EvaluationDirection, ManagementBonusConfig, AnrsBonusConfig, InadimplenciaRankingConfig } from '../types';
-import { formatBRL, formatPercentage, formatCurrencyInput, parseCurrencyString } from '../utils/formatting';
+import { formatBRL, formatPercentage, formatCurrency, formatPercentageMask, parseMaskedString } from '../utils/formatting';
 import { getMonthIndexFromLabel } from '../utils/calculations';
 
 interface CriteriaEvaluatorProps {
@@ -211,8 +211,8 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
             <input
               type="text"
               inputMode="numeric"
-              value={formatCurrencyInput(inadimplenciaRankingPercentage ?? 0)}
-              onChange={(e) => onInadimplenciaRankingInput(parseCurrencyString(e.target.value))}
+              value={formatPercentageMask(inadimplenciaRankingPercentage ?? 0)}
+              onChange={(e) => onInadimplenciaRankingInput(parseMaskedString(e.target.value))}
               disabled={isReadOnly}
               className="w-full bg-white border border-blue-100 rounded-lg px-3 py-2 text-lg font-black text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-all pr-12"
             />
@@ -410,8 +410,8 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
                               type="text"
                               inputMode="numeric"
                               disabled={isReadOnly}
-                              value={formatCurrencyInput(realized)}
-                              onChange={(e) => onMetricInput(category.id, parseCurrencyString(e.target.value))}
+                              value={category.id === 'orcamento_bi' ? formatCurrency(realized) : formatPercentageMask(realized)}
+                              onChange={(e) => onMetricInput(category.id, parseMaskedString(e.target.value))}
                               className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all"
                             />
                           )}

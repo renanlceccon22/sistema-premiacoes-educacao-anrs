@@ -59,7 +59,7 @@ const Header: React.FC<HeaderProps> = ({
   const tabs = [
     { id: 'UNITIES', label: 'CADASTRO UNIDADES' },
     { id: 'MASTER_VALUES', label: 'CADASTRO PREMIAÇÕES' },
-    { id: 'EVALUATION', label: 'CRITÉRIOS E AVALIAÇÃO' },
+    { id: 'EVALUATION', label: 'AVALIAÇÃO' },
     { id: 'REPORT', label: 'RELATÓRIOS' },
     { id: 'COST_ANALYSIS', label: 'CUSTO OPERACIONAL' },
   ];

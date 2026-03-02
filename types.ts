@@ -1,9 +1,20 @@
 
-export enum AwardLevel {
-  GOLD = 'GOLD',
-  SILVER = 'SILVER',
-  BRONZE = 'BRONZE',
-  NONE = 'NONE'
+export interface Period {
+  id: string;
+  label: string; // Ex: "03/2024"
+  status: 'open' | 'closed';
+}
+
+export type CriterionType = 'TOGGLE' | 'VALUE';
+
+export type ComparisonOperator = 'GREATER_THAN' | 'LESS_THAN' | 'BETWEEN' | 'EQUAL' | 'GREATER_EQUAL' | 'LESS_EQUAL' | 'RANKING_TOP' | 'RANKING_BOTTOM';
+
+export interface ScoringRange {
+  id: string;
+  operator: ComparisonOperator;
+  threshold1: number;
+  threshold2?: number;
+  points: number;
 }
 
 export interface CriterionOption {
@@ -12,113 +23,110 @@ export interface CriterionOption {
   points: number;
 }
 
+export enum AwardLevel {
+  GOLD = 'GOLD',
+  SILVER = 'SILVER',
+  BRONZE = 'BRONZE',
+  NONE = 'NONE'
+}
+
+export type Thresholds = {
+  [AwardLevel.GOLD]: number;
+  [AwardLevel.SILVER]: number;
+  [AwardLevel.BRONZE]: number;
+};
+
 export enum EvaluationModel {
-  MANUAL = 'MANUAL',          // Seleção manual de opções
-  METRIC_DIRECT = 'METRIC_DIRECT',    // Comparação direta (ex: inadimplência < 2%)
-  METRIC_RELATIVE = 'METRIC_RELATIVE',  // Comparação relativa ao target (ex: target + 0.25%)
-  METRIC_ACCUMULATED = 'METRIC_ACCUMULATED' // Meta acumulada pelo mês (ex: Orçamento BI)
+  MANUAL = 'MANUAL',
+  METRIC_DIRECT = 'METRIC_DIRECT',
+  METRIC_RELATIVE = 'METRIC_RELATIVE',
+  METRIC_ACCUMULATED = 'METRIC_ACCUMULATED'
 }
 
 export enum EvaluationDirection {
-  LOWER_IS_BETTER = 'LOWER_IS_BETTER', // Quanto menor o valor, mais pontos
-  HIGHER_IS_BETTER = 'HIGHER_IS_BETTER' // Quanto maior o valor, mais pontos
+  HIGHER_IS_BETTER = 'HIGHER_IS_BETTER',
+  LOWER_IS_BETTER = 'LOWER_IS_BETTER'
 }
 
 export interface Category {
   id: string;
   name: string;
-  options: CriterionOption[];
   evaluationModel: EvaluationModel;
-  evaluationDirection?: EvaluationDirection;
-  metricThresholds?: number[]; // Limites para as faixas (ex: [2, 3])
-  isMetric?: boolean; // Mantido por compatibilidade temporária se necessário, mas usaremos evaluationModel
-}
-
-export interface Thresholds {
-  [AwardLevel.GOLD]: number;
-  [AwardLevel.SILVER]: number;
-  [AwardLevel.BRONZE]: number;
+  evaluationDirection: EvaluationDirection;
+  options: CriterionOption[];
+  metricThresholds?: number[];
 }
 
 export interface InadimplenciaRankingConfig {
+  enabled: boolean;
   firstPlace: number;
   secondPlace: number;
   thirdPlace: number;
-  enabled: boolean;
 }
 
 export interface ManagementBonusConfig {
+  enabled: boolean;
   pointThreshold: number;
   bonusValue: number;
-  enabled: boolean;
 }
 
 export interface AnrsBonusConfig {
+  enabled: boolean;
   pointThreshold: number;
   bonusValue: number;
-  enabled: boolean;
 }
 
-export interface Period {
+export interface AwardCriterion {
   id: string;
-  label: string; // Ex: "Março 2024"
-  status: 'open' | 'closed';
+  name: string;
+  awardId: string; // Linked award
+  type: CriterionType;
+  valueFormat?: 'NUMBER' | 'PERCENTAGE';
+  operator?: ComparisonOperator;
+  threshold1?: number;
+  threshold2?: number;
+  scoringRanges?: ScoringRange[];
+  options?: CriterionOption[];
+  useAccumulatedBudget?: boolean;
+  budgetEvaluationType?: 'MONTHLY' | 'ACCUMULATED';
+}
+
+export interface CustomAward {
+  id: string;
+  name: string;
+  value: number;
+  schoolIds: string[];
+  evaluationType?: 'INDIVIDUAL' | 'JOINT';
+  scoringMode?: boolean;
+  minScore?: number;
 }
 
 export interface Evaluation {
   schoolId: string;
   periodId: string;
-  selections: Record<string, string>; // categoryId -> optionId
-  realizedValues: Record<string, number>; // categoryId -> valor em % (para categorias isMetric)
-  inadimplenciaRankingPercentage?: number; // Percentual para o ranking de inadimplência entre escolas
+  wonAwardIds: string[];
+  criterionResults: Record<string, {
+    value?: number;
+    checked?: boolean;
+    isMet: boolean;
+    score?: number;
+    selectedOptionId?: string;
+  }>;
   isFinalized: boolean;
   calculatedAt?: string;
-  snapshot?: {
-    treasurerName?: string;
-    treasurerCpf?: string;
-    viceTreasurerName?: string;
-    viceTreasurerCpf?: string;
-    managementBonusValue: number;
-    anrsBonusValue: number;
-    inadimplenciaRankingBonusValue: number;
-    totalTreasurerPrize: number;
-    vicePrize: number;
-    totalPoints: number;
-    inadimplenciaRank?: number;
-    awardLevel: AwardLevel;
-    // Também armazenamos as configs de bonus caso queira ser extremamente preciso
-    bonusConfigs?: {
-      managementBonusConfig: ManagementBonusConfig;
-      anrsBonusConfig: AnrsBonusConfig;
-      inadimplenciaRankingConfig: InadimplenciaRankingConfig;
-      thresholds: Thresholds;
-    };
-  };
+  totalScore?: number;
 }
 
 export interface SchoolUnit {
   id: string;
   name: string;
-  targets: Record<string, number>; // categoryId -> valor meta em %
+  targets: Record<string, number>;
+  annualBudget?: number;
   treasurerName?: string;
   treasurerCpf?: string;
   viceTreasurerName?: string;
   viceTreasurerCpf?: string;
   isLocked?: boolean;
-  custom_categories?: Category[]; // Categorias customizadas da unidade
-}
-
-export interface AppState {
-  thresholds: Thresholds;
-  inadimplenciaRankingConfig: InadimplenciaRankingConfig;
-  managementBonusConfig: ManagementBonusConfig;
-  anrsBonusConfig: AnrsBonusConfig;
-  categories: Category[];
-  schools: SchoolUnit[];
-  periods: Period[];
-  evaluations: Evaluation[];
-  activeSchoolId: string | null;
-  activePeriodId: string | null;
 }
 
 export interface User {
@@ -140,4 +148,9 @@ export interface Entity {
 export interface UserEntity {
   user_id: string;
   entity_id: string;
+}
+
+export interface AppConfig {
+  custom_awards: CustomAward[];
+  award_criteria: AwardCriterion[];
 }

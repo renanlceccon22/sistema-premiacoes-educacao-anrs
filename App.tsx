@@ -1,8 +1,9 @@
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { formatBRL, formatCurrency, formatPercentageMask, parseMaskedString, formatCurrencyInput } from './utils/formatting';
+import { getMonthIndexFromLabel } from './utils/calculations';
 import Header from './components/Header';
 import PrizeConfig from './components/PrizeConfig';
-import CriteriaEvaluator from './components/CriteriaEvaluator';
 import ResultsPanel from './components/ResultsPanel';
 import SchoolManager from './components/SchoolManager';
 import SummaryTable from './components/SummaryTable';
@@ -17,27 +18,18 @@ import ProfileSettings from './components/ProfileSettings';
 import EntityManager from './components/EntityManager';
 import { supabase, isConfigured } from './src/lib/supabase';
 import {
-  INITIAL_THRESHOLDS,
   INITIAL_CATEGORIES,
-  INITIAL_INADIMPLENCIA_RANKING_CONFIG,
-  INITIAL_MANAGEMENT_BONUS_CONFIG,
-  INITIAL_ANRS_BONUS_CONFIG
 } from './constants';
 import {
-  AwardLevel,
-  Thresholds,
-  Category,
+  CustomAward,
+  AwardCriterion,
   SchoolUnit,
   Period,
   Evaluation,
-  InadimplenciaRankingConfig,
-  ManagementBonusConfig,
-  AnrsBonusConfig,
-  EvaluationModel,
   User,
   Entity
 } from './types';
-import { calculatePoints, getAwardLevel, calculateAllPrizes } from './utils/calculations';
+import { calculateAllPrizes } from './utils/calculations';
 
 enum AppTab {
   UNITIES = 'UNITIES',
@@ -49,11 +41,8 @@ enum AppTab {
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<AppTab>(AppTab.UNITIES);
-  const [thresholds, setThresholds] = useState<Thresholds>(INITIAL_THRESHOLDS);
-  const [inadimplenciaRankingConfig, setInadimplenciaRankingConfig] = useState<InadimplenciaRankingConfig>(INITIAL_INADIMPLENCIA_RANKING_CONFIG);
-  const [managementBonusConfig, setManagementBonusConfig] = useState<ManagementBonusConfig>(INITIAL_MANAGEMENT_BONUS_CONFIG);
-  const [anrsBonusConfig, setAnrsBonusConfig] = useState<AnrsBonusConfig>(INITIAL_ANRS_BONUS_CONFIG);
-  const [schoolCustomCategories, setSchoolCustomCategories] = useState<Record<string, Category[]>>({});
+  const [customAwards, setCustomAwards] = useState<CustomAward[]>([]);
+  const [awardCriteria, setAwardCriteria] = useState<AwardCriterion[]>([]);
   const [schools, setSchools] = useState<SchoolUnit[]>([]);
   const [periods, setPeriods] = useState<Period[]>([]);
   const [evaluations, setEvaluations] = useState<Evaluation[]>([]);
@@ -63,6 +52,7 @@ const App: React.FC = () => {
   const [syncing, setSyncing] = useState(false);
   const [session, setSession] = useState<any>(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const lastInitKey = useRef('');
   const [impersonatedUser, setImpersonatedUser] = useState<User | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -71,6 +61,7 @@ const App: React.FC = () => {
   const [showEntities, setShowEntities] = useState(false);
   const [entities, setEntities] = useState<Entity[]>([]);
   const [selectedEntityId, setSelectedEntityId] = useState<string | null>(null);
+  const [configId, setConfigId] = useState<string | null>(null);
   const [availableEntities, setAvailableEntities] = useState<Entity[]>([]);
 
   const isSuperAdmin = useMemo(() => {
@@ -168,7 +159,7 @@ const App: React.FC = () => {
 
   const saveLocally = (key: string, data: any) => {
     if (!isConfigured) {
-      localStorage.setItem(`premacao_${key} `, JSON.stringify(data));
+      localStorage.setItem(`premacao_${key}`, JSON.stringify(data));
     }
   };
 
@@ -179,11 +170,18 @@ const App: React.FC = () => {
         return;
       }
 
-      setLoading(true);
+      const targetUserId = impersonatedUser?.id || session?.user?.id;
+      const currentKey = `${targetUserId}_${selectedEntityId}`;
+      const isReinit = lastInitKey.current === currentKey;
+
+      if (!isReinit) {
+        setLoading(true);
+      }
+
       try {
         const isImpersonating = !!impersonatedUser;
-        const targetUserId = impersonatedUser?.id || session.user.id;
         let profile = null;
+        lastInitKey.current = currentKey;
 
         if (isConfigured && supabase) {
           // 1. Sincronizar/Buscar Perfil
@@ -248,45 +246,17 @@ const App: React.FC = () => {
           ]);
 
           if (schoolsData) {
-            const mappedSchools: SchoolUnit[] = schoolsData.map((s: any) => {
-              let cats = s.custom_categories || INITIAL_CATEGORIES;
-
-              const latestInadimplencia = INITIAL_CATEGORIES.find(c => c.id === 'inadimplencia_mes');
-              if (latestInadimplencia && cats) {
-                const idx = cats.findIndex((c: Category) => c.id === 'inadimplencia_mes');
-                if (idx !== -1) {
-                  // FORCE points to 0 on old evaluations for this specific category
-                  cats[idx].options = cats[idx].options.map(opt => ({ ...opt, points: 0 }));
-
-                  const currentThresholds = cats[idx].metricThresholds || [];
-                  const latestThresholds = latestInadimplencia.metricThresholds || [];
-                  if (JSON.stringify(currentThresholds) !== JSON.stringify(latestThresholds)) {
-                    const newCats = [...cats];
-                    newCats[idx] = latestInadimplencia;
-                    cats = newCats;
-                  }
-                }
-              }
-
-              return {
-                id: s.id,
-                name: s.name,
-                targets: s.targets || {},
-                treasurerName: s.treasurer_name,
-                treasurerCpf: s.treasurer_cpf,
-                viceTreasurerName: s.vice_treasurer_name,
-                viceTreasurerCpf: s.vice_treasurer_cpf,
-                isLocked: s.is_locked,
-                custom_categories: cats
-              };
-            });
+            const mappedSchools: SchoolUnit[] = schoolsData.map((s: any) => ({
+              id: s.id,
+              name: s.name,
+              targets: s.targets || {},
+              treasurerName: s.treasurer_name,
+              treasurerCpf: s.treasurer_cpf,
+              viceTreasurerName: s.vice_treasurer_name,
+              viceTreasurerCpf: s.vice_treasurer_cpf,
+              isLocked: s.is_locked,
+            }));
             setSchools(mappedSchools);
-
-            const customCats: Record<string, Category[]> = {};
-            mappedSchools.forEach((s) => {
-              if (s.custom_categories) customCats[s.id] = s.custom_categories;
-            });
-            setSchoolCustomCategories(customCats);
           }
 
           if (periodsData) setPeriods(periodsData as Period[]);
@@ -295,21 +265,22 @@ const App: React.FC = () => {
             const mappedEvals: Evaluation[] = evaluationsData.map((e: any) => ({
               schoolId: e.school_id,
               periodId: e.period_id,
-              selections: e.selections || {},
-              realizedValues: e.realized_values || {},
-              inadimplenciaRankingPercentage: e.inadimplencia_ranking_percentage,
+              wonAwardIds: e.won_award_ids || [],
+              criterionResults: e.criterion_results || {},
               isFinalized: e.is_finalized,
-              calculatedAt: e.calculated_at,
-              snapshot: e.snapshot
+              calculatedAt: e.calculated_at
             }));
             setEvaluations(mappedEvals);
           }
 
           if (configData) {
-            if (configData.thresholds) setThresholds(configData.thresholds);
-            if (configData.inadimplencia_ranking_config) setInadimplenciaRankingConfig(configData.inadimplencia_ranking_config);
-            if (configData.management_bonus_config) setManagementBonusConfig(configData.management_bonus_config);
-            if (configData.anrs_bonus_config) setAnrsBonusConfig(configData.anrs_bonus_config);
+            setConfigId(configData.id || null);
+            if (configData.custom_awards) setCustomAwards(configData.custom_awards);
+            if (configData.award_criteria) setAwardCriteria(configData.award_criteria);
+          } else {
+            setConfigId(null);
+            setCustomAwards([]);
+            setAwardCriteria([]);
           }
         } else {
           // Fallback LocalStorage
@@ -321,20 +292,13 @@ const App: React.FC = () => {
           if (localSchools) {
             const parsedSchools = JSON.parse(localSchools);
             setSchools(parsedSchools);
-            const customCats: Record<string, Category[]> = {};
-            parsedSchools.forEach((s: any) => {
-              if (s.custom_categories) customCats[s.id] = s.custom_categories;
-            });
-            setSchoolCustomCategories(customCats);
           }
           if (localPeriods) setPeriods(JSON.parse(localPeriods));
           if (localEvals) setEvaluations(JSON.parse(localEvals));
           if (localConfig) {
             const cfg = JSON.parse(localConfig);
-            setThresholds(cfg.thresholds || INITIAL_THRESHOLDS);
-            setInadimplenciaRankingConfig(cfg.inadimplencia_ranking_config || INITIAL_INADIMPLENCIA_RANKING_CONFIG);
-            setManagementBonusConfig(cfg.management_bonus_config || INITIAL_MANAGEMENT_BONUS_CONFIG);
-            setAnrsBonusConfig(cfg.anrs_bonus_config || INITIAL_ANRS_BONUS_CONFIG);
+            setCustomAwards(cfg.custom_awards || []);
+            setAwardCriteria(cfg.award_criteria || []);
           }
         }
       } catch (e) {
@@ -344,8 +308,13 @@ const App: React.FC = () => {
       }
     };
 
-    initApp();
-  }, [session, authLoading, impersonatedUser, selectedEntityId]);
+    const targetUserId = impersonatedUser?.id || session?.user?.id;
+    if (targetUserId) {
+      initApp();
+    } else if (!authLoading) {
+      setLoading(false);
+    }
+  }, [session?.user?.id, authLoading, impersonatedUser?.id, selectedEntityId]);
 
   const handleEntityChange = async (entityId: string) => {
     setSelectedEntityId(entityId);
@@ -362,136 +331,34 @@ const App: React.FC = () => {
     return evaluations.find(e => e.schoolId === activeSchoolId && e.periodId === activePeriodId) || null;
   }, [evaluations, activeSchoolId, activePeriodId]);
 
-  // Configurações efetivas: Se o periodo está fechado, usamos o que foi congelado no snapshot. 
-  // Se está aberto, as mudanças globais no master impactam os resultados (conforme regra do usuário).
-  const effectiveBonusConfig = useMemo(() => {
-    if (activePeriod?.status === 'closed' && currentEvaluation?.snapshot?.bonusConfigs) {
-      return currentEvaluation.snapshot.bonusConfigs;
-    }
-    return {
-      managementBonusConfig,
-      anrsBonusConfig,
-      inadimplenciaRankingConfig,
-      thresholds
-    };
-  }, [activePeriod?.status, currentEvaluation, managementBonusConfig, anrsBonusConfig, inadimplenciaRankingConfig, thresholds]);
-
-  const activeCategories = useMemo(() => {
-    const base = activeSchoolId
-      ? (schoolCustomCategories[activeSchoolId] || INITIAL_CATEGORIES)
-      : INITIAL_CATEGORIES;
-
-    const { managementBonusConfig: mgmt, anrsBonusConfig: anrs, inadimplenciaRankingConfig: inad } = effectiveBonusConfig;
-
-    return base.filter(cat => {
-      if (cat.id === 'adiantamentos' || cat.id === 'cartao_corporativo') {
-        return mgmt.enabled;
-      }
-      if (cat.id === 'orcamento_bi' || cat.id === 'descontos_concedidos') {
-        return anrs.enabled;
-      }
-      if (cat.id === 'inadimplencia_mes') {
-        return inad.enabled || anrs.enabled;
-      }
-      return true;
-    });
-  }, [activeSchoolId, schoolCustomCategories, effectiveBonusConfig]);
-
-  const metricCategories = useMemo(() => activeCategories.filter(c => c.evaluationModel !== EvaluationModel.MANUAL), [activeCategories]);
-
-
-  const selections = useMemo(() => currentEvaluation?.selections || {}, [currentEvaluation]);
-  const realizedValues = useMemo(() => currentEvaluation?.realizedValues || {}, [currentEvaluation]);
-  const inadimplenciaRankingPercentage = useMemo(() => currentEvaluation?.inadimplenciaRankingPercentage, [currentEvaluation]);
-
-  const totalPoints = useMemo(() => {
-    // Se o periodo estiver FECHADO, usamos o valor congelado do snapshot.
-    // Se o periodo estiver ABERTO, recalculamos para refletir mudanças dinâmicas na ativação/inativação.
-    if (activePeriod?.status === 'closed' && currentEvaluation?.snapshot) {
-      return currentEvaluation.snapshot.totalPoints;
-    }
-
-    const targets = activeSchool?.targets || {};
-    return activeCategories.reduce((acc, cat) => {
-      const p = calculatePoints(cat, selections[cat.id], realizedValues[cat.id], targets[cat.id] || 0, activePeriod?.label);
-      return acc + p;
-    }, 0);
-  }, [selections, realizedValues, activeCategories, activeSchool, activePeriod, currentEvaluation]);
-
   const schoolsForSummary = useMemo(() => {
     return schools.map(s => {
       const evalData = evaluations.find(e => e.schoolId === s.id && e.periodId === activePeriodId);
       return {
         ...s,
-        selections: evalData?.selections || {},
-        realizedValues: evalData?.realizedValues || {},
-        inadimplenciaRankingPercentage: evalData?.inadimplenciaRankingPercentage,
+        wonAwardIds: evalData?.wonAwardIds || [],
         isFinalized: evalData?.isFinalized || false,
-        categories: schoolCustomCategories[s.id] || INITIAL_CATEGORIES,
-        snapshot: evalData?.snapshot
       };
     });
-  }, [schools, evaluations, activePeriodId, schoolCustomCategories]);
+  }, [schools, evaluations, activePeriodId]);
 
-  const allPeriodEvaluationsForPrizes = useMemo(() => {
-    if (!activePeriodId) return [];
-    return schoolsForSummary.map(s => ({
-      schoolId: s.id,
-      inadimplenciaRankingPercentage: s.inadimplenciaRankingPercentage,
-      categories: s.categories,
-      selections: s.selections,
-      realizedValues: s.realizedValues,
-      targets: s.targets,
-      periodLabel: activePeriod?.label,
-      isFinalized: s.isFinalized
-    }));
-  }, [schoolsForSummary, activePeriodId, activePeriod]);
-
-  const { inadimplenciaRankingBonus, managementBonus, anrsBonus, totalTreasurerPrize, vicePrize, level, inadimplenciaRank } = useMemo(() => {
+  const { totalTreasurerPrize, vicePrize, awardedPrizes } = useMemo(() => {
     if (!activeSchoolId || !activePeriodId) {
       return {
-        inadimplenciaRankingBonus: 0, managementBonus: 0, anrsBonus: 0,
-        totalTreasurerPrize: 0, vicePrize: 0, level: AwardLevel.NONE,
-        inadimplenciaRank: undefined,
+        totalTreasurerPrize: 0, vicePrize: 0, awardedPrizes: [],
       };
     }
 
-    // Calculamos os prêmios live
-    const livePrizes = calculateAllPrizes(
-      totalPoints, thresholds, inadimplenciaRankingConfig, managementBonusConfig, anrsBonusConfig,
-      allPeriodEvaluationsForPrizes, activeSchoolId, activePeriod?.label,
-      !!activeSchool?.viceTreasurerName
-    );
+    const wonAwardIds = currentEvaluation?.wonAwardIds || [];
+    const prizes = customAwards.filter(a => wonAwardIds.includes(a.id));
+    const total = prizes.reduce((acc, p) => acc + p.value, 0);
 
-    // Se estiver finalizado, usamos o bônus de Ranking live (pois depende de terceiros), 
-    // mas mantemos os outros congelados no snapshot (Gestão e Meta ANRS),
-    // respeitando TAMBÉM o status de ativação que estava no momento da finalização.
-    if (currentEvaluation?.isFinalized && currentEvaluation.snapshot) {
-      const snap = currentEvaluation.snapshot;
-      const { managementBonusConfig: snapMgmt, anrsBonusConfig: snapAnrs, inadimplenciaRankingConfig: snapInad } = effectiveBonusConfig;
-
-      const finalInadBonus = snapInad.enabled ? livePrizes.inadimplenciaRankingBonus : 0;
-      const finalMgmtBonus = snapMgmt.enabled ? (snap.managementBonusValue || 0) : 0;
-      const finalAnrsBonus = snapAnrs.enabled ? (snap.anrsBonusValue || 0) : 0;
-
-      const total = finalInadBonus + finalMgmtBonus + finalAnrsBonus;
-      const hasVice = !!(snap.viceTreasurerName || activeSchool?.viceTreasurerName);
-
-      return {
-        inadimplenciaRankingBonus: finalInadBonus,
-        managementBonus: finalMgmtBonus,
-        anrsBonus: finalAnrsBonus,
-        totalTreasurerPrize: total,
-        vicePrize: hasVice ? total * 0.5 : 0,
-        level: snap.awardLevel,
-        inadimplenciaRank: livePrizes.inadimplenciaRank,
-      };
-    }
-
-    return livePrizes;
-  }, [totalPoints, thresholds, inadimplenciaRankingConfig, managementBonusConfig, anrsBonusConfig, allPeriodEvaluationsForPrizes, activeSchoolId, activePeriodId, activePeriod, currentEvaluation, effectiveBonusConfig]);
-
-  const awardLevel = level;
+    return {
+      totalTreasurerPrize: total,
+      vicePrize: activeSchool?.viceTreasurerName ? total * 0.5 : 0,
+      awardedPrizes: prizes
+    };
+  }, [activeSchoolId, activePeriodId, customAwards, activeSchool, currentEvaluation]);
 
   const handleAddPeriod = async (label: string) => {
     setSyncing(true);
@@ -568,149 +435,309 @@ const App: React.FC = () => {
     setSyncing(false);
   };
 
+
   const updateEvaluation = (updates: Partial<Evaluation>) => {
     if (!activeSchoolId || !activePeriodId) return;
 
-    // 1. Atualiza Localmente INSTANTANEAMENTE (Sem lag)
-    const current = evaluations.find(e => e.schoolId === activeSchoolId && e.periodId === activePeriodId) || {
-      schoolId: activeSchoolId,
-      periodId: activePeriodId,
-      selections: {},
-      realizedValues: {},
-      isFinalized: false
-    };
+    setEvaluations(prevEvaluations => {
+      // 1. Preparar mapa de avaliações do período atual
+      const periodMap = new Map<string, Evaluation>();
+      prevEvaluations.forEach(ev => {
+        if (ev.periodId === activePeriodId) {
+          periodMap.set(ev.schoolId, { ...ev });
+        }
+      });
 
-    const updatedEval = { ...current, ...updates };
-    const newEvaluations = evaluations.some(e => e.schoolId === activeSchoolId && e.periodId === activePeriodId)
-      ? evaluations.map(e => (e.schoolId === activeSchoolId && e.periodId === activePeriodId) ? updatedEval : e)
-      : [...evaluations, updatedEval];
+      // 2. Mesclar a atualização da escola ativa
+      const currentActiveEval = periodMap.get(activeSchoolId) || {
+        schoolId: activeSchoolId,
+        periodId: activePeriodId,
+        wonAwardIds: [],
+        criterionResults: {},
+        isFinalized: false
+      };
 
-    setEvaluations(newEvaluations);
-    saveLocally('evaluations', newEvaluations);
+      const updatedActiveEval = {
+        ...currentActiveEval,
+        ...updates,
+        criterionResults: { ...currentActiveEval.criterionResults, ...(updates.criterionResults || {}) }
+      };
+      periodMap.set(activeSchoolId, updatedActiveEval);
 
-    // 2. Grava no Supabase com DEBOUNCE (Silencioso e sem travar a UI)
-    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+      // 3. Processar critérios de RANKING
+      const rankingCriteria = awardCriteria.filter(c => {
+        const award = customAwards.find(a => a.id === c.awardId);
+        return award?.evaluationType === 'JOINT' && c.operator?.startsWith('RANKING');
+      });
 
-    saveTimeoutRef.current = setTimeout(async () => {
-      if (isConfigured && supabase) {
-        const dbPayload: any = {
-          school_id: updatedEval.schoolId,
-          period_id: updatedEval.periodId,
-          selections: updatedEval.selections,
-          realized_values: updatedEval.realizedValues,
-          inadimplencia_ranking_percentage: updatedEval.inadimplenciaRankingPercentage,
-          is_finalized: updatedEval.isFinalized,
-          calculated_at: updatedEval.calculatedAt,
-          snapshot: updatedEval.snapshot
-        };
+      rankingCriteria.forEach(criterion => {
+        const dataPoints: { schoolId: string, value: number }[] = [];
+        periodMap.forEach((ev) => {
+          const res = ev.criterionResults[criterion.id];
+          if (res && res.value !== undefined) {
+            dataPoints.push({ schoolId: ev.schoolId, value: res.value });
+          }
+        });
 
-        if (selectedEntityId) dbPayload.entity_id = selectedEntityId;
-        else dbPayload.user_id = session.user.id;
+        const isTop = criterion.operator === 'RANKING_TOP';
+        dataPoints.sort((a, b) => isTop ? b.value - a.value : a.value - b.value);
 
-        await supabase.from('evaluations').upsert(dbPayload, { onConflict: 'school_id,period_id' });
+        const topCount = criterion.threshold1 || 0;
+        dataPoints.forEach((dp, index) => {
+          const ev = periodMap.get(dp.schoolId)!;
+          ev.criterionResults = {
+            ...ev.criterionResults,
+            [criterion.id]: {
+              ...ev.criterionResults[criterion.id],
+              isMet: index < topCount
+            }
+          };
+        });
+      });
+
+      // 4. Recalcular wonAwardIds para TODAS as escolas do período
+      const changedEvaluations: Evaluation[] = [];
+      periodMap.forEach((ev) => {
+        const wonAwardIds: string[] = [];
+        customAwards.forEach(award => {
+          if (award.schoolIds.length > 0 && !award.schoolIds.includes(ev.schoolId)) return;
+          const awardCriteriaList = awardCriteria.filter(c => c.awardId === award.id);
+          if (awardCriteriaList.length === 0) return;
+
+          if (award.scoringMode) {
+            const awardScore = awardCriteriaList.reduce((acc, c) => acc + (ev.criterionResults[c.id]?.score || 0), 0);
+            if (awardScore >= (award.minScore || 0)) wonAwardIds.push(award.id);
+          } else {
+            const allCriteriaMet = awardCriteriaList.every(criterion => ev.criterionResults[criterion.id]?.isMet);
+            if (allCriteriaMet) wonAwardIds.push(award.id);
+          }
+        });
+
+        const prevEval = prevEvaluations.find(old => old.schoolId === ev.schoolId && old.periodId === activePeriodId);
+        const prevWonStr = JSON.stringify(prevEval?.wonAwardIds || []);
+        const newWonStr = JSON.stringify(wonAwardIds);
+
+        if (prevWonStr !== newWonStr || ev.schoolId === activeSchoolId) {
+          ev.wonAwardIds = wonAwardIds;
+          ev.calculatedAt = new Date().toISOString();
+          changedEvaluations.push(ev);
+        }
+      });
+
+      // 5. Persistir no Banco de Dados (debounce)
+      if (changedEvaluations.length > 0) {
+        if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+        saveTimeoutRef.current = setTimeout(async () => {
+          if (isConfigured && supabase) {
+            const dbPayloads = changedEvaluations.map(ev => ({
+              school_id: ev.schoolId,
+              period_id: ev.periodId,
+              won_award_ids: ev.wonAwardIds,
+              criterion_results: ev.criterionResults,
+              is_finalized: ev.isFinalized,
+              calculated_at: ev.calculatedAt,
+              entity_id: selectedEntityId || undefined,
+              user_id: (!selectedEntityId ? (impersonatedUser?.id || session.user.id) : undefined)
+            }));
+            await supabase.from('evaluations').upsert(dbPayloads, { onConflict: 'school_id,period_id' });
+          }
+        }, 1000);
       }
-    }, 1000); // Aguarda 1 segundo após o último toque antes de subir pra nuvem
+
+      // 6. Retornar Nova Lista de Avaliações
+      const updatedList = prevEvaluations.map(e => {
+        if (e.periodId === activePeriodId) {
+          return periodMap.get(e.schoolId) || e;
+        }
+        return e;
+      });
+
+      // Adiciona o novo se não existia
+      if (!prevEvaluations.some(e => e.schoolId === activeSchoolId && e.periodId === activePeriodId)) {
+        updatedList.push(periodMap.get(activeSchoolId)!);
+      }
+
+      return updatedList;
+    });
   };
 
-  const handleSelection = (categoryId: string, optionId: string) => {
+  const handleUpdateCriterionResult = (criterionId: string, valueUpdates: { value?: number, checked?: boolean, selectedOptionId?: string }) => {
     if (!activeSchoolId || !activePeriodId || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized) return;
-    const newSelections = { ...selections };
-    if (newSelections[categoryId] === optionId) delete newSelections[categoryId];
-    else newSelections[categoryId] = optionId;
-    updateEvaluation({ selections: newSelections });
+
+    const criterion = awardCriteria.find(c => String(c.id).trim() === String(criterionId).trim());
+    if (!criterion) return;
+
+    const periodLabel = activePeriod?.label || '';
+    const monthIndex = getMonthIndexFromLabel(periodLabel);
+    const award = customAwards.find(a => String(a.id).trim() === String(criterion.awardId).trim());
+
+    const results = currentEvaluation?.criterionResults || {};
+    const oldResult = results[criterionId] ? { ...results[criterionId] } : { isMet: false };
+
+    let effectiveUpdates = { ...valueUpdates };
+
+    const sid = (id: any) => id ? String(id).trim() : null;
+    const oldOptId = sid(oldResult.selectedOptionId);
+    const newOptId = sid(valueUpdates.selectedOptionId);
+
+    // Toggle logic: if clicking already selected, deselect
+    if (newOptId && oldOptId === newOptId) {
+      effectiveUpdates.selectedOptionId = undefined;
+    }
+
+    // Base new result
+    const newResult = { ...oldResult, ...effectiveUpdates };
+
+    // Recalculate Logic
+    if (criterion.type === 'TOGGLE') {
+      if (criterion.options && criterion.options.length > 0) {
+        const targetOptId = sid(newResult.selectedOptionId);
+        const selectedOption = criterion.options.find(o => sid(o.id) === targetOptId);
+        newResult.selectedOptionId = targetOptId || undefined;
+        newResult.score = selectedOption?.points || 0;
+        newResult.isMet = !!selectedOption;
+      } else {
+        newResult.isMet = !!newResult.checked;
+        newResult.score = newResult.checked ? (award?.minScore || 100) : 0;
+      }
+    } else {
+      const val = newResult.value || 0;
+
+      if (criterion.useAccumulatedBudget) {
+        const annualTarget = activeSchool?.annualBudget || activeSchool?.targets[criterion.id] || 0;
+        const monthFactor = criterion.budgetEvaluationType === 'MONTHLY' ? 1 / 12 : monthIndex / 12;
+        const currentTarget = annualTarget * monthFactor;
+
+        if (award?.scoringMode && criterion.scoringRanges && criterion.scoringRanges.length > 0) {
+          let maxPoints = 0;
+          criterion.scoringRanges.forEach(range => {
+            let rangeMet = false;
+            // No modo orçamento, o threshold é interpretado como uma porcentagem do orçamento do período
+            const rt1 = (range.threshold1 || 0) * currentTarget / 100;
+            const rt2 = (range.threshold2 || 0) * currentTarget / 100;
+
+            switch (range.operator) {
+              case 'GREATER_THAN': rangeMet = val > rt1; break;
+              case 'LESS_THAN': rangeMet = val < rt1; break;
+              case 'GREATER_EQUAL': rangeMet = val >= rt1; break;
+              case 'LESS_EQUAL': rangeMet = val <= rt1; break;
+              case 'EQUAL': rangeMet = val === rt1; break;
+              case 'BETWEEN': rangeMet = val >= rt1 && val <= rt2; break;
+              default: rangeMet = false;
+            }
+            if (rangeMet) maxPoints = Math.max(maxPoints, range.points);
+          });
+          newResult.score = maxPoints;
+          newResult.isMet = maxPoints > 0;
+        } else {
+          // Fallback simple: menor ou igual ao orçamento corrente = 100 pontos
+          newResult.isMet = val <= currentTarget;
+          newResult.score = newResult.isMet ? 100 : 0;
+        }
+      } else if (award?.scoringMode && criterion.scoringRanges && criterion.scoringRanges.length > 0) {
+        let maxPoints = 0;
+        criterion.scoringRanges.forEach(range => {
+          let rangeMet = false;
+          const rt1 = range.threshold1 || 0;
+          const rt2 = range.threshold2 || 0;
+          switch (range.operator) {
+            case 'GREATER_THAN': rangeMet = val > rt1; break;
+            case 'LESS_THAN': rangeMet = val < rt1; break;
+            case 'GREATER_EQUAL': rangeMet = val >= rt1; break;
+            case 'LESS_EQUAL': rangeMet = val <= rt1; break;
+            case 'EQUAL': rangeMet = val === rt1; break;
+            case 'BETWEEN': rangeMet = val >= rt1 && val <= rt2; break;
+            default: rangeMet = false;
+          }
+          if (rangeMet) maxPoints = Math.max(maxPoints, range.points);
+        });
+        newResult.score = maxPoints;
+        newResult.isMet = maxPoints > 0;
+      } else {
+        const t1 = criterion.threshold1 || 0;
+        const t2 = criterion.threshold2 || 0;
+        switch (criterion.operator) {
+          case 'GREATER_THAN': newResult.isMet = val > t1; break;
+          case 'LESS_THAN': newResult.isMet = val < t1; break;
+          case 'GREATER_EQUAL': newResult.isMet = val >= t1; break;
+          case 'LESS_EQUAL': newResult.isMet = val <= t1; break;
+          case 'EQUAL': newResult.isMet = val === t1; break;
+          case 'BETWEEN': newResult.isMet = val >= t1 && val <= t2; break;
+          default: newResult.isMet = false;
+        }
+        newResult.score = newResult.isMet ? 100 : 0;
+      }
+    }
+
+    updateEvaluation({
+      criterionResults: {
+        [criterionId]: newResult
+      }
+    });
   };
 
-  const handleMetricInput = (categoryId: string, value: number) => {
-    if (!activeSchoolId || !activePeriodId || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized) return;
-    updateEvaluation({ realizedValues: { ...realizedValues, [categoryId]: value } });
-  };
+  const handleAddSchool = async (payload: Partial<SchoolUnit>) => {
+    setSyncing(true);
+    const newId = crypto.randomUUID();
 
-  const handleInadimplenciaRankingInput = (value: number) => {
-    if (!activeSchoolId || !activePeriodId || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized) return;
-
-    // Atualiza tanto o ranking quanto o realizado da categoria inadimplencia_mes
-    const updatedRealizedValues = { ...realizedValues, inadimplencia_mes: value };
-
-    const evaluationUpdates: Partial<Evaluation> = {
-      inadimplenciaRankingPercentage: value,
-      realizedValues: updatedRealizedValues
+    const newSchool: SchoolUnit = {
+      id: newId,
+      name: payload.name || 'Nova Unidade',
+      targets: {},
+      treasurerName: payload.treasurerName,
+      treasurerCpf: payload.treasurerCpf,
+      viceTreasurerName: payload.viceTreasurerName,
+      viceTreasurerCpf: payload.viceTreasurerCpf,
+      isLocked: payload.isLocked || false,
     };
 
-    updateEvaluation(evaluationUpdates);
+    if (isConfigured && supabase) {
+      const insertData: any = {
+        name: newSchool.name,
+        targets: {},
+        treasurer_name: newSchool.treasurerName,
+        treasurer_cpf: newSchool.treasurerCpf,
+        vice_treasurer_name: newSchool.viceTreasurerName,
+        vice_treasurer_cpf: newSchool.viceTreasurerCpf,
+        is_locked: newSchool.isLocked,
+      };
+
+      if (selectedEntityId) insertData.entity_id = selectedEntityId;
+      else insertData.user_id = session.user.id;
+
+      const { data } = await supabase.from('schools').insert(insertData).select().single();
+
+      if (data) {
+        const mapped: SchoolUnit = {
+          id: data.id,
+          name: data.name,
+          targets: data.targets || {},
+          treasurerName: data.treasurer_name,
+          treasurerCpf: data.treasurer_cpf,
+          viceTreasurerName: data.vice_treasurer_name,
+          viceTreasurerCpf: data.vice_treasurer_cpf,
+          isLocked: data.is_locked,
+        };
+        setSchools(prev => [...prev, mapped]);
+        setActiveSchoolId(mapped.id);
+      }
+    } else {
+      const updated = [...schools, newSchool];
+      setSchools(updated);
+      saveLocally('schools', updated);
+      setActiveSchoolId(newId);
+    }
+    setSyncing(false);
   };
 
   const handleFinalize = async () => {
     if (!activeSchoolId || !activePeriodId || !activeSchool) return;
 
-    // Validação: Verificar se todos os campos estão preenchidos
-    const missingFields: string[] = [];
-
-    // 1. Verificar Ranking de Inadimplência
-    if (inadimplenciaRankingPercentage === undefined || inadimplenciaRankingPercentage === null) {
-      missingFields.push("Inadimplência para Ranking");
-    }
-
-    // 2. Verificar Categorias Ativas
-    activeCategories.forEach(cat => {
-      // Pula validação se o alvo for obrigatório e estiver faltando (o critério estaria desabilitado/não avaliado)
-      // Mas se o usuário deve ignorar, ele não preenche. Se a regra é "toda a avaliação", assumimos que
-      // critérios habilitados devem ter valor.
-
-      const isTargetRequired = cat.id === 'orcamento_bi' || cat.id === 'descontos_concedidos';
-      const target = activeSchool.targets?.[cat.id] || 0;
-
-      // Se falta meta obrigatória, tecnicamente não dá pra avaliar. Vamos considerar que se não tem meta,
-      // ele não bloqueia o salvamento (pois o critério conta como 0 pts).
-      if (isTargetRequired && target <= 0) return;
-
-      const model = cat.evaluationModel;
-
-      if (model === EvaluationModel.MANUAL || !model) {
-        if (!selections[cat.id]) {
-          missingFields.push(cat.name);
-        }
-      } else {
-        // Modelos métricos
-        if (realizedValues[cat.id] === undefined || realizedValues[cat.id] === null) {
-          missingFields.push(cat.name);
-        }
-      }
-    });
-
-    if (missingFields.length > 0) {
-      alert(`Não é possível finalizar a avaliação. Os seguintes itens não foram preenchidos:\n\n- ${missingFields.join('\n- ')}\n\nPor favor, complete todas as avaliações.`);
-      return;
-    }
-
-    const snapshot = {
-      treasurerName: activeSchool.treasurerName,
-      treasurerCpf: activeSchool.treasurerCpf,
-      viceTreasurerName: activeSchool.viceTreasurerName,
-      viceTreasurerCpf: activeSchool.viceTreasurerCpf,
-      managementBonusValue: managementBonus,
-      anrsBonusValue: anrsBonus,
-      inadimplenciaRankingBonusValue: inadimplenciaRankingBonus,
-      totalTreasurerPrize: totalTreasurerPrize,
-      vicePrize: vicePrize,
-      totalPoints: totalPoints,
-      inadimplenciaRank: inadimplenciaRank,
-      awardLevel: awardLevel,
-      // CONGELA as configurações de ativação e valores no momento da finalização
-      bonusConfigs: {
-        managementBonusConfig: { ...managementBonusConfig },
-        anrsBonusConfig: { ...anrsBonusConfig },
-        inadimplenciaRankingConfig: { ...inadimplenciaRankingConfig },
-        thresholds: { ...thresholds }
-      }
-    };
-
     await updateEvaluation({
       isFinalized: true,
-      calculatedAt: new Date().toISOString(),
-      snapshot
+      calculatedAt: new Date().toISOString()
     });
 
-    // 3. Verificar se todas as escolas do período já foram finalizadas
     const finalizedIds = new Set(evaluations.filter(e => e.periodId === activePeriodId && e.isFinalized).map(e => e.schoolId));
     finalizedIds.add(activeSchoolId);
 
@@ -731,7 +758,6 @@ const App: React.FC = () => {
   const handleReopenEvaluation = () => {
     if (!activeSchoolId || !activePeriodId) return;
 
-    // Restrição: Para reabrir avaliação é preciso reabrir o período
     if (activePeriod?.status === 'closed') {
       alert("Não é possível reabrir a avaliação pois o período está FECHADO. Reabra o período primeiro para permitir ajustes.");
       return;
@@ -739,120 +765,30 @@ const App: React.FC = () => {
 
     showConfirm(
       'Reabrir Avaliação',
-      "Deseja reabrir esta avaliação para ajustes? Isso permitirá editar critérios e os valores realizados.",
+      "Deseja reabrir esta avaliação para ajustes? Isso permitirá editar as premiações recebidas.",
       () => {
-        updateEvaluation({ isFinalized: false, snapshot: undefined });
+        updateEvaluation({ isFinalized: false });
         setConfirmConfig(prev => ({ ...prev, isOpen: false }));
       }
     );
   };
 
-  const handleUpdateCategories = async (updated: Category[]) => {
-    // 1. Atualiza Localmente para TODAS as escolas (Sincronização Global)
-    setSchoolCustomCategories(prev => {
-      const newState: Record<string, Category[]> = {};
-      schools.forEach(s => {
-        newState[s.id] = updated;
-      });
-
-      setSchools(currentSchools => {
-        const updatedSchools = currentSchools.map(s => ({ ...s, custom_categories: updated }));
-        saveLocally('schools', updatedSchools);
-        return updatedSchools;
-      });
-
-      return newState;
-    });
-
-    // 2. Grava no Supabase para TODAS as escolas (Update em massa)
-    if (isConfigured && supabase) {
-      // Usamos .neq('id', '00000000-0000-0000-0000-000000000000') ou simplesmente um filtro que pegue todos
-      // O Supabase não permite update sem filtro, então pegamos as ids atuais
-      const schoolIds = schools.map(s => s.id);
-      if (schoolIds.length > 0) {
-        await supabase.from('schools').update({ custom_categories: updated }).in('id', schoolIds);
-      }
-    }
-  };
-
-  const handleAddSchool = async (payload: Partial<SchoolUnit>) => {
-    setSyncing(true);
-    const newId = crypto.randomUUID();
-
-    const currentCategories = schools.length > 0
-      ? (schools[0].custom_categories || INITIAL_CATEGORIES)
-      : INITIAL_CATEGORIES;
-
-    const newSchool: SchoolUnit = {
-      id: newId,
-      name: payload.name || 'Nova Unidade',
-      targets: payload.targets || {},
-      treasurerName: payload.treasurerName,
-      treasurerCpf: payload.treasurerCpf,
-      viceTreasurerName: payload.viceTreasurerName,
-      viceTreasurerCpf: payload.viceTreasurerCpf,
-      isLocked: payload.isLocked || false,
-      custom_categories: currentCategories
-    };
-
-    if (isConfigured && supabase) {
-      const insertData: any = {
-        name: newSchool.name,
-        targets: newSchool.targets,
-        treasurer_name: newSchool.treasurerName,
-        treasurer_cpf: newSchool.treasurerCpf,
-        vice_treasurer_name: newSchool.viceTreasurerName,
-        vice_treasurer_cpf: newSchool.viceTreasurerCpf,
-        is_locked: newSchool.isLocked,
-        custom_categories: currentCategories
-      };
-
-      if (selectedEntityId) insertData.entity_id = selectedEntityId;
-      else insertData.user_id = session.user.id;
-
-      const { data } = await supabase.from('schools').insert(insertData).select().single();
-
-      if (data) {
-        const mapped: SchoolUnit = {
-          id: data.id,
-          name: data.name,
-          targets: data.targets || {},
-          treasurerName: data.treasurer_name,
-          treasurerCpf: data.treasurer_cpf,
-          viceTreasurerName: data.vice_treasurer_name,
-          viceTreasurerCpf: data.vice_treasurer_cpf,
-          isLocked: data.is_locked,
-          custom_categories: data.custom_categories
-        };
-        setSchools(prev => [...prev, mapped]);
-        setActiveSchoolId(mapped.id);
-        setSchoolCustomCategories(prev => ({ ...prev, [mapped.id]: currentCategories }));
-      }
-    } else {
-      const updated = [...schools, newSchool];
-      setSchools(updated);
-      saveLocally('schools', updated);
-      setSchoolCustomCategories(prev => ({ ...prev, [newId]: currentCategories }));
-      setActiveSchoolId(newId);
-    }
-    setSyncing(false);
-  };
-
-  const handleUpdateTargets = async (schoolId: string, targets: Record<string, number>, additionalData?: Partial<SchoolUnit>) => {
+  const handleUpdateSchool = async (schoolId: string, payload: Partial<SchoolUnit>) => {
     setSyncing(true);
     if (isConfigured && supabase) {
-      const updatePayload: any = { targets };
-      if (additionalData) {
-        if (additionalData.treasurerName !== undefined) updatePayload.treasurer_name = additionalData.treasurerName;
-        if (additionalData.treasurerCpf !== undefined) updatePayload.treasurer_cpf = additionalData.treasurerCpf;
-        if (additionalData.viceTreasurerName !== undefined) updatePayload.vice_treasurer_name = additionalData.viceTreasurerName;
-        if (additionalData.viceTreasurerCpf !== undefined) updatePayload.vice_treasurer_cpf = additionalData.viceTreasurerCpf;
-        if (additionalData.isLocked !== undefined) updatePayload.is_locked = additionalData.isLocked;
-      }
+      const updatePayload: any = {};
+      if (payload.name !== undefined) updatePayload.name = payload.name;
+      if (payload.treasurerName !== undefined) updatePayload.treasurer_name = payload.treasurerName;
+      if (payload.treasurerCpf !== undefined) updatePayload.treasurer_cpf = payload.treasurerCpf;
+      if (payload.viceTreasurerName !== undefined) updatePayload.vice_treasurer_name = payload.viceTreasurerName;
+      if (payload.viceTreasurerCpf !== undefined) updatePayload.vice_treasurer_cpf = payload.viceTreasurerCpf;
+      if (payload.isLocked !== undefined) updatePayload.is_locked = payload.isLocked;
+      if (payload.targets !== undefined) updatePayload.targets = payload.targets;
+
       await supabase.from('schools').update(updatePayload).eq('id', schoolId);
     }
 
-    const updatedSchools = schools.map(s => s.id === schoolId ? { ...s, ...additionalData, targets } : s);
+    const updatedSchools = schools.map(s => s.id === schoolId ? { ...s, ...payload } : s);
     setSchools(updatedSchools);
     saveLocally('schools', updatedSchools);
     setSyncing(false);
@@ -893,37 +829,64 @@ const App: React.FC = () => {
     );
   };
 
-  const handleUpdateAllBonusConfig = async (
-    newThresholds: Thresholds,
-    newInadRanking: InadimplenciaRankingConfig,
-    newMgmtBonus: ManagementBonusConfig,
-    newAnrsBonus: AnrsBonusConfig
-  ) => {
+  const handleSaveConfig = async (updatedAwards: CustomAward[], updatedCriteria: AwardCriterion[]) => {
     setSyncing(true);
-    if (isConfigured && supabase && session?.user?.id) {
-      const targetId = selectedEntityId ? { entity_id: selectedEntityId } : { user_id: impersonatedUser?.id || session.user.id };
+    try {
+      if (isConfigured && supabase && session?.user?.id) {
+        const targetId = selectedEntityId ? { entity_id: selectedEntityId } : { user_id: impersonatedUser?.id || session.user.id };
+        const authorId = impersonatedUser?.id || session.user.id;
 
-      await supabase.from('app_config').upsert({
-        ...targetId,
-        thresholds: newThresholds,
-        inadimplencia_ranking_config: newInadRanking,
-        management_bonus_config: newMgmtBonus,
-        anrs_bonus_config: newAnrsBonus,
-        updated_at: new Date().toISOString()
-      }, { onConflict: selectedEntityId ? 'entity_id' : 'user_id' });
+        const payload: any = {
+          ...targetId,
+          custom_awards: updatedAwards,
+          award_criteria: updatedCriteria,
+          updated_at: new Date().toISOString()
+        };
+
+        // Se fomos nós que carregamos esse registro, mantemos o ID para o upsert não errar
+        if (configId) payload.id = configId;
+
+        // Sempre garantimos que o user_id esteja presente para evitar violações de RLS se possível
+        if (!payload.user_id) payload.user_id = authorId;
+
+        console.log("DEBUG: Salvando Configuração:", payload);
+
+        const { data, error } = await supabase.from('app_config').upsert(payload,
+          { onConflict: configId ? 'id' : (selectedEntityId ? 'entity_id' : 'user_id') }
+        ).select().maybeSingle();
+
+        if (error) {
+          console.error("DEBUG: Erro no Supabase:", error);
+          alert(`Erro ao salvar no banco: ${error.message} (Código: ${error.code})`);
+          throw error;
+        }
+
+        if (data) {
+          console.log("DEBUG: Salvo com sucesso:", data);
+          setConfigId(data.id);
+        }
+      }
+
+      setCustomAwards(updatedAwards);
+      setAwardCriteria(updatedCriteria);
+
+      saveLocally('config', {
+        custom_awards: updatedAwards,
+        award_criteria: updatedCriteria
+      });
+    } catch (err) {
+      console.error("DEBUG: Falha geral:", err);
+    } finally {
+      setSyncing(false);
     }
-    setThresholds(newThresholds);
-    setInadimplenciaRankingConfig(newInadRanking);
-    setManagementBonusConfig(newMgmtBonus);
-    setAnrsBonusConfig(newAnrsBonus);
+  };
 
-    saveLocally('config', {
-      thresholds: newThresholds,
-      inadimplencia_ranking_config: newInadRanking,
-      management_bonus_config: newMgmtBonus,
-      anrs_bonus_config: newAnrsBonus
-    });
-    setSyncing(false);
+  const handleUpdateAwards = async (updatedAwards: CustomAward[]) => {
+    await handleSaveConfig(updatedAwards, awardCriteria);
+  };
+
+  const handleUpdateCriteria = async (updatedCriteria: AwardCriterion[]) => {
+    await handleSaveConfig(customAwards, updatedCriteria);
   };
 
   if (authLoading) {
@@ -1148,11 +1111,11 @@ const App: React.FC = () => {
             <SchoolManager
               schools={schools}
               activeSchoolId={activeSchoolId}
-              metricCategories={metricCategories}
+              criteria={awardCriteria}
               onAddSchool={handleAddSchool}
               onRemoveSchool={handleRemoveSchool}
               onSelectSchool={setActiveSchoolId}
-              onUpdateTargets={handleUpdateTargets}
+              onUpdateSchool={handleUpdateSchool}
               isReadOnly={isReadOnlyMode}
             />
             <PeriodManager
@@ -1172,13 +1135,12 @@ const App: React.FC = () => {
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             <PrizeConfig
               schools={schools}
-              thresholds={thresholds}
-              inadimplenciaRankingConfig={inadimplenciaRankingConfig}
-              managementBonusConfig={managementBonusConfig}
-              anrsBonusConfig={anrsBonusConfig}
-              onUpdateAllBonusConfig={handleUpdateAllBonusConfig}
+              customAwards={customAwards}
+              criteria={awardCriteria}
+              onSave={handleSaveConfig}
               isReadOnly={isReadOnlyMode}
-              entityInitials={selectedEntity?.initials || 'ANRS'}
+              isSaving={syncing}
+              evaluations={evaluations}
             />
           </div>
         )}
@@ -1188,44 +1150,270 @@ const App: React.FC = () => {
             {activeSchoolId && activePeriodId ? (
               <div className="flex flex-col lg:flex-row gap-8">
                 <div className="w-full lg:w-2/3">
-                  <CriteriaEvaluator
-                    categories={activeCategories}
-                    schoolName={activeSchool?.name || ''}
-                    selections={selections}
-                    realizedValues={realizedValues}
-                    schoolTargets={activeSchool?.targets || {}}
-                    inadimplenciaRankingPercentage={inadimplenciaRankingPercentage}
-                    isReadOnly={isReadOnlyMode || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized || false}
-                    onSelect={handleSelection}
-                    onMetricInput={handleMetricInput}
-                    onInadimplenciaRankingInput={handleInadimplenciaRankingInput}
-                    onUpdateCategories={handleUpdateCategories}
-                    activePeriodLabel={activePeriod?.label}
-                    managementBonusConfig={effectiveBonusConfig.managementBonusConfig}
-                    anrsBonusConfig={effectiveBonusConfig.anrsBonusConfig}
-                    inadimplenciaRankingConfig={effectiveBonusConfig.inadimplenciaRankingConfig}
-                  />
+                  <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8 transition-all duration-500">
+                    <h2 className="text-xl font-bold text-[#003B71] uppercase tracking-tight flex items-center gap-3">
+                      <span className="w-1.5 h-8 bg-[#003B71] rounded-full"></span>
+                      Avaliação de Premiações
+                    </h2>
+
+                    {(isReadOnlyMode || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized) && (
+                      <div className="mt-6 mb-2 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 flex-shrink-0">
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 className="text-[10px] font-black text-amber-800 uppercase tracking-widest leading-none mb-1">Modo Somente Leitura</h4>
+                          <p className="text-[9px] text-amber-600 font-bold">
+                            {activePeriod?.status === 'closed' ? 'Este período está FECHADO e não permite novas edições.' :
+                              currentEvaluation?.isFinalized ? 'Esta avaliação foi FINALIZADA. Reabra-a para fazer novos ajustes.' :
+                                'Você está visualizando em modo de consulta. Edições não são permitidas.'}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="space-y-8 mt-8">
+                      {customAwards.filter(award => award.schoolIds.includes(activeSchoolId)).map(award => {
+                        const awardCriteriaList = awardCriteria.filter(c => c.awardId === award.id);
+                        if (awardCriteriaList.length === 0) return null;
+
+                        const isWon = (currentEvaluation?.wonAwardIds || []).includes(award.id);
+                        const isDisabled = isReadOnlyMode || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized;
+
+                        return (
+                          <div key={award.id} className={`p-6 rounded-2xl border-2 transition-all ${isWon ? 'border-[#003B71] bg-blue-50/30' : 'border-slate-100 bg-white'}`}>
+                            <div className="flex justify-between items-center mb-6">
+                              <div>
+                                <div className="flex items-center gap-4">
+                                  <div className="w-1.5 h-10 bg-[#003B71] rounded-full"></div>
+                                  <div>
+                                    <div className="flex items-center gap-2">
+                                      <h3 className="text-xl font-bold text-[#003B71] tracking-tight">{award.name}</h3>
+                                      <span className={`text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest leading-none ${award.evaluationType === 'JOINT' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
+                                        {award.evaluationType === 'JOINT' ? 'Conjunta' : 'Individual'}
+                                      </span>
+                                    </div>
+                                    <p className="text-[10px] font-black text-[#FDB813] uppercase tracking-[0.2em] mt-0.5">
+                                      Prêmio de {award.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                              {isWon && (
+                                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1 shadow-sm border border-green-200">
+                                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                  </svg>
+                                  Conquistado
+                                </span>
+                              )}
+                            </div>
+
+                            {award.scoringMode && (
+                              <div className="mb-6 flex items-center gap-4 bg-[#003B71]/5 p-3 rounded-xl border border-[#003B71]/10">
+                                <div className="flex flex-col">
+                                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pontuação Total</span>
+                                  <p className="text-2xl font-black text-[#003B71]">
+                                    {awardCriteriaList.reduce((acc, c) => acc + (currentEvaluation?.criterionResults[c.id]?.score || 0), 0)}
+                                    <span className="text-xs text-slate-400 ml-1">/ {award.minScore}</span>
+                                  </p>
+                                </div>
+                                <div className="flex-1 h-3 bg-white rounded-full overflow-hidden border border-slate-100">
+                                  <div
+                                    className="h-full bg-[#FDB813] transition-all duration-1000"
+                                    style={{ width: `${Math.min(100, (awardCriteriaList.reduce((acc, c) => acc + (currentEvaluation?.criterionResults[c.id]?.score || 0), 0) / (award.minScore || 1)) * 100)}%` }}
+                                  ></div>
+                                </div>
+                              </div>
+                            )}
+
+                            <div className="space-y-6">
+                              {awardCriteriaList.map(criterion => {
+                                const result = (currentEvaluation?.criterionResults || {})[criterion.id] || { isMet: false };
+
+                                const getRuleDisplay = () => {
+                                  if (criterion.type === 'TOGGLE') {
+                                    if (award.scoringMode && criterion.options?.length) {
+                                      return `Modo Pontuação (${criterion.options.length} Avaliações)`;
+                                    }
+                                    return 'Seleção Simples (Checkbox)';
+                                  }
+                                  if (award.scoringMode && criterion.scoringRanges?.length) {
+                                    return `Modo Pontuação (${criterion.scoringRanges.length} faixas)`;
+                                  }
+                                  const suffix = criterion.valueFormat === 'PERCENTAGE' ? '%' : '';
+                                  if (criterion.useAccumulatedBudget) {
+                                    const annualTarget = activeSchool?.annualBudget || activeSchool?.targets[criterion.id] || 0;
+                                    const monthIndex = getMonthIndexFromLabel(activePeriod?.label || '');
+                                    const monthFactor = criterion.budgetEvaluationType === 'MONTHLY' ? 1 / 12 : monthIndex / 12;
+                                    const currentTarget = annualTarget * monthFactor;
+                                    return `Orçamento ${criterion.budgetEvaluationType === 'MONTHLY' ? 'Mensal' : 'Acumulado'}: ≤ ${currentTarget.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+                                  }
+                                  switch (criterion.operator) {
+                                    case 'GREATER_THAN': return `Meta: > ${criterion.threshold1}${suffix}`;
+                                    case 'LESS_THAN': return `Meta: < ${criterion.threshold1}${suffix}`;
+                                    case 'GREATER_EQUAL': return `Meta: ≥ ${criterion.threshold1}${suffix}`;
+                                    case 'LESS_EQUAL': return `Meta: ≤ ${criterion.threshold1}${suffix}`;
+                                    case 'EQUAL': return `Meta: = ${criterion.threshold1}${suffix}`;
+                                    case 'BETWEEN': return `Meta: ${criterion.threshold1}${suffix} até ${criterion.threshold2}${suffix}`;
+                                    case 'RANKING_TOP': return `Meta: Top ${criterion.threshold1} Maiores`;
+                                    case 'RANKING_BOTTOM': return `Meta: Top ${criterion.threshold1} Menores`;
+                                    default: return '';
+                                  }
+                                };
+
+                                return (
+                                  <div key={criterion.id} className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                    <div className="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+                                      <div className="flex items-center gap-3">
+                                        <span className="w-1 h-4 bg-[#003B71] rounded-full opacity-30"></span>
+                                        <label className="text-xs font-black uppercase text-[#003B71] tracking-tight">{criterion.name}</label>
+                                      </div>
+                                      <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest">{getRuleDisplay()}</span>
+                                    </div>
+
+                                    {criterion.type === 'TOGGLE' ? (
+                                      award.scoringMode && criterion.options && criterion.options.length > 0 ? (
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3">
+                                          {criterion.options.map(opt => (
+                                            <button
+                                              key={opt.id}
+                                              onClick={() => {
+                                                if (!isDisabled) {
+                                                  handleUpdateCriterionResult(criterion.id, { selectedOptionId: opt.id });
+                                                }
+                                              }}
+                                              className={`relative flex items-center justify-between px-4 py-3.5 rounded-2xl border-2 transition-all group outline-none ${String(result.selectedOptionId).trim() === String(opt.id).trim()
+                                                ? 'bg-white border-[#003B71] ring-4 ring-blue-50 shadow-lg -translate-y-0.5'
+                                                : 'bg-white border-slate-100 hover:border-blue-200 hover:shadow-md'
+                                                } ${isDisabled ? 'opacity-50 cursor-not-allowed grayscale-[0.3]' : 'cursor-pointer hover:scale-[1.01] active:scale-[0.98]'}`}
+                                            >
+                                              <span className={`text-[11px] font-black uppercase tracking-tight text-left ${String(result.selectedOptionId).trim() === String(opt.id).trim() ? 'text-[#003B71]' : 'text-slate-500'}`}>
+                                                {opt.label}
+                                              </span>
+                                              <div className={`px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-widest flex items-center gap-1 ${String(result.selectedOptionId).trim() === String(opt.id).trim()
+                                                ? 'bg-[#FDB813]/20 text-[#003B71]'
+                                                : 'bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-500'
+                                                }`}>
+                                                {opt.points} <span className="opacity-50">pts</span>
+                                              </div>
+                                              {String(result.selectedOptionId).trim() === String(opt.id).trim() && (
+                                                <div className="absolute -top-2 -right-2 w-5 h-5 bg-[#003B71] text-white rounded-full flex items-center justify-center shadow-md animate-in zoom-in-50">
+                                                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
+                                                  </svg>
+                                                </div>
+                                              )}
+                                            </button>
+                                          ))}
+                                        </div>
+                                      ) : (
+                                        <button
+                                          disabled={isDisabled}
+                                          onClick={() => handleUpdateCriterionResult(criterion.id, { checked: !result.checked })}
+                                          className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl border-2 transition-all font-black text-xs ${result.checked ? 'bg-[#003B71] border-[#003B71] text-white shadow-lg' : 'bg-white border-slate-100 text-slate-500 hover:border-blue-100'} ${isDisabled ? 'opacity-50 cursor-not-allowed grayscale-[0.3]' : 'cursor-pointer hover:border-blue-200'}`}
+                                        >
+                                          <span className="uppercase tracking-widest">{result.checked ? 'Ativado' : 'Desativado'}</span>
+                                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${result.checked ? 'bg-[#FDB813] border-[#FDB813]' : 'bg-transparent border-slate-200'}`}>
+                                            {result.checked && <svg className="w-3 h-3 text-[#003B71]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
+                                          </div>
+                                        </button>
+                                      )
+                                    ) : (
+                                      <div className="relative group/input">
+                                        <input
+                                          type="text"
+                                          inputMode="numeric"
+                                          disabled={isDisabled}
+                                          value={result.value !== undefined
+                                            ? (criterion.valueFormat === 'PERCENTAGE' ? formatPercentageMask(result.value) : formatCurrencyInput(result.value))
+                                            : ''
+                                          }
+                                          onChange={(e) => {
+                                            const numericValue = parseMaskedString(e.target.value);
+                                            handleUpdateCriterionResult(criterion.id, { value: e.target.value === '' ? undefined : numericValue });
+                                          }}
+                                          className={`w-full bg-white border-2 rounded-lg pl-4 pr-4 py-2.5 font-black text-xs focus:outline-none transition-all ${result.isMet ? 'border-green-500 ring-4 ring-green-100/50 shadow-sm' : 'border-slate-200 focus:border-[#003B71]'} ${isDisabled ? 'bg-slate-50 text-slate-400 cursor-not-allowed border-slate-100' : ''}`}
+                                          placeholder={criterion.valueFormat === 'PERCENTAGE' ? '0,00' : 'R$ 0,00'}
+                                        />
+
+                                        {(result.isMet || (award.scoringMode && result.score !== undefined)) && (
+                                          <div className="mt-2 flex items-center justify-center gap-2">
+                                            {result.isMet && (
+                                              <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-600 rounded-full border border-green-100 animate-in zoom-in-95 duration-300">
+                                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                                <span className="text-[8px] font-black uppercase tracking-widest">Meta Batida</span>
+                                              </div>
+                                            )}
+                                            {award.scoringMode && result.score !== undefined && (
+                                              <span className="text-[10px] font-black text-[#003B71] bg-[#FDB813]/20 px-2 py-1 rounded-lg border border-[#FDB813]/30 animate-in slide-in-from-right-2 duration-300">
+                                                +{result.score} PTS
+                                              </span>
+                                            )}
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          </div>
+                        );
+                      })}
+                      {customAwards.filter(award => award.schoolIds.includes(activeSchoolId)).filter(award => awardCriteria.some(c => c.awardId === award.id)).length === 0 && (
+                        <div className="col-span-full py-12 text-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                          <p className="text-slate-400 font-bold uppercase text-xs tracking-widest underline cursor-pointer" onClick={() => setActiveTab(AppTab.MASTER_VALUES)}>
+                            Nenhum critério configurado para as premiações desta unidade. Clique aqui para configurar.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-8 pt-8 border-t border-slate-100 flex justify-end">
+                      {currentEvaluation?.isFinalized ? (
+                        <button
+                          onClick={handleReopenEvaluation}
+                          className="bg-slate-100 text-slate-600 px-6 py-3 rounded-xl font-black text-xs hover:bg-slate-200 transition-all uppercase tracking-widest flex items-center gap-2"
+                        >
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                          </svg>
+                          Reabrir para Ajustes
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleFinalize}
+                          disabled={isReadOnlyMode}
+                          className="bg-green-600 text-white px-10 py-4 rounded-xl font-black text-sm hover:bg-green-700 shadow-xl active:scale-95 transition-all flex items-center gap-3 uppercase tracking-[0.1em]"
+                        >
+                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                          </svg>
+                          Finalizar Avaliação
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
                 <div className="w-full lg:w-1/3">
                   <ResultsPanel
-                    totalPoints={totalPoints}
-                    awardLevel={awardLevel}
-                    inadimplenciaRankingBonus={inadimplenciaRankingBonus}
-                    managementBonus={managementBonus}
-                    anrsBonus={anrsBonus}
-                    totalTreasurerPrize={totalTreasurerPrize}
-                    vicePrize={vicePrize}
-                    isFinalized={currentEvaluation?.isFinalized || false}
-                    isReadOnly={isReadOnlyMode}
-                    inadimplenciaRank={inadimplenciaRank}
+                    schoolName={activeSchool?.name || ''}
+                    prizes={{
+                      totalTreasurerPrize,
+                      vicePrize,
+                      awardedPrizes
+                    }}
                     onFinalize={handleFinalize}
                     onReopen={handleReopenEvaluation}
-                    schoolName={activeSchool?.name}
-                    periodLabel={activePeriod?.label}
-                    managementBonusConfig={effectiveBonusConfig.managementBonusConfig}
-                    anrsBonusConfig={effectiveBonusConfig.anrsBonusConfig}
-                    inadimplenciaRankingConfig={effectiveBonusConfig.inadimplenciaRankingConfig}
-                    entityInitials={selectedEntity?.initials || 'ANRS'}
+                    isFinalized={currentEvaluation?.isFinalized || false}
+                    isReadOnly={isReadOnlyMode || activePeriod?.status === 'closed'}
+                    activePeriodLabel={activePeriod?.label || ''}
+                    schoolViceName={activeSchool?.viceTreasurerName}
                   />
                 </div>
               </div>
@@ -1247,13 +1435,9 @@ const App: React.FC = () => {
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
             {activePeriodId ? (
               <SummaryTable
-                schools={schoolsForSummary as any[]}
-                thresholds={thresholds}
-                inadimplenciaRankingConfig={inadimplenciaRankingConfig}
-                managementBonusConfig={managementBonusConfig}
-                anrsBonusConfig={anrsBonusConfig}
+                schools={schoolsForSummary}
+                customAwards={customAwards}
                 activePeriodLabel={activePeriod?.label || ''}
-                allPeriodEvaluations={allPeriodEvaluationsForPrizes}
                 entityInitials={selectedEntity?.initials || 'ANRS'}
                 entityName={selectedEntity?.name || 'ANRS Contabilidade e Gestão Educacional'}
               />
@@ -1277,10 +1461,7 @@ const App: React.FC = () => {
               schools={schools}
               periods={periods}
               evaluations={evaluations}
-              thresholds={thresholds}
-              inadimplenciaRankingConfig={inadimplenciaRankingConfig}
-              managementBonusConfig={managementBonusConfig}
-              anrsBonusConfig={anrsBonusConfig}
+              customAwards={customAwards}
               activePeriodId={activePeriodId}
               activeSchoolId={activeSchoolId}
             />
@@ -1321,7 +1502,7 @@ const App: React.FC = () => {
         href="https://wa.me/5551982981329"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-8 right-8 z-[90] flex items-center justify-center w-14 h-14 bg-[#25D366] text-white rounded-full shadow-lg hover:bg-[#128C7E] hover:scale-110 hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[#25D366]/30"
+        className="fixed bottom-8 right-8 z-[9999] flex items-center justify-center w-14 h-14 bg-[#25D366] text-white rounded-full shadow-lg hover:bg-[#128C7E] hover:scale-110 hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[#25D366]/30"
         title="Fale com nosso Suporte"
       >
         <svg fill="currentColor" viewBox="0 0 308 308" className="w-7 h-7">

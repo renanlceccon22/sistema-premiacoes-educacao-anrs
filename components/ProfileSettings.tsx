@@ -86,54 +86,54 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ session, targetUser, 
     };
 
     return (
-        <div className="bg-white rounded-[2rem] shadow-xl border border-slate-100 p-8 animate-in fade-in zoom-in-95 duration-500 max-w-md w-full relative">
+        <div className="bg-white rounded-[1.5rem] shadow-xl border border-slate-100 p-6 animate-in fade-in zoom-in-95 duration-500 max-w-sm w-full relative">
             <button
                 onClick={onClose}
-                className="absolute top-6 right-6 p-2 bg-slate-50 rounded-xl text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all shadow-sm"
+                className="absolute top-4 right-4 p-1.5 bg-slate-50 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-all shadow-sm"
             >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
             </button>
 
-            <div className="mb-8">
-                <h2 className="text-xl font-black text-slate-800">Sua Conta</h2>
-                <p className="text-slate-400 text-xs font-medium mt-1">Gerencie suas informações de acesso.</p>
+            <div className="mb-5">
+                <h2 className="text-base font-black text-slate-800">Sua Conta</h2>
+                <p className="text-slate-400 text-[10px] font-medium mt-0.5">Gerencie suas informações de acesso.</p>
             </div>
 
-            <form onSubmit={handleUpdateProfile} className="space-y-6">
+            <form onSubmit={handleUpdateProfile} className="space-y-4">
                 <div>
-                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nome Completo</label>
+                    <label className="block text-[7px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Nome Completo</label>
                     <input
                         type="text"
                         value={fullName}
                         onChange={(e) => setFullName(e.target.value)}
                         placeholder="Seu nome"
-                        className="w-full bg-slate-50 border-2 border-slate-50 focus:border-[#003B71] focus:bg-white rounded-xl px-4 py-3 text-xs font-bold text-slate-700 outline-none transition-all"
+                        className="w-full bg-slate-50 border-2 border-slate-50 focus:border-[#003B71] focus:bg-white rounded-lg px-3 py-2 text-[10px] font-bold text-slate-700 outline-none transition-all"
                     />
                 </div>
 
                 <div>
-                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">E-mail</label>
+                    <label className="block text-[7px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">E-mail</label>
                     <input
                         type="email"
                         value={email}
                         readOnly={isImpersonating || isReadOnly}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="seu@email.com"
-                        className={`w-full bg-slate-50 border-2 border-slate-50 rounded-xl px-4 py-3 text-xs font-bold text-slate-700 outline-none transition-all ${isImpersonating ? 'opacity-60 cursor-not-allowed' : 'focus:border-[#003B71] focus:bg-white'}`}
+                        className={`w-full bg-slate-50 border-2 border-slate-50 rounded-lg px-3 py-2 text-[10px] font-bold text-slate-700 outline-none transition-all ${isImpersonating ? 'opacity-60 cursor-not-allowed' : 'focus:border-[#003B71] focus:bg-white'}`}
                     />
                 </div>
 
                 {!isImpersonating && (
                     <div>
-                        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Nova Senha (deixe vazio para manter)</label>
+                        <label className="block text-[7px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1">Nova Senha (vazio para manter)</label>
                         <input
                             type="password"
                             value={newPassword}
                             onChange={(e) => setNewPassword(e.target.value)}
                             placeholder="••••••••"
-                            className="w-full bg-slate-50 border-2 border-slate-50 focus:border-[#003B71] focus:bg-white rounded-xl px-4 py-3 text-xs font-bold text-slate-700 outline-none transition-all"
+                            className="w-full bg-slate-50 border-2 border-slate-50 focus:border-[#003B71] focus:bg-white rounded-lg px-3 py-2 text-[10px] font-bold text-slate-700 outline-none transition-all"
                         />
                     </div>
                 )}
@@ -159,7 +159,7 @@ const ProfileSettings: React.FC<ProfileSettingsProps> = ({ session, targetUser, 
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-[#003B71] text-white py-4 rounded-xl font-black uppercase tracking-widest text-[11px] hover:bg-[#002a51] hover:scale-[1.02] transition-all shadow-lg shadow-blue-900/10 disabled:opacity-50"
+                    className="w-full bg-[#003B71] text-white py-3 rounded-xl font-black uppercase tracking-widest text-[9px] hover:bg-[#002a51] hover:scale-[1.02] transition-all shadow-lg shadow-blue-900/10 disabled:opacity-50"
                 >
                     {loading ? 'Salvando...' : 'Salvar Alterações'}
                 </button>
