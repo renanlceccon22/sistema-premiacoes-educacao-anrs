@@ -46,7 +46,7 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
       if (!school) return;
 
       const prizes = customAwards.filter(a => ev.wonAwardIds && ev.wonAwardIds.includes(a.id));
-      const totalT = prizes.reduce((acc, p) => acc + p.value, 0);
+      const totalT = prizes.reduce((acc, p) => acc + (ev.wonAwardValues?.[p.id] ?? p.value), 0);
       const totalV = school.viceTreasurerName ? totalT * 0.5 : 0;
 
       if (!resultsBySchool[school.id]) {
@@ -63,7 +63,7 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
       resultsBySchool[school.id].evaluationsCount += 1;
     });
 
-    return Object.values(resultsBySchool).sort((a, b) => b.totalTreasurer - a.totalTreasurer);
+    return Object.values(resultsBySchool).sort((a, b) => (b.totalTreasurer + b.totalVice) - (a.totalTreasurer + a.totalVice));
   }, [evaluations, schools, customAwards, activePeriodId, activeSchoolId]);
 
   const totals = useMemo(() => {
@@ -114,7 +114,7 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
         </div>
 
         <div className="space-y-6">
-          {consolidatedData.map((res) => {
+          {consolidatedData.map((res, index) => {
             const total = res.totalTreasurer + res.totalVice;
             const maxVal = Math.max(...consolidatedData.map(d => d.totalTreasurer + d.totalVice), 1);
             const percent = (total / maxVal) * 100;
@@ -122,9 +122,14 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
             return (
               <div key={res.schoolName} className="group">
                 <div className="flex items-end justify-between mb-2">
-                  <div className="flex flex-col">
-                    <span className="text-sm font-black text-slate-700 uppercase tracking-tight">{res.schoolName}</span>
-                    <span className="text-[10px] text-slate-400 font-bold uppercase">{res.evaluationsCount} Avaliação(ões)</span>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-sm font-black text-[#003B71] uppercase tracking-tight flex items-center">
+                      {res.schoolName}
+                      {index === 0 && total > 0 && <span className="ml-2 bg-[#FDB813] text-[#003B71] text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm tracking-widest">1º LUGAR</span>}
+                      {index === 1 && total > 0 && <span className="ml-2 bg-slate-300 text-slate-800 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm tracking-widest">2º LUGAR</span>}
+                      {index === 2 && total > 0 && <span className="ml-2 bg-amber-700/20 text-amber-800 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm tracking-widest">3º LUGAR</span>}
+                    </span>
+                    <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">{res.evaluationsCount} Avaliaç{res.evaluationsCount === 1 ? 'ão' : 'ões'}</span>
                   </div>
                   <span className="text-lg font-black text-[#003B71]">{formatBRL(total)}</span>
                 </div>

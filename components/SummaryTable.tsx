@@ -9,8 +9,9 @@ import autoTable from 'jspdf-autotable';
 import ExcelJS from 'exceljs';
 
 interface SchoolWithEvaluationStatus extends SchoolUnit {
-  wonAwardIds: string[];
-  isFinalized: boolean;
+  wonAwardIds?: string[];
+  wonAwardValues?: Record<string, number>;
+  isFinalized?: boolean;
 }
 
 interface SummaryTableProps {
@@ -34,7 +35,7 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
   const schoolResults = useMemo(() => {
     return schools.map(school => {
       const prizes = customAwards.filter(a => school.wonAwardIds && school.wonAwardIds.includes(a.id));
-      const totalTreasurerPrize = prizes.reduce((acc, p) => acc + p.value, 0);
+      const totalTreasurerPrize = prizes.reduce((acc, p) => acc + (school.wonAwardValues?.[p.id] ?? p.value), 0);
       const vicePrize = school.viceTreasurerName ? totalTreasurerPrize * 0.5 : 0;
 
       return {
@@ -179,10 +180,18 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
       });
 
       const finalY = ((pdf as any).lastAutoTable?.finalY || 100) + 25;
+
+      // Desenha a linha superior de totalização
+      pdf.setDrawColor(0, 59, 113);
+      pdf.setLineWidth(1);
+      pdf.line(40, finalY - 15, pageWidth - 40, finalY - 15);
+
+      // Define a cor (Azul escuro #003B71) e desenha os textos
       pdf.setTextColor(0, 59, 113);
-      pdf.setFontSize(12);
+      pdf.setFontSize(13);
       pdf.setFont('helvetica', 'bold');
-      pdf.text(`TOTAL GERAL: ${formatBRL(totalTreasurer + totalVice)}`, pageWidth - 40, finalY, { align: 'right' });
+      pdf.text('TOTAL GERAL NO PERÍODO:', 40, finalY, { align: 'left' });
+      pdf.text(formatBRL(totalTreasurer + totalVice), pageWidth - 40, finalY, { align: 'right' });
 
       pdf.save(`Relatorio_Executivo_${entityInitials}_${activePeriodLabel.replace('/', '_')}.pdf`);
       setIsExporting(false);

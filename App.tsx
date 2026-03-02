@@ -266,6 +266,7 @@ const App: React.FC = () => {
               schoolId: e.school_id,
               periodId: e.period_id,
               wonAwardIds: e.won_award_ids || [],
+              wonAwardValues: e.won_award_values || {},
               criterionResults: e.criterion_results || {},
               isFinalized: e.is_finalized,
               calculatedAt: e.calculated_at
@@ -351,12 +352,13 @@ const App: React.FC = () => {
 
     const wonAwardIds = currentEvaluation?.wonAwardIds || [];
     const prizes = customAwards.filter(a => wonAwardIds.includes(a.id));
-    const total = prizes.reduce((acc, p) => acc + p.value, 0);
+    const total = prizes.reduce((acc, p) => acc + (currentEvaluation?.wonAwardValues?.[p.id] ?? p.value), 0);
 
     return {
       totalTreasurerPrize: total,
       vicePrize: activeSchool?.viceTreasurerName ? total * 0.5 : 0,
-      awardedPrizes: prizes
+      awardedPrizes: prizes,
+      awardedValues: currentEvaluation?.wonAwardValues || {}
     };
   }, [activeSchoolId, activePeriodId, customAwards, activeSchool, currentEvaluation]);
 
@@ -407,13 +409,13 @@ const App: React.FC = () => {
     );
   };
 
-  const handleTogglePeriodStatus = async (id: string) => {
+  const handleTogglePeriodStatus = async (id: string, forceBypass?: boolean) => {
     const period = periods.find(p => p.id === id);
     if (!period) return;
     const newStatus = period.status === 'open' ? 'closed' : 'open';
 
     // Restrição: Não permitir fechar período se houver unidades em aberto
-    if (newStatus === 'closed') {
+    if (newStatus === 'closed' && !forceBypass) {
       const periodEvaluations = evaluations.filter(e => e.periodId === id);
       const isAllFinalized = schools.length > 0 && schools.every(s =>
         periodEvaluations.find(e => e.schoolId === s.id)?.isFinalized
@@ -489,7 +491,8 @@ const App: React.FC = () => {
             ...ev.criterionResults,
             [criterion.id]: {
               ...ev.criterionResults[criterion.id],
-              isMet: index < topCount
+              isMet: index < topCount,
+              rankIndex: index
             }
           };
         });
@@ -499,6 +502,8 @@ const App: React.FC = () => {
       const changedEvaluations: Evaluation[] = [];
       periodMap.forEach((ev) => {
         const wonAwardIds: string[] = [];
+        const wonAwardValues: Record<string, number> = {};
+
         customAwards.forEach(award => {
           if (award.schoolIds.length > 0 && !award.schoolIds.includes(ev.schoolId)) return;
           const awardCriteriaList = awardCriteria.filter(c => c.awardId === award.id);
@@ -509,16 +514,32 @@ const App: React.FC = () => {
             if (awardScore >= (award.minScore || 0)) wonAwardIds.push(award.id);
           } else {
             const allCriteriaMet = awardCriteriaList.every(criterion => ev.criterionResults[criterion.id]?.isMet);
-            if (allCriteriaMet) wonAwardIds.push(award.id);
+            if (allCriteriaMet) {
+              wonAwardIds.push(award.id);
+              // Handle custom ranking prizes
+              const rankingCriterion = awardCriteriaList.find(c => award.evaluationType === 'JOINT' && c.operator?.startsWith('RANKING'));
+              if (rankingCriterion && rankingCriterion.rankingPrizes) {
+                const rankIndex = ev.criterionResults[rankingCriterion.id]?.rankIndex;
+                if (rankIndex !== undefined && rankIndex < rankingCriterion.rankingPrizes.length) {
+                  wonAwardValues[award.id] = rankingCriterion.rankingPrizes[rankIndex];
+                }
+              }
+            }
           }
         });
 
         const prevEval = prevEvaluations.find(old => old.schoolId === ev.schoolId && old.periodId === activePeriodId);
         const prevWonStr = JSON.stringify(prevEval?.wonAwardIds || []);
-        const newWonStr = JSON.stringify(wonAwardIds);
+        const prevValsStr = JSON.stringify(prevEval?.wonAwardValues || {});
+        const prevResStr = JSON.stringify(prevEval?.criterionResults || {});
 
-        if (prevWonStr !== newWonStr || ev.schoolId === activeSchoolId) {
+        const newWonStr = JSON.stringify(wonAwardIds);
+        const newValsStr = JSON.stringify(wonAwardValues);
+        const newResStr = JSON.stringify(ev.criterionResults || {});
+
+        if (prevWonStr !== newWonStr || prevValsStr !== newValsStr || prevResStr !== newResStr || ev.schoolId === activeSchoolId) {
           ev.wonAwardIds = wonAwardIds;
+          ev.wonAwardValues = wonAwardValues;
           ev.calculatedAt = new Date().toISOString();
           changedEvaluations.push(ev);
         }
@@ -533,6 +554,7 @@ const App: React.FC = () => {
               school_id: ev.schoolId,
               period_id: ev.periodId,
               won_award_ids: ev.wonAwardIds,
+              won_award_values: ev.wonAwardValues,
               criterion_results: ev.criterionResults,
               is_finalized: ev.isFinalized,
               calculated_at: ev.calculatedAt,
@@ -747,7 +769,7 @@ const App: React.FC = () => {
           "Fechar Período?",
           "Todas as unidades deste período foram finalizadas com sucesso. Deseja fechar o período agora para impedir novas edições?",
           () => {
-            handleTogglePeriodStatus(activePeriodId!);
+            handleTogglePeriodStatus(activePeriodId!, true);
             setConfirmConfig(prev => ({ ...prev, isOpen: false }));
           }
         );
@@ -846,8 +868,8 @@ const App: React.FC = () => {
         // Se fomos nós que carregamos esse registro, mantemos o ID para o upsert não errar
         if (configId) payload.id = configId;
 
-        // Sempre garantimos que o user_id esteja presente para evitar violações de RLS se possível
-        if (!payload.user_id) payload.user_id = authorId;
+        // Só atrelamos user_id se não for configuração de entidade, para não violar o Unique Key de usuários
+        if (!payload.user_id && !selectedEntityId) payload.user_id = authorId;
 
         console.log("DEBUG: Salvando Configuração:", payload);
 
@@ -1335,18 +1357,28 @@ const App: React.FC = () => {
                                             const numericValue = parseMaskedString(e.target.value);
                                             handleUpdateCriterionResult(criterion.id, { value: e.target.value === '' ? undefined : numericValue });
                                           }}
-                                          className={`w-full bg-white border-2 rounded-lg pl-4 pr-4 py-2.5 font-black text-xs focus:outline-none transition-all ${result.isMet ? 'border-green-500 ring-4 ring-green-100/50 shadow-sm' : 'border-slate-200 focus:border-[#003B71]'} ${isDisabled ? 'bg-slate-50 text-slate-400 cursor-not-allowed border-slate-100' : ''}`}
+                                          className={`w-full bg-white border-2 rounded-lg pl-4 py-2.5 font-black text-xs focus:outline-none transition-all ${criterion.valueFormat === 'PERCENTAGE' ? 'pr-8' : 'pr-4'} ${result.isMet ? 'border-green-500 ring-4 ring-green-100/50 shadow-sm' : 'border-slate-200 focus:border-[#003B71]'} ${isDisabled ? 'bg-slate-50 text-slate-400 cursor-not-allowed border-slate-100' : ''}`}
                                           placeholder={criterion.valueFormat === 'PERCENTAGE' ? '0,00' : 'R$ 0,00'}
                                         />
+                                        {criterion.valueFormat === 'PERCENTAGE' && (
+                                          <span className="absolute right-4 top-5 text-[10px] font-black text-slate-400 pointer-events-none">
+                                            %
+                                          </span>
+                                        )}
 
-                                        {(result.isMet || (award.scoringMode && result.score !== undefined)) && (
+                                        {(result.isMet || (award.scoringMode && result.score !== undefined) || (criterion.operator?.startsWith('RANKING') && result.rankIndex !== undefined)) && (
                                           <div className="mt-2 flex items-center justify-center gap-2">
-                                            {result.isMet && (
+                                            {result.isMet && !criterion.operator?.startsWith('RANKING') && (
                                               <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-600 rounded-full border border-green-100 animate-in zoom-in-95 duration-300">
                                                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
                                                 </svg>
                                                 <span className="text-[8px] font-black uppercase tracking-widest">Meta Batida</span>
+                                              </div>
+                                            )}
+                                            {criterion.operator?.startsWith('RANKING') && result.rankIndex !== undefined && (
+                                              <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border auto animate-in zoom-in-95 duration-300 ${result.isMet ? 'bg-[#FDB813]/20 text-amber-700 border-amber-200' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>
+                                                <span className="text-[9px] font-black uppercase tracking-widest">{result.rankIndex + 1}º LUGAR (RANKING)</span>
                                               </div>
                                             )}
                                             {award.scoringMode && result.score !== undefined && (
@@ -1467,6 +1499,8 @@ const App: React.FC = () => {
             />
           </div>
         )}
+
+
       </main>
       <Footer entityInitials={selectedEntity?.initials || 'ANRS'} />
 
@@ -1496,19 +1530,6 @@ const App: React.FC = () => {
           </div>
         </button>
       )}
-
-      {/* WhatsApp Floating Button */}
-      <a
-        href="https://wa.me/5551982981329"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-8 right-8 z-[9999] flex items-center justify-center w-14 h-14 bg-[#25D366] text-white rounded-full shadow-lg hover:bg-[#128C7E] hover:scale-110 hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[#25D366]/30"
-        title="Fale com nosso Suporte"
-      >
-        <svg fill="currentColor" viewBox="0 0 308 308" className="w-7 h-7">
-          <path d="M227.904 176.981c-.6-.288-23.054-11.345-26.693-12.637-1.629-.576-3.656-1.248-6.168-.384-2.52.864-10.408 6.768-12.768 8.196-2.352 1.416-4.008 1.62-7.44.324-3.432-1.296-14.472-5.328-27.576-16.98-10.2-9.072-17.088-20.28-19.104-23.712-2.016-3.432-.216-5.28 1.512-6.996 1.56-1.536 3.432-4.008 5.16-6.012 1.728-2.004 2.304-3.432 3.456-5.724 1.152-2.304.576-4.308-.288-6.012-.864-1.716-7.836-18.96-10.8-25.92-2.784-6.504-5.76-5.724-7.836-5.724-2.088-.048-4.392-.048-6.72-.048-2.328 0-6.096.864-9.312 4.308-3.216 3.432-12.264 11.952-12.264 29.16s12.552 33.816 14.304 36.132c1.728 2.304 24.408 38.808 60.096 52.848 8.388 3.312 14.928 5.292 20.04 6.768 8.424 2.688 16.092 2.304 22.152 1.392 6.756-1.008 23.054-9.408 26.304-18.48 3.252-9.084 3.252-16.86 2.28-18.48-.972-1.62-3.576-2.58-7.512-4.56zM156.734 0C73.318 0 5.454 67.354 5.454 150.143c0 26.777 7.166 52.988 20.741 75.928L.045 308l84.129-25.286c21.678 11.924 46.261 18.226 71.609 18.226h.06C239.271 300.94 308 233.59 308 150.143 308 67.354 240.143 0 156.734 0zm0 275.9c-22.74 0-45.06-6.132-64.428-17.7l-4.608-2.736-47.868 12.564 12.816-46.656-3.012-4.776C37.122 197.926 30.5 174.546 30.5 150.143 30.5 81.349 87.477 25.05 156.854 25.05c33.588 0 65.172 13.116 88.932 36.924 23.748 23.832 36.828 55.476 36.828 89.16-.06 69.444-57.036 124.766-125.88 124.766z" />
-        </svg>
-      </a>
     </div>
   );
 };

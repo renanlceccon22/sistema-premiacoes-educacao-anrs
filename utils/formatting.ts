@@ -26,7 +26,7 @@ export const formatPercentageMask = (val: number) => {
   return val.toLocaleString('pt-BR', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }) + ' %';
+  });
 };
 
 /**

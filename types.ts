@@ -87,6 +87,7 @@ export interface AwardCriterion {
   threshold2?: number;
   scoringRanges?: ScoringRange[];
   options?: CriterionOption[];
+  rankingPrizes?: number[];
   useAccumulatedBudget?: boolean;
   budgetEvaluationType?: 'MONTHLY' | 'ACCUMULATED';
 }
@@ -105,12 +106,14 @@ export interface Evaluation {
   schoolId: string;
   periodId: string;
   wonAwardIds: string[];
+  wonAwardValues?: Record<string, number>;
   criterionResults: Record<string, {
     value?: number;
     checked?: boolean;
     isMet: boolean;
     score?: number;
     selectedOptionId?: string;
+    rankIndex?: number;
   }>;
   isFinalized: boolean;
   calculatedAt?: string;

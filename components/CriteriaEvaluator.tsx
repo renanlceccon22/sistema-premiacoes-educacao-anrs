@@ -406,14 +406,21 @@ const CriteriaEvaluator: React.FC<CriteriaEvaluatorProps> = ({
                               Auto-Sincronizado
                             </div>
                           ) : (
-                            <input
-                              type="text"
-                              inputMode="numeric"
-                              disabled={isReadOnly}
-                              value={category.id === 'orcamento_bi' ? formatCurrency(realized) : formatPercentageMask(realized)}
-                              onChange={(e) => onMetricInput(category.id, parseMaskedString(e.target.value))}
-                              className="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all"
-                            />
+                            <>
+                              <input
+                                type="text"
+                                inputMode="numeric"
+                                disabled={isReadOnly}
+                                value={category.id === 'orcamento_bi' ? formatCurrency(realized) : formatPercentageMask(realized)}
+                                onChange={(e) => onMetricInput(category.id, parseMaskedString(e.target.value))}
+                                className={`w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-black text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#003B71] transition-all ${category.id !== 'orcamento_bi' ? 'pr-6' : ''}`}
+                              />
+                              {category.id !== 'orcamento_bi' && (
+                                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-black pointer-events-none text-slate-400">
+                                  %
+                                </span>
+                              )}
+                            </>
                           )}
                         </div>
                       </div>
