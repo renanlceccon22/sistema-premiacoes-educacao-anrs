@@ -269,7 +269,7 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
 
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <h2 className="text-sm font-bold text-gray-900 flex items-center">
+        <h2 className="text-sm font-bold text-[#003B71] flex items-center">
           <span className="w-2 h-8 bg-[#003B71] rounded-full mr-3"></span>
           GERENCIAMENTO DE UNIDADES
         </h2>

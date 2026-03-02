@@ -32,10 +32,11 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
       totalTreasurer: number;
       totalVice: number;
       evaluationsCount: number;
+      prizes: CustomAward[];
     }> = {};
 
+    // Filtra avaliações pelo período e escola selecionados (sem exigir finalizado)
     const filteredEvaluations = evaluations.filter(e => {
-      if (!e.isFinalized) return false;
       if (activePeriodId && e.periodId !== activePeriodId) return false;
       if (activeSchoolId && e.schoolId !== activeSchoolId) return false;
       return true;
@@ -55,12 +56,19 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
           treasurerName: school.treasurerName || '---',
           totalTreasurer: 0,
           totalVice: 0,
-          evaluationsCount: 0
+          evaluationsCount: 0,
+          prizes: []
         };
       }
       resultsBySchool[school.id].totalTreasurer += totalT;
       resultsBySchool[school.id].totalVice += totalV;
       resultsBySchool[school.id].evaluationsCount += 1;
+      // Merge prizes (avoid duplicates)
+      prizes.forEach(p => {
+        if (!resultsBySchool[school.id].prizes.find(pp => pp.id === p.id)) {
+          resultsBySchool[school.id].prizes.push(p);
+        }
+      });
     });
 
     return Object.values(resultsBySchool).sort((a, b) => (b.totalTreasurer + b.totalVice) - (a.totalTreasurer + a.totalVice));
@@ -84,7 +92,7 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
           <div>
             <h4 className="text-sm font-black text-blue-900 uppercase tracking-tight">Análise de Custos</h4>
             <p className="text-xs font-medium text-blue-700 mt-1">
-              Certifique-se de que a unidade possui o status de <strong>Avaliação Finalizada</strong> no período selecionado para ver os custos.
+              Selecione um período e aguarde as avaliações serem preenchidas para visualizar os custos.
             </p>
           </div>
         </div>
@@ -123,15 +131,32 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
               <div key={res.schoolName} className="group">
                 <div className="flex items-end justify-between mb-2">
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-black text-[#003B71] uppercase tracking-tight flex items-center">
+                    <span className="text-sm font-black text-[#003B71] uppercase tracking-tight flex items-center gap-2">
                       {res.schoolName}
-                      {index === 0 && total > 0 && <span className="ml-2 bg-[#FDB813] text-[#003B71] text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm tracking-widest">1º LUGAR</span>}
-                      {index === 1 && total > 0 && <span className="ml-2 bg-slate-300 text-slate-800 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm tracking-widest">2º LUGAR</span>}
-                      {index === 2 && total > 0 && <span className="ml-2 bg-amber-700/20 text-amber-800 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm tracking-widest">3º LUGAR</span>}
+                      {index === 0 && total > 0 && <span className="bg-[#FDB813] text-[#003B71] text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm tracking-widest">1º LUGAR</span>}
+                      {index === 1 && total > 0 && <span className="bg-slate-300 text-slate-800 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm tracking-widest">2º LUGAR</span>}
+                      {index === 2 && total > 0 && <span className="bg-amber-700/20 text-amber-800 text-[8px] font-black px-1.5 py-0.5 rounded shadow-sm tracking-widest">3º LUGAR</span>}
                     </span>
-                    <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">{res.evaluationsCount} Avaliaç{res.evaluationsCount === 1 ? 'ão' : 'ões'}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">{res.evaluationsCount} Avaliaç{res.evaluationsCount === 1 ? 'ão' : 'ões'}</span>
+                      {res.prizes.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {res.prizes.map(p => (
+                            <span key={p.id} className="text-[7px] bg-blue-50 text-[#003B71] px-1.5 py-0.5 rounded-full border border-blue-100 font-bold">
+                              {p.name}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <span className="text-lg font-black text-[#003B71]">{formatBRL(total)}</span>
+                  <div className="flex flex-col items-end gap-0.5">
+                    <span className="text-lg font-black text-[#003B71]">{formatBRL(total)}</span>
+                    <div className="flex gap-2">
+                      <span className="text-[8px] text-slate-400 font-bold">Tes: {formatBRL(res.totalTreasurer)}</span>
+                      <span className="text-[8px] text-slate-400 font-bold">Vice: {formatBRL(res.totalVice)}</span>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="h-3 w-full bg-slate-50 rounded-full overflow-hidden border border-slate-100 relative">

@@ -96,6 +96,16 @@ const App: React.FC = () => {
     return !!impersonatedUser && !isOperatorMode;
   }, [impersonatedUser, isOperatorMode]);
 
+  // Verifica se existe pelo menos um período aberto
+  const hasOpenPeriod = useMemo(() => {
+    return periods.some(p => p.status === 'open');
+  }, [periods]);
+
+  // Modo bloqueado: somente leitura quando não há período aberto (ou modo read-only geral)
+  const isPeriodLocked = useMemo(() => {
+    return isReadOnlyMode || (periods.length > 0 && !hasOpenPeriod);
+  }, [isReadOnlyMode, periods, hasOpenPeriod]);
+
   const [isSchoolDropdownOpen, setIsSchoolDropdownOpen] = useState(false);
   const [isPeriodDropdownOpen, setIsPeriodDropdownOpen] = useState(false);
   const schoolDropdownRef = useRef<HTMLDivElement>(null);
@@ -338,12 +348,13 @@ const App: React.FC = () => {
       return {
         ...s,
         wonAwardIds: evalData?.wonAwardIds || [],
+        wonAwardValues: evalData?.wonAwardValues || {},
         isFinalized: evalData?.isFinalized || false,
       };
     });
   }, [schools, evaluations, activePeriodId]);
 
-  const { totalTreasurerPrize, vicePrize, awardedPrizes } = useMemo(() => {
+  const { totalTreasurerPrize, vicePrize, awardedPrizes, awardedValues } = useMemo(() => {
     if (!activeSchoolId || !activePeriodId) {
       return {
         totalTreasurerPrize: 0, vicePrize: 0, awardedPrizes: [],
@@ -699,6 +710,10 @@ const App: React.FC = () => {
   };
 
   const handleAddSchool = async (payload: Partial<SchoolUnit>) => {
+    if (periods.length > 0 && !hasOpenPeriod) {
+      alert('Não é possível cadastrar novas unidades pois não há nenhum período aberto. Abra ou crie um novo período primeiro.');
+      return;
+    }
     setSyncing(true);
     const newId = crypto.randomUUID();
 
@@ -796,6 +811,10 @@ const App: React.FC = () => {
   };
 
   const handleUpdateSchool = async (schoolId: string, payload: Partial<SchoolUnit>) => {
+    if (periods.length > 0 && !hasOpenPeriod) {
+      alert('Não é possível alterar cadastro de unidades pois não há nenhum período aberto. Abra ou crie um novo período primeiro.');
+      return;
+    }
     setSyncing(true);
     if (isConfigured && supabase) {
       const updatePayload: any = {};
@@ -817,6 +836,11 @@ const App: React.FC = () => {
   };
 
   const handleRemoveSchool = (id: string) => {
+    if (periods.length > 0 && !hasOpenPeriod) {
+      alert('Não é possível remover unidades pois não há nenhum período aberto. Abra ou crie um novo período primeiro.');
+      return;
+    }
+
     const school = schools.find(s => s.id === id);
 
     // Restrição: Não remover unidade com avaliações finalizadas
@@ -852,6 +876,10 @@ const App: React.FC = () => {
   };
 
   const handleSaveConfig = async (updatedAwards: CustomAward[], updatedCriteria: AwardCriterion[]) => {
+    if (periods.length > 0 && !hasOpenPeriod) {
+      alert('Não é possível alterar configuração de premiações pois não há nenhum período aberto. Abra ou crie um novo período primeiro.');
+      return;
+    }
     setSyncing(true);
     try {
       if (isConfigured && supabase && session?.user?.id) {
@@ -896,6 +924,68 @@ const App: React.FC = () => {
         custom_awards: updatedAwards,
         award_criteria: updatedCriteria
       });
+
+      // Recalcular avaliações de períodos ABERTOS após mudança de regras
+      const openPeriodIds = periods.filter(p => p.status === 'open').map(p => p.id);
+      if (openPeriodIds.length > 0) {
+        setEvaluations(prevEvaluations => {
+          const changedEvaluations: Evaluation[] = [];
+          const updatedList = prevEvaluations.map(ev => {
+            // Só recalcula se o período estiver aberto E a avaliação NÃO estiver finalizada
+            if (!openPeriodIds.includes(ev.periodId) || ev.isFinalized) return ev;
+
+            const wonAwardIds: string[] = [];
+            const wonAwardValues: Record<string, number> = {};
+
+            updatedAwards.forEach(award => {
+              if (award.schoolIds.length > 0 && !award.schoolIds.includes(ev.schoolId)) return;
+              const awardCriteriaList = updatedCriteria.filter(c => c.awardId === award.id);
+              if (awardCriteriaList.length === 0) return;
+
+              if (award.scoringMode) {
+                const awardScore = awardCriteriaList.reduce((acc, c) => acc + (ev.criterionResults[c.id]?.score || 0), 0);
+                if (awardScore >= (award.minScore || 0)) wonAwardIds.push(award.id);
+              } else {
+                const allCriteriaMet = awardCriteriaList.every(criterion => ev.criterionResults[criterion.id]?.isMet);
+                if (allCriteriaMet) {
+                  wonAwardIds.push(award.id);
+                  const rankingCriterion = awardCriteriaList.find(c => award.evaluationType === 'JOINT' && c.operator?.startsWith('RANKING'));
+                  if (rankingCriterion && rankingCriterion.rankingPrizes) {
+                    const rankIndex = ev.criterionResults[rankingCriterion.id]?.rankIndex;
+                    if (rankIndex !== undefined && rankIndex < rankingCriterion.rankingPrizes.length) {
+                      wonAwardValues[award.id] = rankingCriterion.rankingPrizes[rankIndex];
+                    }
+                  }
+                }
+              }
+            });
+
+            const updated = { ...ev, wonAwardIds, wonAwardValues, calculatedAt: new Date().toISOString() };
+            changedEvaluations.push(updated);
+            return updated;
+          });
+
+          // Persistir mudanças no banco
+          if (changedEvaluations.length > 0 && isConfigured && supabase) {
+            setTimeout(async () => {
+              const dbPayloads = changedEvaluations.map(ev => ({
+                school_id: ev.schoolId,
+                period_id: ev.periodId,
+                won_award_ids: ev.wonAwardIds,
+                won_award_values: ev.wonAwardValues,
+                criterion_results: ev.criterionResults,
+                is_finalized: ev.isFinalized,
+                calculated_at: ev.calculatedAt,
+                entity_id: selectedEntityId || undefined,
+                user_id: (!selectedEntityId ? (impersonatedUser?.id || session.user.id) : undefined)
+              }));
+              await supabase.from('evaluations').upsert(dbPayloads, { onConflict: 'school_id,period_id' });
+            }, 500);
+          }
+
+          return updatedList;
+        });
+      }
     } catch (err) {
       console.error("DEBUG: Falha geral:", err);
     } finally {
@@ -1138,7 +1228,7 @@ const App: React.FC = () => {
               onRemoveSchool={handleRemoveSchool}
               onSelectSchool={setActiveSchoolId}
               onUpdateSchool={handleUpdateSchool}
-              isReadOnly={isReadOnlyMode}
+              isReadOnly={isPeriodLocked}
             />
             <PeriodManager
               periods={periods}
@@ -1160,7 +1250,7 @@ const App: React.FC = () => {
               customAwards={customAwards}
               criteria={awardCriteria}
               onSave={handleSaveConfig}
-              isReadOnly={isReadOnlyMode}
+              isReadOnly={isPeriodLocked}
               isSaving={syncing}
               evaluations={evaluations}
             />
@@ -1181,8 +1271,8 @@ const App: React.FC = () => {
                     {(isReadOnlyMode || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized) && (
                       <div className="mt-6 mb-2 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
                         <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 flex-shrink-0">
-                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                           </svg>
                         </div>
                         <div>
@@ -1217,9 +1307,25 @@ const App: React.FC = () => {
                                         {award.evaluationType === 'JOINT' ? 'Conjunta' : 'Individual'}
                                       </span>
                                     </div>
-                                    <p className="text-[10px] font-black text-[#FDB813] uppercase tracking-[0.2em] mt-0.5">
-                                      Prêmio de {award.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                                    </p>
+                                    {(() => {
+                                      const rankCrit = awardCriteriaList.find(c => award.evaluationType === 'JOINT' && (c.operator || '').startsWith('RANKING') && c.rankingPrizes && c.rankingPrizes.length > 0);
+                                      if (award.value === 0 && rankCrit) {
+                                        return (
+                                          <div className="flex flex-wrap gap-1 mt-0.5">
+                                            {rankCrit.rankingPrizes!.map((v, i) => (
+                                              <span key={i} className="text-[8px] font-black text-[#003B71] bg-[#FDB813]/20 px-1.5 py-0.5 rounded border border-[#FDB813]/30">
+                                                {i + 1}º {v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                              </span>
+                                            ))}
+                                          </div>
+                                        );
+                                      }
+                                      return (
+                                        <p className="text-[10px] font-black text-[#FDB813] uppercase tracking-[0.2em] mt-0.5">
+                                          Prêmio de {(currentEvaluation?.wonAwardValues?.[award.id] ?? award.value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                        </p>
+                                      );
+                                    })()}
                                   </div>
                                 </div>
                               </div>
@@ -1438,7 +1544,8 @@ const App: React.FC = () => {
                     prizes={{
                       totalTreasurerPrize,
                       vicePrize,
-                      awardedPrizes
+                      awardedPrizes,
+                      awardedValues
                     }}
                     onFinalize={handleFinalize}
                     onReopen={handleReopenEvaluation}
@@ -1472,6 +1579,9 @@ const App: React.FC = () => {
                 activePeriodLabel={activePeriod?.label || ''}
                 entityInitials={selectedEntity?.initials || 'ANRS'}
                 entityName={selectedEntity?.name || 'ANRS Contabilidade e Gestão Educacional'}
+                awardCriteria={awardCriteria}
+                evaluations={evaluations}
+                activePeriodId={activePeriodId}
               />
             ) : (
               <EmptyState

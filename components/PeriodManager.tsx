@@ -70,7 +70,7 @@ const PeriodManager: React.FC<PeriodManagerProps> = ({
     <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div className="flex-1">
-          <h2 className="text-sm font-bold text-slate-800 flex items-center mb-3">
+          <h2 className="text-sm font-bold text-[#003B71] flex items-center mb-3">
             <span className="w-1.5 h-5 bg-[#FDB813] rounded-full mr-2.5"></span>
             Gestão de Períodos Contábeis
           </h2>

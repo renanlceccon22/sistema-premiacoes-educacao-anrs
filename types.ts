@@ -90,6 +90,7 @@ export interface AwardCriterion {
   rankingPrizes?: number[];
   useAccumulatedBudget?: boolean;
   budgetEvaluationType?: 'MONTHLY' | 'ACCUMULATED';
+  showInReport?: boolean;
 }
 
 export interface CustomAward {

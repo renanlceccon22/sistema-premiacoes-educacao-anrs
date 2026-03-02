@@ -273,7 +273,7 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
         <div className="flex items-center">
           <span className="w-2 h-8 bg-[#003B71] rounded-full mr-3"></span>
           <div>
-            <h2 className="text-xl font-bold text-slate-800 uppercase text-xs lg:text-xl">CONFIGURAÇÃO DE PREMIAÇÕES E CRITÉRIOS</h2>
+            <h2 className="text-xl font-bold text-[#003B71] uppercase text-xs lg:text-xl">CONFIGURAÇÃO DE PREMIAÇÕES E CRITÉRIOS</h2>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Defina as premiações e como elas serão avaliadas</p>
           </div>
         </div>
@@ -346,9 +346,29 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
                       {award.evaluationType === 'JOINT' ? 'Conjunta' : 'Individual'}
                     </span>
                   </div>
-                  <p className="text-xl font-black text-[#FDB813] mb-5">
-                    {award.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                  </p>
+                  {(() => {
+                    const awardRankingCriteria = localCriteria.filter(c => c.awardId === award.id && (c.operator || '').startsWith('RANKING') && c.rankingPrizes && c.rankingPrizes.length > 0);
+                    if (award.value === 0 && awardRankingCriteria.length > 0) {
+                      const prizes = awardRankingCriteria[0].rankingPrizes!;
+                      return (
+                        <div className="mb-5">
+                          <div className="flex flex-wrap gap-1.5">
+                            {prizes.map((v, i) => (
+                              <span key={i} className="text-[10px] font-black text-[#003B71] bg-[#FDB813]/20 px-2 py-1 rounded-lg border border-[#FDB813]/30">
+                                {i + 1}º {v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                              </span>
+                            ))}
+                          </div>
+                          <p className="text-[8px] text-slate-400 font-bold mt-1 uppercase tracking-widest">Valores por colocação</p>
+                        </div>
+                      );
+                    }
+                    return (
+                      <p className="text-xl font-black text-[#FDB813] mb-5">
+                        {award.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                      </p>
+                    );
+                  })()}
                   <div className="flex items-center gap-2">
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
@@ -631,6 +651,26 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
                                       </button>
                                     </div>
                                   </div>
+                                </div>
+
+                                {/* Toggle Exibir no Relatório */}
+                                <div className="flex items-center gap-2 px-1">
+                                  <label className="flex items-center gap-2 cursor-pointer group">
+                                    <div className="relative">
+                                      <input
+                                        type="checkbox"
+                                        disabled={isReadOnly}
+                                        checked={criterion.showInReport || false}
+                                        onChange={(e) => handleUpdateCriterion(criterion.id, { showInReport: e.target.checked })}
+                                        className="sr-only"
+                                      />
+                                      <div className={`w-8 h-4 rounded-full transition-all duration-300 ${criterion.showInReport ? 'bg-[#003B71]' : 'bg-slate-200'}`}></div>
+                                      <div className={`absolute top-0.5 left-0.5 w-3 h-3 bg-white rounded-full transition-all duration-300 transform ${criterion.showInReport ? 'translate-x-4 shadow-sm' : ''}`}></div>
+                                    </div>
+                                    <span className={`text-[8px] font-black uppercase tracking-widest transition-colors ${criterion.showInReport ? 'text-[#003B71]' : 'text-slate-400'}`}>
+                                      Exibir no Relatório
+                                    </span>
+                                  </label>
                                 </div>
 
                                 {criterion.type === 'VALUE' && (

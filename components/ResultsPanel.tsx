@@ -8,6 +8,7 @@ interface ResultsPanelProps {
     totalTreasurerPrize: number;
     vicePrize: number;
     awardedPrizes: CustomAward[];
+    awardedValues?: Record<string, number>;
   };
   isFinalized: boolean;
   isReadOnly: boolean;
@@ -38,7 +39,7 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
     setIsReopening(false);
   };
 
-  const { totalTreasurerPrize, vicePrize, awardedPrizes } = prizes;
+  const { totalTreasurerPrize, vicePrize, awardedPrizes, awardedValues = {} } = prizes;
 
   return (
     <div className="lg:sticky lg:top-6">
@@ -72,15 +73,19 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
             <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2 border-b border-slate-200 pb-3">Premiações Recebidas</h3>
 
             <div className="space-y-3">
-              {awardedPrizes.map((award) => (
-                <div key={award.id} className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-                    <span className="text-[11px] font-bold text-slate-700 uppercase tracking-tight">{award.name}</span>
+              {awardedPrizes.map((award) => {
+                // Usar wonAwardValues se disponível, senão fallback para award.value
+                const effectiveValue = awardedValues[award.id] !== undefined ? awardedValues[award.id] : award.value;
+                return (
+                  <div key={award.id} className="flex justify-between items-center">
+                    <div className="flex items-center">
+                      <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                      <span className="text-[11px] font-bold text-slate-700 uppercase tracking-tight">{award.name}</span>
+                    </div>
+                    <span className="text-xs font-black text-slate-900">{formatBRL(effectiveValue)}</span>
                   </div>
-                  <span className="text-xs font-black text-slate-900">{formatBRL(award.value)}</span>
-                </div>
-              ))}
+                );
+              })}
               {awardedPrizes.length === 0 && (
                 <p className="text-[10px] text-slate-400 text-center py-4 font-bold italic">Nenhum prêmio selecionado</p>
               )}
