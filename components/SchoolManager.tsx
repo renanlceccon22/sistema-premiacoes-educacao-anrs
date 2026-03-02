@@ -30,6 +30,7 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
   const [newTreasurerCpf, setNewTreasurerCpf] = useState('');
   const [newViceTreasurerName, setNewViceTreasurerName] = useState('');
   const [newViceTreasurerCpf, setNewViceTreasurerCpf] = useState('');
+  const [newViceTreasurerPercentage, setNewViceTreasurerPercentage] = useState<number>(50);
   const [newAnnualBudget, setNewAnnualBudget] = useState<number>(0);
 
   const [editingSchoolId, setEditingSchoolId] = useState<string | null>(null);
@@ -54,6 +55,7 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
           setNewTreasurerCpf(school.treasurerCpf || '');
           setNewViceTreasurerName(school.viceTreasurerName || '');
           setNewViceTreasurerCpf(school.viceTreasurerCpf || '');
+          setNewViceTreasurerPercentage(school.viceTreasurerPercentage ?? 50);
           setNewAnnualBudget(school.annualBudget || 0);
         }
       } else {
@@ -62,6 +64,7 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
         setNewTreasurerCpf('');
         setNewViceTreasurerName('');
         setNewViceTreasurerCpf('');
+        setNewViceTreasurerPercentage(50);
         setNewAnnualBudget(0);
       }
     }
@@ -88,6 +91,7 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
         treasurerCpf: newTreasurerCpf,
         viceTreasurerName: newViceTreasurerName,
         viceTreasurerCpf: newViceTreasurerCpf,
+        viceTreasurerPercentage: newViceTreasurerPercentage,
         annualBudget: newAnnualBudget,
         isLocked: true
       };
@@ -238,6 +242,23 @@ const SchoolManager: React.FC<SchoolManagerProps> = ({
                         placeholder="000.000.000-00"
                         className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-[#003B71] outline-none"
                       />
+                    </div>
+                    <div>
+                      <label className="block text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1 flex items-center justify-between">
+                        % Premiação Vice
+                        <span className="text-[7px] text-slate-300 font-bold ml-2">(Padrão 50%)</span>
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          min="0"
+                          max="100"
+                          value={newViceTreasurerPercentage}
+                          onChange={(e) => setNewViceTreasurerPercentage(Number(e.target.value))}
+                          className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-[#003B71] outline-none"
+                        />
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-300">%</span>
+                      </div>
                     </div>
                   </div>
                 </div>

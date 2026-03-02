@@ -354,10 +354,10 @@ const App: React.FC = () => {
     });
   }, [schools, evaluations, activePeriodId]);
 
-  const { totalTreasurerPrize, vicePrize, awardedPrizes, awardedValues } = useMemo(() => {
+  const { totalTreasurerPrize, vicePrize, vicePercentage, awardedPrizes, awardedValues } = useMemo(() => {
     if (!activeSchoolId || !activePeriodId) {
       return {
-        totalTreasurerPrize: 0, vicePrize: 0, awardedPrizes: [],
+        totalTreasurerPrize: 0, vicePrize: 0, vicePercentage: 50, awardedPrizes: [],
       };
     }
 
@@ -365,9 +365,13 @@ const App: React.FC = () => {
     const prizes = customAwards.filter(a => wonAwardIds.includes(a.id));
     const total = prizes.reduce((acc, p) => acc + (currentEvaluation?.wonAwardValues?.[p.id] ?? p.value), 0);
 
+    const isPeriodOpen = activePeriod?.status === 'open';
+    const vicePercentage = isPeriodOpen ? (activeSchool?.viceTreasurerPercentage ?? 50) : 50;
+
     return {
       totalTreasurerPrize: total,
-      vicePrize: activeSchool?.viceTreasurerName ? total * 0.5 : 0,
+      vicePrize: activeSchool?.viceTreasurerName ? (total * vicePercentage / 100) : 0,
+      vicePercentage,
       awardedPrizes: prizes,
       awardedValues: currentEvaluation?.wonAwardValues || {}
     };
@@ -725,6 +729,7 @@ const App: React.FC = () => {
       treasurerCpf: payload.treasurerCpf,
       viceTreasurerName: payload.viceTreasurerName,
       viceTreasurerCpf: payload.viceTreasurerCpf,
+      viceTreasurerPercentage: payload.viceTreasurerPercentage ?? 50,
       isLocked: payload.isLocked || false,
     };
 
@@ -736,6 +741,7 @@ const App: React.FC = () => {
         treasurer_cpf: newSchool.treasurerCpf,
         vice_treasurer_name: newSchool.viceTreasurerName,
         vice_treasurer_cpf: newSchool.viceTreasurerCpf,
+        vice_treasurer_percentage: newSchool.viceTreasurerPercentage,
         is_locked: newSchool.isLocked,
       };
 
@@ -753,6 +759,7 @@ const App: React.FC = () => {
           treasurerCpf: data.treasurer_cpf,
           viceTreasurerName: data.vice_treasurer_name,
           viceTreasurerCpf: data.vice_treasurer_cpf,
+          viceTreasurerPercentage: data.vice_treasurer_percentage ?? 50,
           isLocked: data.is_locked,
         };
         setSchools(prev => [...prev, mapped]);
@@ -823,6 +830,7 @@ const App: React.FC = () => {
       if (payload.treasurerCpf !== undefined) updatePayload.treasurer_cpf = payload.treasurerCpf;
       if (payload.viceTreasurerName !== undefined) updatePayload.vice_treasurer_name = payload.viceTreasurerName;
       if (payload.viceTreasurerCpf !== undefined) updatePayload.vice_treasurer_cpf = payload.viceTreasurerCpf;
+      if (payload.viceTreasurerPercentage !== undefined) updatePayload.vice_treasurer_percentage = payload.viceTreasurerPercentage;
       if (payload.isLocked !== undefined) updatePayload.is_locked = payload.isLocked;
       if (payload.targets !== undefined) updatePayload.targets = payload.targets;
 
@@ -1023,7 +1031,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col">
       <Header
         activeTab={activeTab}
         onTabChange={setActiveTab}
@@ -1108,14 +1116,14 @@ const App: React.FC = () => {
 
 
       {/* Syncing indicator removed as per user request */}
-      {/* Barra de Filtros (Oculta na aba de Cadastro de Premiações) */}
-      {activeTab !== AppTab.MASTER_VALUES && (
-        <main className="mx-auto px-2 sm:px-4 md:px-6 lg:px-8 pt-6 dashboard-container relative z-20">
+      {/* Barra de Filtros (Visível em todas as abas) */}
+      <div className="mx-auto px-2 sm:px-4 md:px-6 lg:px-8 pt-6 relative z-20">
+        <div className="dashboard-container">
           <div className="bg-white rounded-[1.5rem] border border-slate-200 shadow-sm p-3.5 mb-4 flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
 
-              {/* Dropdown Unidade Escolar Customizado - Oculto na aba Relatórios */}
-              {activeTab !== AppTab.REPORT && (
+              {/* Dropdown Unidade Escolar Customizado - Oculto na aba Relatórios e Cadastro Premiações */}
+              {![AppTab.REPORT, AppTab.MASTER_VALUES].includes(activeTab) && (
                 <div className="flex flex-col flex-1 min-w-[200px] md:w-64 relative" ref={schoolDropdownRef}>
                   <label className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 ml-1 flex items-center">
                     <svg className="w-3 h-3 mr-1.5 text-[#003B71]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1172,7 +1180,7 @@ const App: React.FC = () => {
                 </label>
                 <button
                   onClick={() => setIsPeriodDropdownOpen(!isPeriodDropdownOpen)}
-                  className={`w-full flex justify-between items-center bg-slate-50 border-2 rounded-xl px-3.5 py-2 text-xs font-black transition-all outline-none ${activePeriodId ? 'border-[#FDB813] text-slate-800 bg-white ring-4 ring-[#FDB813]/5 shadow-lg shadow-[#FDB813]/10' : 'border-slate-100 text-slate-400'
+                  className={`w-full flex justify-between items-center bg-slate-50 border-2 rounded-xl px-3.5 py-2 text-xs font-black transition-all outline-none ${activePeriodId ? 'border-[#FDB813] text-[#003B71] bg-white ring-4 ring-[#FDB813]/5 shadow-lg shadow-[#FDB813]/10' : 'border-slate-100 text-slate-400'
                     }`}
                 >
                   <span className="truncate">{activePeriod ? `${activePeriod.label} ${activePeriod.status === 'closed' ? '🔒' : ''}` : "Todos os Períodos"}</span>
@@ -1212,405 +1220,409 @@ const App: React.FC = () => {
               </div>
             </div>
           </div>
-        </main>
-      )}
+        </div>
+      </div>
 
-      <main className="mx-auto px-4 pt-6 pb-20 dashboard-container relative z-10">
+      <main className="flex-1 w-full relative z-10">
+        <div className="dashboard-container mx-auto px-4 pt-6 pb-20">
 
 
-        {activeTab === AppTab.UNITIES && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <SchoolManager
-              schools={schools}
-              activeSchoolId={activeSchoolId}
-              criteria={awardCriteria}
-              onAddSchool={handleAddSchool}
-              onRemoveSchool={handleRemoveSchool}
-              onSelectSchool={setActiveSchoolId}
-              onUpdateSchool={handleUpdateSchool}
-              isReadOnly={isPeriodLocked}
-            />
-            <PeriodManager
-              periods={periods}
-              activePeriodId={activePeriodId}
-              schoolsCount={schools.length}
-              onAddPeriod={handleAddPeriod}
-              onRemovePeriod={handleRemovePeriod}
-              onSelectPeriod={setActivePeriodId}
-              onToggleStatus={handleTogglePeriodStatus}
-              isReadOnly={isReadOnlyMode}
-            />
-          </div>
-        )}
+          {activeTab === AppTab.UNITIES && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <SchoolManager
+                schools={schools}
+                activeSchoolId={activeSchoolId}
+                criteria={awardCriteria}
+                onAddSchool={handleAddSchool}
+                onRemoveSchool={handleRemoveSchool}
+                onSelectSchool={setActiveSchoolId}
+                onUpdateSchool={handleUpdateSchool}
+                isReadOnly={isPeriodLocked}
+              />
+              <PeriodManager
+                periods={periods}
+                activePeriodId={activePeriodId}
+                schoolsCount={schools.length}
+                onAddPeriod={handleAddPeriod}
+                onRemovePeriod={handleRemovePeriod}
+                onSelectPeriod={setActivePeriodId}
+                onToggleStatus={handleTogglePeriodStatus}
+                isReadOnly={isReadOnlyMode}
+              />
+            </div>
+          )}
 
-        {activeTab === AppTab.MASTER_VALUES && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <PrizeConfig
-              schools={schools}
-              customAwards={customAwards}
-              criteria={awardCriteria}
-              onSave={handleSaveConfig}
-              isReadOnly={isPeriodLocked}
-              isSaving={syncing}
-              evaluations={evaluations}
-            />
-          </div>
-        )}
+          {activeTab === AppTab.MASTER_VALUES && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <PrizeConfig
+                schools={schools}
+                customAwards={customAwards}
+                criteria={awardCriteria}
+                onSave={handleSaveConfig}
+                isReadOnly={isPeriodLocked}
+                isSaving={syncing}
+                evaluations={evaluations}
+              />
+            </div>
+          )}
 
-        {activeTab === AppTab.EVALUATION && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {activeSchoolId && activePeriodId ? (
-              <div className="flex flex-col lg:flex-row gap-8">
-                <div className="w-full lg:w-2/3">
-                  <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8 transition-all duration-500">
-                    <h2 className="text-xl font-bold text-[#003B71] uppercase tracking-tight flex items-center gap-3">
-                      <span className="w-1.5 h-8 bg-[#003B71] rounded-full"></span>
-                      Avaliação de Premiações
-                    </h2>
+          {activeTab === AppTab.EVALUATION && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              {activeSchoolId && activePeriodId ? (
+                <div className="flex flex-col lg:flex-row gap-8">
+                  <div className="w-full lg:w-2/3">
+                    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8 transition-all duration-500">
+                      <h2 className="text-xl font-bold text-[#003B71] uppercase tracking-tight flex items-center gap-3">
+                        <span className="w-1.5 h-8 bg-[#003B71] rounded-full"></span>
+                        Avaliação de Premiações
+                      </h2>
 
-                    {(isReadOnlyMode || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized) && (
-                      <div className="mt-6 mb-2 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
-                        <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 flex-shrink-0">
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-                          </svg>
+                      {(isReadOnlyMode || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized) && (
+                        <div className="mt-6 mb-2 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+                          <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center text-amber-600 flex-shrink-0">
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h4 className="text-[10px] font-black text-amber-800 uppercase tracking-widest leading-none mb-1">Modo Somente Leitura</h4>
+                            <p className="text-[9px] text-amber-600 font-bold">
+                              {activePeriod?.status === 'closed' ? 'Este período está FECHADO e não permite novas edições.' :
+                                currentEvaluation?.isFinalized ? 'Esta avaliação foi FINALIZADA. Reabra-a para fazer novos ajustes.' :
+                                  'Você está visualizando em modo de consulta. Edições não são permitidas.'}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <h4 className="text-[10px] font-black text-amber-800 uppercase tracking-widest leading-none mb-1">Modo Somente Leitura</h4>
-                          <p className="text-[9px] text-amber-600 font-bold">
-                            {activePeriod?.status === 'closed' ? 'Este período está FECHADO e não permite novas edições.' :
-                              currentEvaluation?.isFinalized ? 'Esta avaliação foi FINALIZADA. Reabra-a para fazer novos ajustes.' :
-                                'Você está visualizando em modo de consulta. Edições não são permitidas.'}
-                          </p>
-                        </div>
-                      </div>
-                    )}
+                      )}
 
-                    <div className="space-y-8 mt-8">
-                      {customAwards.filter(award => award.schoolIds.includes(activeSchoolId)).map(award => {
-                        const awardCriteriaList = awardCriteria.filter(c => c.awardId === award.id);
-                        if (awardCriteriaList.length === 0) return null;
+                      <div className="space-y-8 mt-8">
+                        {customAwards.filter(award => award.schoolIds.includes(activeSchoolId)).map(award => {
+                          const awardCriteriaList = awardCriteria.filter(c => c.awardId === award.id);
+                          if (awardCriteriaList.length === 0) return null;
 
-                        const isWon = (currentEvaluation?.wonAwardIds || []).includes(award.id);
-                        const isDisabled = isReadOnlyMode || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized;
+                          const isWon = (currentEvaluation?.wonAwardIds || []).includes(award.id);
+                          const isDisabled = isReadOnlyMode || activePeriod?.status === 'closed' || currentEvaluation?.isFinalized;
 
-                        return (
-                          <div key={award.id} className={`p-6 rounded-2xl border-2 transition-all ${isWon ? 'border-[#003B71] bg-blue-50/30' : 'border-slate-100 bg-white'}`}>
-                            <div className="flex justify-between items-center mb-6">
-                              <div>
-                                <div className="flex items-center gap-4">
-                                  <div className="w-1.5 h-10 bg-[#003B71] rounded-full"></div>
-                                  <div>
-                                    <div className="flex items-center gap-2">
-                                      <h3 className="text-xl font-bold text-[#003B71] tracking-tight">{award.name}</h3>
-                                      <span className={`text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest leading-none ${award.evaluationType === 'JOINT' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
-                                        {award.evaluationType === 'JOINT' ? 'Conjunta' : 'Individual'}
-                                      </span>
-                                    </div>
-                                    {(() => {
-                                      const rankCrit = awardCriteriaList.find(c => award.evaluationType === 'JOINT' && (c.operator || '').startsWith('RANKING') && c.rankingPrizes && c.rankingPrizes.length > 0);
-                                      if (award.value === 0 && rankCrit) {
+                          return (
+                            <div key={award.id} className={`p-6 rounded-2xl border-2 transition-all ${isWon ? 'border-[#003B71] bg-blue-50/30' : 'border-slate-100 bg-white'}`}>
+                              <div className="flex justify-between items-center mb-6">
+                                <div>
+                                  <div className="flex items-center gap-4">
+                                    <div className="w-1.5 h-10 bg-[#003B71] rounded-full"></div>
+                                    <div>
+                                      <div className="flex items-center gap-2">
+                                        <h3 className="text-xl font-bold text-[#003B71] tracking-tight">{award.name}</h3>
+                                        <span className={`text-[8px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest leading-none ${award.evaluationType === 'JOINT' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}`}>
+                                          {award.evaluationType === 'JOINT' ? 'Conjunta' : 'Individual'}
+                                        </span>
+                                      </div>
+                                      {(() => {
+                                        const rankCrit = awardCriteriaList.find(c => award.evaluationType === 'JOINT' && (c.operator || '').startsWith('RANKING') && c.rankingPrizes && c.rankingPrizes.length > 0);
+                                        if (award.value === 0 && rankCrit) {
+                                          return (
+                                            <div className="flex flex-wrap gap-1 mt-0.5">
+                                              {rankCrit.rankingPrizes!.map((v, i) => (
+                                                <span key={i} className="text-[8px] font-black text-[#003B71] bg-[#FDB813]/20 px-1.5 py-0.5 rounded border border-[#FDB813]/30">
+                                                  {i + 1}º {v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                                </span>
+                                              ))}
+                                            </div>
+                                          );
+                                        }
                                         return (
-                                          <div className="flex flex-wrap gap-1 mt-0.5">
-                                            {rankCrit.rankingPrizes!.map((v, i) => (
-                                              <span key={i} className="text-[8px] font-black text-[#003B71] bg-[#FDB813]/20 px-1.5 py-0.5 rounded border border-[#FDB813]/30">
-                                                {i + 1}º {v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                                              </span>
+                                          <p className="text-[10px] font-black text-[#FDB813] uppercase tracking-[0.2em] mt-0.5">
+                                            Prêmio de {(currentEvaluation?.wonAwardValues?.[award.id] ?? award.value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                                          </p>
+                                        );
+                                      })()}
+                                    </div>
+                                  </div>
+                                </div>
+                                {isWon && (
+                                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1 shadow-sm border border-green-200">
+                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Conquistado
+                                  </span>
+                                )}
+                              </div>
+
+                              {award.scoringMode && (
+                                <div className="mb-6 flex items-center gap-4 bg-[#003B71]/5 p-3 rounded-xl border border-[#003B71]/10">
+                                  <div className="flex flex-col">
+                                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pontuação Total</span>
+                                    <p className="text-2xl font-black text-[#003B71]">
+                                      {awardCriteriaList.reduce((acc, c) => acc + (currentEvaluation?.criterionResults[c.id]?.score || 0), 0)}
+                                      <span className="text-xs text-slate-400 ml-1">/ {award.minScore}</span>
+                                    </p>
+                                  </div>
+                                  <div className="flex-1 h-3 bg-white rounded-full overflow-hidden border border-slate-100">
+                                    <div
+                                      className="h-full bg-[#FDB813] transition-all duration-1000"
+                                      style={{ width: `${Math.min(100, (awardCriteriaList.reduce((acc, c) => acc + (currentEvaluation?.criterionResults[c.id]?.score || 0), 0) / (award.minScore || 1)) * 100)}%` }}
+                                    ></div>
+                                  </div>
+                                </div>
+                              )}
+
+                              <div className="space-y-6">
+                                {awardCriteriaList.map(criterion => {
+                                  const result = (currentEvaluation?.criterionResults || {})[criterion.id] || { isMet: false };
+
+                                  const getRuleDisplay = () => {
+                                    if (criterion.type === 'TOGGLE') {
+                                      if (award.scoringMode && criterion.options?.length) {
+                                        return `Modo Pontuação (${criterion.options.length} Avaliações)`;
+                                      }
+                                      return 'Seleção Simples (Checkbox)';
+                                    }
+                                    if (award.scoringMode && criterion.scoringRanges?.length) {
+                                      return `Modo Pontuação (${criterion.scoringRanges.length} faixas)`;
+                                    }
+                                    const suffix = criterion.valueFormat === 'PERCENTAGE' ? '%' : '';
+                                    if (criterion.useAccumulatedBudget) {
+                                      const annualTarget = activeSchool?.annualBudget || activeSchool?.targets[criterion.id] || 0;
+                                      const monthIndex = getMonthIndexFromLabel(activePeriod?.label || '');
+                                      const monthFactor = criterion.budgetEvaluationType === 'MONTHLY' ? 1 / 12 : monthIndex / 12;
+                                      const currentTarget = annualTarget * monthFactor;
+                                      return `Orçamento ${criterion.budgetEvaluationType === 'MONTHLY' ? 'Mensal' : 'Acumulado'}: ≤ ${currentTarget.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+                                    }
+                                    switch (criterion.operator) {
+                                      case 'GREATER_THAN': return `Meta: > ${criterion.threshold1}${suffix}`;
+                                      case 'LESS_THAN': return `Meta: < ${criterion.threshold1}${suffix}`;
+                                      case 'GREATER_EQUAL': return `Meta: ≥ ${criterion.threshold1}${suffix}`;
+                                      case 'LESS_EQUAL': return `Meta: ≤ ${criterion.threshold1}${suffix}`;
+                                      case 'EQUAL': return `Meta: = ${criterion.threshold1}${suffix}`;
+                                      case 'BETWEEN': return `Meta: ${criterion.threshold1}${suffix} até ${criterion.threshold2}${suffix}`;
+                                      case 'RANKING_TOP': return `Meta: Top ${criterion.threshold1} Maiores`;
+                                      case 'RANKING_BOTTOM': return `Meta: Top ${criterion.threshold1} Menores`;
+                                      default: return '';
+                                    }
+                                  };
+
+                                  return (
+                                    <div key={criterion.id} className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                                      <div className="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+                                        <div className="flex items-center gap-3">
+                                          <span className="w-1 h-4 bg-[#003B71] rounded-full opacity-30"></span>
+                                          <label className="text-xs font-black uppercase text-[#003B71] tracking-tight">{criterion.name}</label>
+                                        </div>
+                                        <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest">{getRuleDisplay()}</span>
+                                      </div>
+
+                                      {criterion.type === 'TOGGLE' ? (
+                                        award.scoringMode && criterion.options && criterion.options.length > 0 ? (
+                                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3">
+                                            {criterion.options.map(opt => (
+                                              <button
+                                                key={opt.id}
+                                                onClick={() => {
+                                                  if (!isDisabled) {
+                                                    handleUpdateCriterionResult(criterion.id, { selectedOptionId: opt.id });
+                                                  }
+                                                }}
+                                                className={`relative flex items-center justify-between px-4 py-3.5 rounded-2xl border-2 transition-all group outline-none ${String(result.selectedOptionId).trim() === String(opt.id).trim()
+                                                  ? 'bg-white border-[#003B71] ring-4 ring-blue-50 shadow-lg -translate-y-0.5'
+                                                  : 'bg-white border-slate-100 hover:border-blue-200 hover:shadow-md'
+                                                  } ${isDisabled ? 'opacity-50 cursor-not-allowed grayscale-[0.3]' : 'cursor-pointer hover:scale-[1.01] active:scale-[0.98]'}`}
+                                              >
+                                                <span className={`text-[11px] font-black uppercase tracking-tight text-left ${String(result.selectedOptionId).trim() === String(opt.id).trim() ? 'text-[#003B71]' : 'text-slate-500'}`}>
+                                                  {opt.label}
+                                                </span>
+                                                <div className={`px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-widest flex items-center gap-1 ${String(result.selectedOptionId).trim() === String(opt.id).trim()
+                                                  ? 'bg-[#FDB813]/20 text-[#003B71]'
+                                                  : 'bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-500'
+                                                  }`}>
+                                                  {opt.points} <span className="opacity-50">pts</span>
+                                                </div>
+                                                {String(result.selectedOptionId).trim() === String(opt.id).trim() && (
+                                                  <div className="absolute -top-2 -right-2 w-5 h-5 bg-[#003B71] text-white rounded-full flex items-center justify-center shadow-md animate-in zoom-in-50">
+                                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                  </div>
+                                                )}
+                                              </button>
                                             ))}
                                           </div>
-                                        );
-                                      }
-                                      return (
-                                        <p className="text-[10px] font-black text-[#FDB813] uppercase tracking-[0.2em] mt-0.5">
-                                          Prêmio de {(currentEvaluation?.wonAwardValues?.[award.id] ?? award.value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                                        </p>
-                                      );
-                                    })()}
-                                  </div>
-                                </div>
-                              </div>
-                              {isWon && (
-                                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1 shadow-sm border border-green-200">
-                                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                                  </svg>
-                                  Conquistado
-                                </span>
-                              )}
-                            </div>
+                                        ) : (
+                                          <button
+                                            disabled={isDisabled}
+                                            onClick={() => handleUpdateCriterionResult(criterion.id, { checked: !result.checked })}
+                                            className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl border-2 transition-all font-black text-xs ${result.checked ? 'bg-[#003B71] border-[#003B71] text-white shadow-lg' : 'bg-white border-slate-100 text-slate-500 hover:border-blue-100'} ${isDisabled ? 'opacity-50 cursor-not-allowed grayscale-[0.3]' : 'cursor-pointer hover:border-blue-200'}`}
+                                          >
+                                            <span className="uppercase tracking-widest">{result.checked ? 'Ativado' : 'Desativado'}</span>
+                                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${result.checked ? 'bg-[#FDB813] border-[#FDB813]' : 'bg-transparent border-slate-200'}`}>
+                                              {result.checked && <svg className="w-3 h-3 text-[#003B71]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
+                                            </div>
+                                          </button>
+                                        )
+                                      ) : (
+                                        <div className="relative group/input">
+                                          <input
+                                            type="text"
+                                            inputMode="numeric"
+                                            disabled={isDisabled}
+                                            value={result.value !== undefined
+                                              ? (criterion.valueFormat === 'PERCENTAGE' ? formatPercentageMask(result.value) : formatCurrencyInput(result.value))
+                                              : ''
+                                            }
+                                            onChange={(e) => {
+                                              const numericValue = parseMaskedString(e.target.value);
+                                              handleUpdateCriterionResult(criterion.id, { value: e.target.value === '' ? undefined : numericValue });
+                                            }}
+                                            className={`w-full bg-white border-2 rounded-lg pl-4 py-2.5 font-black text-xs focus:outline-none transition-all ${criterion.valueFormat === 'PERCENTAGE' ? 'pr-8' : 'pr-4'} ${result.isMet ? 'border-green-500 ring-4 ring-green-100/50 shadow-sm' : 'border-slate-200 focus:border-[#003B71]'} ${isDisabled ? 'bg-slate-50 text-slate-400 cursor-not-allowed border-slate-100' : ''}`}
+                                            placeholder={criterion.valueFormat === 'PERCENTAGE' ? '0,00' : 'R$ 0,00'}
+                                          />
+                                          {criterion.valueFormat === 'PERCENTAGE' && (
+                                            <span className="absolute right-4 top-5 text-[10px] font-black text-slate-400 pointer-events-none">
+                                              %
+                                            </span>
+                                          )}
 
-                            {award.scoringMode && (
-                              <div className="mb-6 flex items-center gap-4 bg-[#003B71]/5 p-3 rounded-xl border border-[#003B71]/10">
-                                <div className="flex flex-col">
-                                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pontuação Total</span>
-                                  <p className="text-2xl font-black text-[#003B71]">
-                                    {awardCriteriaList.reduce((acc, c) => acc + (currentEvaluation?.criterionResults[c.id]?.score || 0), 0)}
-                                    <span className="text-xs text-slate-400 ml-1">/ {award.minScore}</span>
-                                  </p>
-                                </div>
-                                <div className="flex-1 h-3 bg-white rounded-full overflow-hidden border border-slate-100">
-                                  <div
-                                    className="h-full bg-[#FDB813] transition-all duration-1000"
-                                    style={{ width: `${Math.min(100, (awardCriteriaList.reduce((acc, c) => acc + (currentEvaluation?.criterionResults[c.id]?.score || 0), 0) / (award.minScore || 1)) * 100)}%` }}
-                                  ></div>
-                                </div>
-                              </div>
-                            )}
-
-                            <div className="space-y-6">
-                              {awardCriteriaList.map(criterion => {
-                                const result = (currentEvaluation?.criterionResults || {})[criterion.id] || { isMet: false };
-
-                                const getRuleDisplay = () => {
-                                  if (criterion.type === 'TOGGLE') {
-                                    if (award.scoringMode && criterion.options?.length) {
-                                      return `Modo Pontuação (${criterion.options.length} Avaliações)`;
-                                    }
-                                    return 'Seleção Simples (Checkbox)';
-                                  }
-                                  if (award.scoringMode && criterion.scoringRanges?.length) {
-                                    return `Modo Pontuação (${criterion.scoringRanges.length} faixas)`;
-                                  }
-                                  const suffix = criterion.valueFormat === 'PERCENTAGE' ? '%' : '';
-                                  if (criterion.useAccumulatedBudget) {
-                                    const annualTarget = activeSchool?.annualBudget || activeSchool?.targets[criterion.id] || 0;
-                                    const monthIndex = getMonthIndexFromLabel(activePeriod?.label || '');
-                                    const monthFactor = criterion.budgetEvaluationType === 'MONTHLY' ? 1 / 12 : monthIndex / 12;
-                                    const currentTarget = annualTarget * monthFactor;
-                                    return `Orçamento ${criterion.budgetEvaluationType === 'MONTHLY' ? 'Mensal' : 'Acumulado'}: ≤ ${currentTarget.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
-                                  }
-                                  switch (criterion.operator) {
-                                    case 'GREATER_THAN': return `Meta: > ${criterion.threshold1}${suffix}`;
-                                    case 'LESS_THAN': return `Meta: < ${criterion.threshold1}${suffix}`;
-                                    case 'GREATER_EQUAL': return `Meta: ≥ ${criterion.threshold1}${suffix}`;
-                                    case 'LESS_EQUAL': return `Meta: ≤ ${criterion.threshold1}${suffix}`;
-                                    case 'EQUAL': return `Meta: = ${criterion.threshold1}${suffix}`;
-                                    case 'BETWEEN': return `Meta: ${criterion.threshold1}${suffix} até ${criterion.threshold2}${suffix}`;
-                                    case 'RANKING_TOP': return `Meta: Top ${criterion.threshold1} Maiores`;
-                                    case 'RANKING_BOTTOM': return `Meta: Top ${criterion.threshold1} Menores`;
-                                    default: return '';
-                                  }
-                                };
-
-                                return (
-                                  <div key={criterion.id} className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                    <div className="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
-                                      <div className="flex items-center gap-3">
-                                        <span className="w-1 h-4 bg-[#003B71] rounded-full opacity-30"></span>
-                                        <label className="text-xs font-black uppercase text-[#003B71] tracking-tight">{criterion.name}</label>
-                                      </div>
-                                      <span className="text-[8px] font-black text-slate-300 uppercase tracking-widest">{getRuleDisplay()}</span>
-                                    </div>
-
-                                    {criterion.type === 'TOGGLE' ? (
-                                      award.scoringMode && criterion.options && criterion.options.length > 0 ? (
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-3">
-                                          {criterion.options.map(opt => (
-                                            <button
-                                              key={opt.id}
-                                              onClick={() => {
-                                                if (!isDisabled) {
-                                                  handleUpdateCriterionResult(criterion.id, { selectedOptionId: opt.id });
-                                                }
-                                              }}
-                                              className={`relative flex items-center justify-between px-4 py-3.5 rounded-2xl border-2 transition-all group outline-none ${String(result.selectedOptionId).trim() === String(opt.id).trim()
-                                                ? 'bg-white border-[#003B71] ring-4 ring-blue-50 shadow-lg -translate-y-0.5'
-                                                : 'bg-white border-slate-100 hover:border-blue-200 hover:shadow-md'
-                                                } ${isDisabled ? 'opacity-50 cursor-not-allowed grayscale-[0.3]' : 'cursor-pointer hover:scale-[1.01] active:scale-[0.98]'}`}
-                                            >
-                                              <span className={`text-[11px] font-black uppercase tracking-tight text-left ${String(result.selectedOptionId).trim() === String(opt.id).trim() ? 'text-[#003B71]' : 'text-slate-500'}`}>
-                                                {opt.label}
-                                              </span>
-                                              <div className={`px-2 py-0.5 rounded-lg text-[8px] font-black uppercase tracking-widest flex items-center gap-1 ${String(result.selectedOptionId).trim() === String(opt.id).trim()
-                                                ? 'bg-[#FDB813]/20 text-[#003B71]'
-                                                : 'bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-500'
-                                                }`}>
-                                                {opt.points} <span className="opacity-50">pts</span>
-                                              </div>
-                                              {String(result.selectedOptionId).trim() === String(opt.id).trim() && (
-                                                <div className="absolute -top-2 -right-2 w-5 h-5 bg-[#003B71] text-white rounded-full flex items-center justify-center shadow-md animate-in zoom-in-50">
-                                                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                          {(result.isMet || (award.scoringMode && result.score !== undefined) || (criterion.operator?.startsWith('RANKING') && result.rankIndex !== undefined)) && (
+                                            <div className="mt-2 flex items-center justify-center gap-2">
+                                              {result.isMet && !criterion.operator?.startsWith('RANKING') && (
+                                                <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-600 rounded-full border border-green-100 animate-in zoom-in-95 duration-300">
+                                                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
                                                   </svg>
+                                                  <span className="text-[8px] font-black uppercase tracking-widest">Meta Batida</span>
                                                 </div>
                                               )}
-                                            </button>
-                                          ))}
+                                              {criterion.operator?.startsWith('RANKING') && result.rankIndex !== undefined && (
+                                                <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border auto animate-in zoom-in-95 duration-300 ${result.isMet ? 'bg-[#FDB813]/20 text-amber-700 border-amber-200' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>
+                                                  <span className="text-[9px] font-black uppercase tracking-widest">{result.rankIndex + 1}º LUGAR (RANKING)</span>
+                                                </div>
+                                              )}
+                                              {award.scoringMode && result.score !== undefined && (
+                                                <span className="text-[10px] font-black text-[#003B71] bg-[#FDB813]/20 px-2 py-1 rounded-lg border border-[#FDB813]/30 animate-in slide-in-from-right-2 duration-300">
+                                                  +{result.score} PTS
+                                                </span>
+                                              )}
+                                            </div>
+                                          )}
                                         </div>
-                                      ) : (
-                                        <button
-                                          disabled={isDisabled}
-                                          onClick={() => handleUpdateCriterionResult(criterion.id, { checked: !result.checked })}
-                                          className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl border-2 transition-all font-black text-xs ${result.checked ? 'bg-[#003B71] border-[#003B71] text-white shadow-lg' : 'bg-white border-slate-100 text-slate-500 hover:border-blue-100'} ${isDisabled ? 'opacity-50 cursor-not-allowed grayscale-[0.3]' : 'cursor-pointer hover:border-blue-200'}`}
-                                        >
-                                          <span className="uppercase tracking-widest">{result.checked ? 'Ativado' : 'Desativado'}</span>
-                                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${result.checked ? 'bg-[#FDB813] border-[#FDB813]' : 'bg-transparent border-slate-200'}`}>
-                                            {result.checked && <svg className="w-3 h-3 text-[#003B71]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" /></svg>}
-                                          </div>
-                                        </button>
-                                      )
-                                    ) : (
-                                      <div className="relative group/input">
-                                        <input
-                                          type="text"
-                                          inputMode="numeric"
-                                          disabled={isDisabled}
-                                          value={result.value !== undefined
-                                            ? (criterion.valueFormat === 'PERCENTAGE' ? formatPercentageMask(result.value) : formatCurrencyInput(result.value))
-                                            : ''
-                                          }
-                                          onChange={(e) => {
-                                            const numericValue = parseMaskedString(e.target.value);
-                                            handleUpdateCriterionResult(criterion.id, { value: e.target.value === '' ? undefined : numericValue });
-                                          }}
-                                          className={`w-full bg-white border-2 rounded-lg pl-4 py-2.5 font-black text-xs focus:outline-none transition-all ${criterion.valueFormat === 'PERCENTAGE' ? 'pr-8' : 'pr-4'} ${result.isMet ? 'border-green-500 ring-4 ring-green-100/50 shadow-sm' : 'border-slate-200 focus:border-[#003B71]'} ${isDisabled ? 'bg-slate-50 text-slate-400 cursor-not-allowed border-slate-100' : ''}`}
-                                          placeholder={criterion.valueFormat === 'PERCENTAGE' ? '0,00' : 'R$ 0,00'}
-                                        />
-                                        {criterion.valueFormat === 'PERCENTAGE' && (
-                                          <span className="absolute right-4 top-5 text-[10px] font-black text-slate-400 pointer-events-none">
-                                            %
-                                          </span>
-                                        )}
-
-                                        {(result.isMet || (award.scoringMode && result.score !== undefined) || (criterion.operator?.startsWith('RANKING') && result.rankIndex !== undefined)) && (
-                                          <div className="mt-2 flex items-center justify-center gap-2">
-                                            {result.isMet && !criterion.operator?.startsWith('RANKING') && (
-                                              <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 text-green-600 rounded-full border border-green-100 animate-in zoom-in-95 duration-300">
-                                                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M5 13l4 4L19 7" />
-                                                </svg>
-                                                <span className="text-[8px] font-black uppercase tracking-widest">Meta Batida</span>
-                                              </div>
-                                            )}
-                                            {criterion.operator?.startsWith('RANKING') && result.rankIndex !== undefined && (
-                                              <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border auto animate-in zoom-in-95 duration-300 ${result.isMet ? 'bg-[#FDB813]/20 text-amber-700 border-amber-200' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>
-                                                <span className="text-[9px] font-black uppercase tracking-widest">{result.rankIndex + 1}º LUGAR (RANKING)</span>
-                                              </div>
-                                            )}
-                                            {award.scoringMode && result.score !== undefined && (
-                                              <span className="text-[10px] font-black text-[#003B71] bg-[#FDB813]/20 px-2 py-1 rounded-lg border border-[#FDB813]/30 animate-in slide-in-from-right-2 duration-300">
-                                                +{result.score} PTS
-                                              </span>
-                                            )}
-                                          </div>
-                                        )}
-                                      </div>
-                                    )}
-                                  </div>
-                                );
-                              })}
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
                             </div>
+                          );
+                        })}
+                        {customAwards.filter(award => award.schoolIds.includes(activeSchoolId)).filter(award => awardCriteria.some(c => c.awardId === award.id)).length === 0 && (
+                          <div className="col-span-full py-12 text-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+                            <p className="text-slate-400 font-bold uppercase text-xs tracking-widest underline cursor-pointer" onClick={() => setActiveTab(AppTab.MASTER_VALUES)}>
+                              Nenhum critério configurado para as premiações desta unidade. Clique aqui para configurar.
+                            </p>
                           </div>
-                        );
-                      })}
-                      {customAwards.filter(award => award.schoolIds.includes(activeSchoolId)).filter(award => awardCriteria.some(c => c.awardId === award.id)).length === 0 && (
-                        <div className="col-span-full py-12 text-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
-                          <p className="text-slate-400 font-bold uppercase text-xs tracking-widest underline cursor-pointer" onClick={() => setActiveTab(AppTab.MASTER_VALUES)}>
-                            Nenhum critério configurado para as premiações desta unidade. Clique aqui para configurar.
-                          </p>
-                        </div>
-                      )}
-                    </div>
+                        )}
+                      </div>
 
-                    <div className="mt-8 pt-8 border-t border-slate-100 flex justify-end">
-                      {currentEvaluation?.isFinalized ? (
-                        <button
-                          onClick={handleReopenEvaluation}
-                          className="bg-slate-100 text-slate-600 px-6 py-3 rounded-xl font-black text-xs hover:bg-slate-200 transition-all uppercase tracking-widest flex items-center gap-2"
-                        >
-                          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
-                          </svg>
-                          Reabrir para Ajustes
-                        </button>
-                      ) : (
-                        <button
-                          onClick={handleFinalize}
-                          disabled={isReadOnlyMode}
-                          className="bg-green-600 text-white px-10 py-4 rounded-xl font-black text-sm hover:bg-green-700 shadow-xl active:scale-95 transition-all flex items-center gap-3 uppercase tracking-[0.1em]"
-                        >
-                          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                          </svg>
-                          Finalizar Avaliação
-                        </button>
-                      )}
+                      <div className="mt-8 pt-8 border-t border-slate-100 flex justify-end">
+                        {currentEvaluation?.isFinalized ? (
+                          <button
+                            onClick={handleReopenEvaluation}
+                            className="bg-slate-100 text-slate-600 px-6 py-3 rounded-xl font-black text-xs hover:bg-slate-200 transition-all uppercase tracking-widest flex items-center gap-2"
+                          >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                            </svg>
+                            Reabrir para Ajustes
+                          </button>
+                        ) : (
+                          <button
+                            onClick={handleFinalize}
+                            disabled={isReadOnlyMode}
+                            className="bg-green-600 text-white px-10 py-4 rounded-xl font-black text-sm hover:bg-green-700 shadow-xl active:scale-95 transition-all flex items-center gap-3 uppercase tracking-[0.1em]"
+                          >
+                            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                            Finalizar Avaliação
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
+                  <div className="w-full lg:w-1/3">
+                    <ResultsPanel
+                      schoolName={activeSchool?.name || ''}
+                      prizes={{
+                        totalTreasurerPrize,
+                        vicePrize,
+                        awardedPrizes,
+                        awardedValues
+                      }}
+                      onFinalize={handleFinalize}
+                      onReopen={handleReopenEvaluation}
+                      isFinalized={currentEvaluation?.isFinalized || false}
+                      isReadOnly={isReadOnlyMode || activePeriod?.status === 'closed'}
+                      activePeriodLabel={activePeriod?.label || ''}
+                      schoolViceName={activeSchool?.viceTreasurerName}
+                      vicePercentage={vicePercentage}
+                    />
+                  </div>
                 </div>
-                <div className="w-full lg:w-1/3">
-                  <ResultsPanel
-                    schoolName={activeSchool?.name || ''}
-                    prizes={{
-                      totalTreasurerPrize,
-                      vicePrize,
-                      awardedPrizes,
-                      awardedValues
-                    }}
-                    onFinalize={handleFinalize}
-                    onReopen={handleReopenEvaluation}
-                    isFinalized={currentEvaluation?.isFinalized || false}
-                    isReadOnly={isReadOnlyMode || activePeriod?.status === 'closed'}
-                    activePeriodLabel={activePeriod?.label || ''}
-                    schoolViceName={activeSchool?.viceTreasurerName}
-                  />
-                </div>
-              </div>
-            ) : (
-              <EmptyState
-                icon={
-                  <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                  </svg>
-                }
-                title="Aguardando Seleção"
-                description="Selecione Unidade e Período Ativo para iniciar"
-              />
-            )}
-          </div>
-        )}
+              ) : (
+                <EmptyState
+                  icon={
+                    <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  }
+                  title="Aguardando Seleção"
+                  description="Selecione Unidade e Período Ativo para iniciar"
+                />
+              )}
+            </div>
+          )}
 
-        {activeTab === AppTab.REPORT && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {activePeriodId ? (
-              <SummaryTable
-                schools={schoolsForSummary}
-                customAwards={customAwards}
-                activePeriodLabel={activePeriod?.label || ''}
-                entityInitials={selectedEntity?.initials || 'ANRS'}
-                entityName={selectedEntity?.name || 'ANRS Contabilidade e Gestão Educacional'}
-                awardCriteria={awardCriteria}
+          {activeTab === AppTab.REPORT && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              {activePeriodId ? (
+                <SummaryTable
+                  schools={schoolsForSummary}
+                  customAwards={customAwards}
+                  activePeriodLabel={activePeriod?.label || ''}
+                  entityInitials={selectedEntity?.initials || 'ANRS'}
+                  entityName={selectedEntity?.name || 'ANRS Contabilidade e Gestão Educacional'}
+                  awardCriteria={awardCriteria}
+                  evaluations={evaluations}
+                  activePeriodId={activePeriodId}
+                  isPeriodClosed={activePeriod?.status === 'closed'}
+                />
+              ) : (
+                <EmptyState
+                  icon={
+                    <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z" />
+                    </svg>
+                  }
+                  title="Relatório não Carregado"
+                  description="Selecione um Período no Filtro Principal acima"
+                />
+              )}
+            </div>
+          )}
+
+          {activeTab === AppTab.COST_ANALYSIS && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <CostAnalysis
+                schools={schools}
+                periods={periods}
                 evaluations={evaluations}
+                customAwards={customAwards}
                 activePeriodId={activePeriodId}
+                activeSchoolId={activeSchoolId}
               />
-            ) : (
-              <EmptyState
-                icon={
-                  <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z" />
-                  </svg>
-                }
-                title="Relatório não Carregado"
-                description="Selecione um Período no Filtro Principal acima"
-              />
-            )}
-          </div>
-        )}
-
-        {activeTab === AppTab.COST_ANALYSIS && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <CostAnalysis
-              schools={schools}
-              periods={periods}
-              evaluations={evaluations}
-              customAwards={customAwards}
-              activePeriodId={activePeriodId}
-              activeSchoolId={activeSchoolId}
-            />
-          </div>
-        )}
+            </div>
+          )}
 
 
+        </div>
       </main>
       <Footer entityInitials={selectedEntity?.initials || 'ANRS'} />
 

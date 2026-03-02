@@ -130,6 +130,7 @@ export interface SchoolUnit {
   treasurerCpf?: string;
   viceTreasurerName?: string;
   viceTreasurerCpf?: string;
+  viceTreasurerPercentage?: number;
   isLocked?: boolean;
 }
 

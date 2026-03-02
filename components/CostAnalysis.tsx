@@ -46,9 +46,13 @@ const CostAnalysis: React.FC<CostAnalysisProps> = ({
       const school = schools.find(s => s.id === ev.schoolId);
       if (!school) return;
 
+      const period = periods.find(p => p.id === ev.periodId);
+      const isPeriodOpen = period?.status === 'open';
+      const vicePercentage = isPeriodOpen ? (school.viceTreasurerPercentage ?? 50) : 50;
+
       const prizes = customAwards.filter(a => ev.wonAwardIds && ev.wonAwardIds.includes(a.id));
       const totalT = prizes.reduce((acc, p) => acc + (ev.wonAwardValues?.[p.id] ?? p.value), 0);
-      const totalV = school.viceTreasurerName ? totalT * 0.5 : 0;
+      const totalV = school.viceTreasurerName ? (totalT * vicePercentage / 100) : 0;
 
       if (!resultsBySchool[school.id]) {
         resultsBySchool[school.id] = {

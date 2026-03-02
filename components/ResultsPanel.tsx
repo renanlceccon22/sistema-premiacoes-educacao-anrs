@@ -17,6 +17,7 @@ interface ResultsPanelProps {
   schoolName: string;
   activePeriodLabel: string;
   schoolViceName?: string;
+  vicePercentage: number;
 }
 
 const ResultsPanel: React.FC<ResultsPanelProps> = ({
@@ -27,7 +28,8 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
   onReopen,
   schoolName,
   activePeriodLabel,
-  schoolViceName
+  schoolViceName,
+  vicePercentage
 }) => {
   const [isReopening, setIsReopening] = useState(false);
 
@@ -106,7 +108,7 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
                 <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-xl border border-yellow-100">
                   <div className="flex flex-col">
                     <span className="text-[9px] font-black text-slate-700 uppercase tracking-widest">Repasse Vice</span>
-                    <span className="text-[8px] font-bold text-slate-400 uppercase">Repasse (50%)</span>
+                    <span className="text-[8px] font-bold text-slate-400 uppercase">Repasse ({vicePercentage}%)</span>
                   </div>
                   <p className="text-lg font-black text-slate-700">{formatBRL(vicePrize)}</p>
                 </div>

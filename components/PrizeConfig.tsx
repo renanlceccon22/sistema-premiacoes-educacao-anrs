@@ -78,6 +78,7 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
     setLocalAwards(updatedAwards);
     setLocalCriteria(updatedCriteria);
     setAwardToDelete(null);
+    onSave(updatedAwards, updatedCriteria);
   };
 
   const handleUpdateAward = (awardId: string, updates: Partial<CustomAward>) => {
@@ -127,8 +128,10 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
 
   const executeRemoveCriterion = () => {
     if (!criterionToDelete) return;
-    setLocalCriteria(localCriteria.filter(c => c.id !== criterionToDelete));
+    const updated = localCriteria.filter(c => c.id !== criterionToDelete);
+    setLocalCriteria(updated);
     setCriterionToDelete(null);
+    onSave(localAwards, updated);
   };
 
   const handleUpdateCriterion = (id: string, updates: Partial<AwardCriterion>) => {

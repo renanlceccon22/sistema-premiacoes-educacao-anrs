@@ -105,6 +105,7 @@ export const calculateAllPrizes = (
   allSchoolsEvaluations: SchoolEvaluationForPrizeCalculation[],
   activeSchoolId: string,
   currentPeriodLabel?: string,
+  vicePercentage: number = 50,
   hasViceTreasurer: boolean = true
 ): AllPrizesResult => {
   const level = getAwardLevel(totalPoints, thresholds);
@@ -193,7 +194,7 @@ export const calculateAllPrizes = (
     (inadimplenciaRankingConfig.enabled ? inadimplenciaRankingBonus : 0) +
     (managementBonusConfig.enabled ? managementBonus : 0) +
     (anrsBonusConfig.enabled ? anrsBonus : 0);
-  const vicePrize = hasViceTreasurer ? totalTreasurerPrize * 0.5 : 0;
+  const vicePrize = hasViceTreasurer ? (totalTreasurerPrize * vicePercentage / 100) : 0;
 
   return {
     inadimplenciaRankingBonus,

@@ -25,6 +25,7 @@ interface SummaryTableProps {
   awardCriteria?: AwardCriterion[];
   evaluations?: Evaluation[];
   activePeriodId?: string | null;
+  isPeriodClosed?: boolean;
 }
 
 const SummaryTable: React.FC<SummaryTableProps> = ({
@@ -35,7 +36,8 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
   entityName,
   awardCriteria = [],
   evaluations = [],
-  activePeriodId
+  activePeriodId,
+  isPeriodClosed
 }) => {
   const tableRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
@@ -49,7 +51,9 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
     return schools.map(school => {
       const prizes = customAwards.filter(a => school.wonAwardIds && school.wonAwardIds.includes(a.id));
       const totalTreasurerPrize = prizes.reduce((acc, p) => acc + (school.wonAwardValues?.[p.id] ?? p.value), 0);
-      const vicePrize = school.viceTreasurerName ? totalTreasurerPrize * 0.5 : 0;
+
+      const vicePercentage = !isPeriodClosed ? (school.viceTreasurerPercentage ?? 50) : 50;
+      const vicePrize = school.viceTreasurerName ? (totalTreasurerPrize * vicePercentage / 100) : 0;
 
       // Buscar dados de avaliação para critérios do relatório
       const evalData = evaluations.find(e => e.schoolId === school.id && e.periodId === activePeriodId);
