@@ -59,6 +59,8 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
       const evalData = evaluations.find(e => e.schoolId === school.id && e.periodId === activePeriodId);
       const criterionValues: Record<string, string> = {};
 
+      let lowestPercentage: number | null = null;
+
       reportCriteria.forEach(criterion => {
         const result = evalData?.criterionResults?.[criterion.id];
         if (!result) {
@@ -77,6 +79,10 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
           if (result.value !== undefined) {
             if (criterion.valueFormat === 'PERCENTAGE') {
               criterionValues[criterion.id] = result.value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
+              // Capturar a menor porcentagem para ordenação
+              if (lowestPercentage === null || result.value < lowestPercentage) {
+                lowestPercentage = result.value;
+              }
             } else {
               criterionValues[criterion.id] = result.value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
             }
@@ -92,10 +98,25 @@ const SummaryTable: React.FC<SummaryTableProps> = ({
         totalTreasurerPrize,
         vicePrize,
         criterionValues,
+        lowestPercentage,
         statusText: school.isFinalized ? "Finalizado" : "Aberto",
         statusColor: school.isFinalized ? "bg-green-100 text-green-600" : "bg-blue-100 text-blue-600"
       };
-    }).sort((a, b) => (b.totalTreasurerPrize + b.vicePrize) - (a.totalTreasurerPrize + a.vicePrize));
+    }).sort((a, b) => {
+      // 1. Ordem por menor %
+      if (a.lowestPercentage !== null && b.lowestPercentage !== null) {
+        if (a.lowestPercentage !== b.lowestPercentage) {
+          return a.lowestPercentage - b.lowestPercentage;
+        }
+      } else if (a.lowestPercentage !== null && b.lowestPercentage === null) {
+        return -1;
+      } else if (a.lowestPercentage === null && b.lowestPercentage !== null) {
+        return 1;
+      }
+      
+      // 2. Ordem por total premiado descendente caso não haja porcentagem
+      return (b.totalTreasurerPrize + b.vicePrize) - (a.totalTreasurerPrize + a.vicePrize);
+    });
   }, [schools, customAwards, evaluations, activePeriodId, reportCriteria]);
 
   const totalTreasurer = schoolResults.reduce((acc, r) => acc + r.totalTreasurerPrize, 0);
