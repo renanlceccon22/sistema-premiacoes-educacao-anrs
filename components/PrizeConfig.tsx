@@ -180,6 +180,48 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
     setLocalCriteria(updated);
   };
 
+  const handleAddFinancialRange = (criterionId: string) => {
+    const criterion = localCriteria.find(c => c.id === criterionId);
+    if (!criterion) return;
+
+    const newRange = {
+      id: crypto.randomUUID(),
+      operator: 'BETWEEN' as ComparisonOperator,
+      threshold1: 0,
+      value: 0
+    };
+
+    const updated = localCriteria.map(c =>
+      c.id === criterionId
+        ? { ...c, financialRanges: [...(c.financialRanges || []), newRange] }
+        : c
+    );
+    setLocalCriteria(updated);
+  };
+
+  const handleUpdateFinancialRange = (criterionId: string, rangeId: string, updates: any) => {
+    const updated = localCriteria.map(c => {
+      if (c.id === criterionId) {
+        const updatedRanges = (c.financialRanges || []).map(r =>
+          r.id === rangeId ? { ...r, ...updates } : r
+        );
+        return { ...c, financialRanges: updatedRanges };
+      }
+      return c;
+    });
+    setLocalCriteria(updated);
+  };
+
+  const handleRemoveFinancialRange = (criterionId: string, rangeId: string) => {
+    const updated = localCriteria.map(c => {
+      if (c.id === criterionId) {
+        return { ...c, financialRanges: (c.financialRanges || []).filter(r => r.id !== rangeId) };
+      }
+      return c;
+    });
+    setLocalCriteria(updated);
+  };
+
   const handleAddCriterionOption = (criterionId: string) => {
     const criterion = localCriteria.find(c => c.id === criterionId);
     if (!criterion) return;
@@ -480,7 +522,9 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
                               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold opacity-30">R$</span>
                               <input
                                 type="text"
-                                disabled={isReadOnly || (award.evaluationType === 'JOINT' && localCriteria.some(c => c.awardId === award.id && (c.operator || '').startsWith('RANKING')))}
+                                disabled={isReadOnly ||
+                                  (award.evaluationType === 'JOINT' && localCriteria.some(c => c.awardId === award.id && (c.operator || '').startsWith('RANKING'))) ||
+                                  (!award.scoringMode && localCriteria.some(c => c.awardId === award.id && c.financialRanges && c.financialRanges.length > 0))}
                                 inputMode="numeric"
                                 value={award.value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 onChange={(e) => handleValueChange(award.id, e.target.value)}
@@ -488,6 +532,9 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
                               />
                               {(award.evaluationType === 'JOINT' && localCriteria.some(c => c.awardId === award.id && (c.operator || '').startsWith('RANKING'))) && (
                                 <div className="absolute inset-0 bg-transparent cursor-not-allowed" title="O valor será configurado em prêmios específicos nas regras de Ranking" />
+                              )}
+                              {(!award.scoringMode && localCriteria.some(c => c.awardId === award.id && c.financialRanges && c.financialRanges.length > 0)) && (
+                                <div className="absolute inset-0 bg-transparent cursor-not-allowed" title="O valor será determinado pelas múltiplas faixas de valor financeiro configuradas nos critérios" />
                               )}
                             </div>
                           </div>
@@ -800,71 +847,167 @@ const PrizeConfig: React.FC<PrizeConfigProps> = ({
                                       </div>
                                     ) : (
                                       <>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                          <div>
-                                            <label className="block text-[7px] font-black uppercase text-slate-400 mb-1 tracking-widest">Regra</label>
-                                            <select
-                                              disabled={isReadOnly}
-                                              value={criterion.operator}
-                                              onChange={(e) => handleUpdateCriterion(criterion.id, { operator: e.target.value as ComparisonOperator })}
-                                              className="w-full bg-white border border-slate-100 rounded-lg px-2 py-1.5 text-[10px] font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#003B71]"
-                                            >
-                                              <option value="">Comparar...</option>
-                                              {operators
-                                                .filter(op => {
-                                                  if (award.evaluationType === 'JOINT') {
-                                                    return op.value.startsWith('RANKING');
-                                                  } else {
-                                                    return !op.value.startsWith('RANKING');
-                                                  }
-                                                })
-                                                .map(op => (
-                                                  <option key={op.value} value={op.value}>{op.label}</option>
-                                                ))}
-                                            </select>
+                                        <div className="flex justify-between items-center mb-2">
+                                          <div className="flex flex-col">
+                                            <label className="text-[7px] font-black uppercase text-slate-400 tracking-widest">
+                                              {(criterion.financialRanges && criterion.financialRanges.length > 0) ? 'Regras Dinâmicas de Valor' : 'Regra Principal'}
+                                            </label>
                                           </div>
-                                          <div className="flex gap-2">
-                                            <div className="flex-1">
-                                              <label className="block text-[7px] font-black uppercase text-slate-400 mb-1 tracking-widest">
-                                                {criterion.operator === 'BETWEEN' ? 'Min' :
-                                                  (criterion.operator || '').startsWith('RANKING') ? 'Top X' : 'Ref'}
-                                              </label>
-                                              <div className="relative">
-                                                <input
-                                                  type="text"
-                                                  inputMode="numeric"
-                                                  disabled={isReadOnly}
-                                                  value={criterion.threshold1 !== undefined ? ((criterion.operator || '').startsWith('RANKING') ? criterion.threshold1.toString() : (criterion.valueFormat === 'PERCENTAGE' ? formatPercentageMask(criterion.threshold1) : formatCurrency(criterion.threshold1))) : ''}
-                                                  onChange={(e) => handleUpdateCriterion(criterion.id, { threshold1: (criterion.operator || '').startsWith('RANKING') ? (parseInt(e.target.value.replace(/\D/g, '')) || 0) : parseMaskedString(e.target.value) })}
-                                                  className={`w-full bg-white border border-slate-100 rounded-lg ${(criterion.valueFormat === 'PERCENTAGE' && !(criterion.operator || '').startsWith('RANKING')) ? 'pl-2 pr-6' : 'px-2'} py-1.5 text-[10px] font-bold text-slate-800`}
-                                                  placeholder={(criterion.operator || '').startsWith('RANKING') ? 'Ex: 3' : (criterion.valueFormat === 'PERCENTAGE' ? '0,00' : 'R$ 0,00')}
-                                                />
-                                                {(criterion.valueFormat === 'PERCENTAGE' && !(criterion.operator || '').startsWith('RANKING')) && (
-                                                  <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-300 pointer-events-none">%</span>
-                                                )}
+                                          {!(criterion.operator || '').startsWith('RANKING') && (
+                                            <button
+                                              onClick={() => {
+                                                if (criterion.financialRanges && criterion.financialRanges.length > 0) {
+                                                  handleUpdateCriterion(criterion.id, { financialRanges: [] });
+                                                } else {
+                                                  handleAddFinancialRange(criterion.id);
+                                                }
+                                              }}
+                                              className={`text-[7px] px-1.5 py-0.5 rounded font-black uppercase tracking-widest transition-all ${(criterion.financialRanges && criterion.financialRanges.length > 0) ? 'bg-red-100 text-red-600 hover:bg-red-200' : 'bg-green-100 text-green-700 hover:bg-green-200'}`}
+                                            >
+                                              {(criterion.financialRanges && criterion.financialRanges.length > 0) ? 'Remover Valores Dinâmicos' : '+ Valor Financeiro por Regra'}
+                                            </button>
+                                          )}
+                                        </div>
+
+                                        {(criterion.financialRanges && criterion.financialRanges.length > 0) ? (
+                                          <div className="space-y-2">
+                                            {(criterion.financialRanges || []).map((range) => (
+                                              <div key={range.id} className="grid grid-cols-12 gap-1.5 bg-white p-1.5 rounded-lg border border-slate-100 relative group/range items-center">
+                                                <div className="col-span-3">
+                                                  <select
+                                                    value={range.operator}
+                                                    onChange={(e) => handleUpdateFinancialRange(criterion.id, range.id, { operator: e.target.value as ComparisonOperator })}
+                                                    className="w-full text-[8px] font-bold border-none bg-slate-50 rounded px-1 py-0.5"
+                                                  >
+                                                    {operators.filter(op => !op.value.startsWith('RANKING')).map(op => (
+                                                      <option key={op.value} value={op.value}>{op.label}</option>
+                                                    ))}
+                                                  </select>
+                                                </div>
+                                                <div className="col-span-2 relative">
+                                                  <input
+                                                    type="text"
+                                                    inputMode="numeric"
+                                                    value={range.threshold1 !== undefined ? ((criterion.valueFormat === 'PERCENTAGE' || criterion.useAccumulatedBudget) ? formatPercentageMask(range.threshold1) : formatCurrency(range.threshold1)) : ''}
+                                                    onChange={(e) => handleUpdateFinancialRange(criterion.id, range.id, { threshold1: parseMaskedString(e.target.value) })}
+                                                    className="w-full text-[8px] font-bold border-none bg-slate-50 rounded px-1 py-0.5"
+                                                    placeholder="Ref"
+                                                  />
+                                                </div>
+                                                <div className="col-span-2">
+                                                  {range.operator === 'BETWEEN' ? (
+                                                    <div className="relative">
+                                                      <input
+                                                        type="text"
+                                                        inputMode="numeric"
+                                                        value={range.threshold2 !== undefined ? ((criterion.valueFormat === 'PERCENTAGE' || criterion.useAccumulatedBudget) ? formatPercentageMask(range.threshold2) : formatCurrency(range.threshold2)) : ''}
+                                                        onChange={(e) => handleUpdateFinancialRange(criterion.id, range.id, { threshold2: parseMaskedString(e.target.value) })}
+                                                        className="w-full text-[8px] font-bold border-none bg-slate-50 rounded px-1 py-0.5"
+                                                        placeholder="Max"
+                                                      />
+                                                    </div>
+                                                  ) : (
+                                                    <div className="w-full h-full bg-slate-100 rounded opacity-20"></div>
+                                                  )}
+                                                </div>
+                                                <div className="col-span-5 flex items-center gap-1">
+                                                  <div className="relative flex-1">
+                                                    <input
+                                                      type="text"
+                                                      inputMode="numeric"
+                                                      value={formatCurrency(range.value)}
+                                                      onChange={(e) => handleUpdateFinancialRange(criterion.id, range.id, { value: parseMaskedString(e.target.value) })}
+                                                      className="w-full text-[8px] font-black text-[#003B71] border-none bg-green-50 rounded px-2 py-0.5 focus:outline-none"
+                                                    />
+                                                  </div>
+                                                  <button
+                                                    onClick={() => handleRemoveFinancialRange(criterion.id, range.id)}
+                                                    className="text-red-400 hover:text-red-600 opacity-0 group-hover/range:opacity-100 transition-all font-bold p-0.5"
+                                                  >
+                                                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                                                    </svg>
+                                                  </button>
+                                                </div>
                                               </div>
+                                            ))}
+                                            <button
+                                              onClick={() => handleAddFinancialRange(criterion.id)}
+                                              className="w-full mt-1 border border-dashed border-slate-200 text-slate-400 hover:border-[#003B71] hover:text-[#003B71] text-[7px] font-black uppercase tracking-widest py-1.5 rounded-lg transition-all"
+                                            >
+                                              + Adicionar Faixa de Valor
+                                            </button>
+                                            <p className="text-[7px] text-slate-400 italic mt-1 leading-tight text-center">
+                                              * Quando faixas de valor estão ativas, elas ignoram o valor geral da premiação.
+                                            </p>
+                                          </div>
+                                        ) : (
+                                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                            <div>
+                                              <label className="block text-[7px] font-black uppercase text-slate-400 mb-1 tracking-widest">Regra Base</label>
+                                              <select
+                                                disabled={isReadOnly}
+                                                value={criterion.operator}
+                                                onChange={(e) => handleUpdateCriterion(criterion.id, { operator: e.target.value as ComparisonOperator })}
+                                                className="w-full bg-white border border-slate-100 rounded-lg px-2 py-1.5 text-[10px] font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-[#003B71]"
+                                              >
+                                                <option value="">Comparar...</option>
+                                                {operators
+                                                  .filter(op => {
+                                                    if (award.evaluationType === 'JOINT') {
+                                                      return op.value.startsWith('RANKING');
+                                                    } else {
+                                                      return !op.value.startsWith('RANKING');
+                                                    }
+                                                  })
+                                                  .map(op => (
+                                                    <option key={op.value} value={op.value}>{op.label}</option>
+                                                  ))}
+                                              </select>
                                             </div>
-                                            {criterion.operator === 'BETWEEN' && (
+                                            <div className="flex gap-2">
                                               <div className="flex-1">
-                                                <label className="block text-[7px] font-black uppercase text-slate-400 mb-1 tracking-widest">Max</label>
+                                                <label className="block text-[7px] font-black uppercase text-slate-400 mb-1 tracking-widest">
+                                                  {criterion.operator === 'BETWEEN' ? 'Min' :
+                                                    (criterion.operator || '').startsWith('RANKING') ? 'Top X' : 'Ref'}
+                                                </label>
                                                 <div className="relative">
                                                   <input
                                                     type="text"
                                                     inputMode="numeric"
                                                     disabled={isReadOnly}
-                                                    value={criterion.threshold2 !== undefined ? (criterion.valueFormat === 'PERCENTAGE' ? formatPercentageMask(criterion.threshold2) : formatCurrency(criterion.threshold2)) : ''}
-                                                    onChange={(e) => handleUpdateCriterion(criterion.id, { threshold2: parseMaskedString(e.target.value) })}
-                                                    className={`w-full bg-white border border-slate-100 rounded-lg ${criterion.valueFormat === 'PERCENTAGE' ? 'pl-2 pr-6' : 'px-2'} py-1.5 text-[10px] font-bold text-slate-800`}
-                                                    placeholder={criterion.valueFormat === 'PERCENTAGE' ? '0,00' : 'R$ 0,00'}
+                                                    value={criterion.threshold1 !== undefined ? ((criterion.operator || '').startsWith('RANKING') ? criterion.threshold1.toString() : (criterion.valueFormat === 'PERCENTAGE' ? formatPercentageMask(criterion.threshold1) : formatCurrency(criterion.threshold1))) : ''}
+                                                    onChange={(e) => handleUpdateCriterion(criterion.id, { threshold1: (criterion.operator || '').startsWith('RANKING') ? (parseInt(e.target.value.replace(/\D/g, '')) || 0) : parseMaskedString(e.target.value) })}
+                                                    className={`w-full bg-white border border-slate-100 rounded-lg ${(criterion.valueFormat === 'PERCENTAGE' && !(criterion.operator || '').startsWith('RANKING')) ? 'pl-2 pr-6' : 'px-2'} py-1.5 text-[10px] font-bold text-slate-800`}
+                                                    placeholder={(criterion.operator || '').startsWith('RANKING') ? 'Ex: 3' : (criterion.valueFormat === 'PERCENTAGE' ? '0,00' : 'R$ 0,00')}
                                                   />
-                                                  {criterion.valueFormat === 'PERCENTAGE' && (
+                                                  {(criterion.valueFormat === 'PERCENTAGE' && !(criterion.operator || '').startsWith('RANKING')) && (
                                                     <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-300 pointer-events-none">%</span>
                                                   )}
                                                 </div>
                                               </div>
-                                            )}
+                                              {criterion.operator === 'BETWEEN' && (
+                                                <div className="flex-1">
+                                                  <label className="block text-[7px] font-black uppercase text-slate-400 mb-1 tracking-widest">Max</label>
+                                                  <div className="relative">
+                                                    <input
+                                                      type="text"
+                                                      inputMode="numeric"
+                                                      disabled={isReadOnly}
+                                                      value={criterion.threshold2 !== undefined ? (criterion.valueFormat === 'PERCENTAGE' ? formatPercentageMask(criterion.threshold2) : formatCurrency(criterion.threshold2)) : ''}
+                                                      onChange={(e) => handleUpdateCriterion(criterion.id, { threshold2: parseMaskedString(e.target.value) })}
+                                                      className={`w-full bg-white border border-slate-100 rounded-lg ${criterion.valueFormat === 'PERCENTAGE' ? 'pl-2 pr-6' : 'px-2'} py-1.5 text-[10px] font-bold text-slate-800`}
+                                                      placeholder={criterion.valueFormat === 'PERCENTAGE' ? '0,00' : 'R$ 0,00'}
+                                                    />
+                                                    {criterion.valueFormat === 'PERCENTAGE' && (
+                                                      <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-black text-slate-300 pointer-events-none">%</span>
+                                                    )}
+                                                  </div>
+                                                </div>
+                                              )}
+                                            </div>
                                           </div>
-                                        </div>
+                                        )}
                                         {((criterion.operator || '').startsWith('RANKING')) && criterion.threshold1 && criterion.threshold1 > 0 ? (
                                           <div className="mt-3 bg-blue-50/50 p-2 rounded-lg border border-blue-100">
                                             <label className="block text-[7px] font-black uppercase text-slate-400 tracking-widest mb-2">Premiação Financeira por Colocação</label>

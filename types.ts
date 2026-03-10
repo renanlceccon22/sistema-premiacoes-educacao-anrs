@@ -17,6 +17,14 @@ export interface ScoringRange {
   points: number;
 }
 
+export interface FinancialRange {
+  id: string;
+  operator: ComparisonOperator;
+  threshold1: number;
+  threshold2?: number;
+  value: number;
+}
+
 export interface CriterionOption {
   id: string;
   label: string;
@@ -86,6 +94,7 @@ export interface AwardCriterion {
   threshold1?: number;
   threshold2?: number;
   scoringRanges?: ScoringRange[];
+  financialRanges?: FinancialRange[];
   options?: CriterionOption[];
   rankingPrizes?: number[];
   useAccumulatedBudget?: boolean;
@@ -113,6 +122,7 @@ export interface Evaluation {
     checked?: boolean;
     isMet: boolean;
     score?: number;
+    financialValue?: number;
     selectedOptionId?: string;
     rankIndex?: number;
   }>;

@@ -531,12 +531,18 @@ const App: React.FC = () => {
             const allCriteriaMet = awardCriteriaList.every(criterion => ev.criterionResults[criterion.id]?.isMet);
             if (allCriteriaMet) {
               wonAwardIds.push(award.id);
-              // Handle custom ranking prizes
-              const rankingCriterion = awardCriteriaList.find(c => award.evaluationType === 'JOINT' && c.operator?.startsWith('RANKING'));
-              if (rankingCriterion && rankingCriterion.rankingPrizes) {
-                const rankIndex = ev.criterionResults[rankingCriterion.id]?.rankIndex;
-                if (rankIndex !== undefined && rankIndex < rankingCriterion.rankingPrizes.length) {
-                  wonAwardValues[award.id] = rankingCriterion.rankingPrizes[rankIndex];
+              // Handle custom ranking prizes and financial ranges
+              const hasFinancialRanges = awardCriteriaList.some(c => c.financialRanges && c.financialRanges.length > 0);
+              if (hasFinancialRanges) {
+                const sumFinancial = awardCriteriaList.reduce((acc, c) => acc + (ev.criterionResults[c.id]?.financialValue || 0), 0);
+                wonAwardValues[award.id] = sumFinancial;
+              } else {
+                const rankingCriterion = awardCriteriaList.find(c => award.evaluationType === 'JOINT' && c.operator?.startsWith('RANKING'));
+                if (rankingCriterion && rankingCriterion.rankingPrizes) {
+                  const rankIndex = ev.criterionResults[rankingCriterion.id]?.rankIndex;
+                  if (rankIndex !== undefined && rankIndex < rankingCriterion.rankingPrizes.length) {
+                    wonAwardValues[award.id] = rankingCriterion.rankingPrizes[rankIndex];
+                  }
                 }
               }
             }
@@ -690,6 +696,30 @@ const App: React.FC = () => {
         });
         newResult.score = maxPoints;
         newResult.isMet = maxPoints > 0;
+      } else if (!award?.scoringMode && criterion.financialRanges && criterion.financialRanges.length > 0) {
+        let matchedValue = 0;
+        let anyMet = false;
+        criterion.financialRanges.forEach(range => {
+          let rangeMet = false;
+          const rt1 = range.threshold1 || 0;
+          const rt2 = range.threshold2 || 0;
+          switch (range.operator) {
+            case 'GREATER_THAN': rangeMet = val > rt1; break;
+            case 'LESS_THAN': rangeMet = val < rt1; break;
+            case 'GREATER_EQUAL': rangeMet = val >= rt1; break;
+            case 'LESS_EQUAL': rangeMet = val <= rt1; break;
+            case 'EQUAL': rangeMet = val === rt1; break;
+            case 'BETWEEN': rangeMet = val >= rt1 && val <= rt2; break;
+            default: rangeMet = false;
+          }
+          if (rangeMet) {
+            anyMet = true;
+            matchedValue = Math.max(matchedValue, range.value);
+          }
+        });
+        newResult.financialValue = matchedValue;
+        newResult.isMet = anyMet;
+        newResult.score = anyMet ? 100 : 0;
       } else {
         const t1 = criterion.threshold1 || 0;
         const t2 = criterion.threshold2 || 0;
@@ -1388,6 +1418,9 @@ const App: React.FC = () => {
                                       const currentTarget = annualTarget * monthFactor;
                                       return `Orçamento ${criterion.budgetEvaluationType === 'MONTHLY' ? 'Mensal' : 'Acumulado'}: ≤ ${currentTarget.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
                                     }
+                                    if (!award.scoringMode && criterion.financialRanges && criterion.financialRanges.length > 0) {
+                                      return `Múltiplas Faixas de Valor`;
+                                    }
                                     switch (criterion.operator) {
                                       case 'GREATER_THAN': return `Meta: > ${criterion.threshold1}${suffix}`;
                                       case 'LESS_THAN': return `Meta: < ${criterion.threshold1}${suffix}`;
@@ -1499,6 +1532,11 @@ const App: React.FC = () => {
                                               {award.scoringMode && result.score !== undefined && (
                                                 <span className="text-[10px] font-black text-[#003B71] bg-[#FDB813]/20 px-2 py-1 rounded-lg border border-[#FDB813]/30 animate-in slide-in-from-right-2 duration-300">
                                                   +{result.score} PTS
+                                                </span>
+                                              )}
+                                              {!award.scoringMode && result.financialValue !== undefined && result.financialValue > 0 && (
+                                                <span className="text-[10px] font-black text-green-700 bg-green-100 px-2 py-1 rounded-lg border border-green-200 animate-in slide-in-from-right-2 duration-300">
+                                                  + {formatCurrency(result.financialValue)}
                                                 </span>
                                               )}
                                             </div>
