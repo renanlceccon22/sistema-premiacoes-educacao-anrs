@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "Bash(uv --version)",
+      "Bash(pipx --version)",
+      "Bash(pip install *)",
+      "Bash(graphify --help)",
+      "Bash(python -m graphify --help)",
+      "Bash(python -m graphify extract --help)",
+      "Bash(python -c \"import graphify; import os; print\\(os.path.dirname\\(graphify.__file__\\)\\)\")",
+      "Bash(ls \"C:\\\\Users\\\\letil\\\\AppData\\\\Local\\\\Packages\\\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\\\LocalCache\\\\local-packages\\\\Python312\\\\site-packages\\\\graphify\")",
+      "Read(//c/Users/letil/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/site-packages/graphify/**)",
+      "Bash(python -m graphify claude install)",
+      "Bash(git add *)"
+    ]
+  }
+}

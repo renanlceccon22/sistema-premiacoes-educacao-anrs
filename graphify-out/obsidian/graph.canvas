@@ -1,0 +1,2373 @@
+{
+  "nodes": [
+    {
+      "id": "g0",
+      "type": "group",
+      "label": "Criteria & Awards Configuration",
+      "x": 0,
+      "y": 0,
+      "width": 1320,
+      "height": 1020,
+      "color": "1"
+    },
+    {
+      "id": "n_utils_calculations_allprizesresult",
+      "type": "file",
+      "file": "AllPrizesResult.md",
+      "x": 20,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_anrsbonusconfig",
+      "type": "file",
+      "file": "AnrsBonusConfig.md",
+      "x": 220,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_appconfig",
+      "type": "file",
+      "file": "AppConfig.md",
+      "x": 420,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_awardlevel",
+      "type": "file",
+      "file": "AwardLevel.md",
+      "x": 20,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_category",
+      "type": "file",
+      "file": "Category.md",
+      "x": 220,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_criteriaevaluator_tsx",
+      "type": "file",
+      "file": "CriteriaEvaluator.tsx.md",
+      "x": 420,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_criteriaevaluator_criteriaevaluatorprops",
+      "type": "file",
+      "file": "CriteriaEvaluatorProps.md",
+      "x": 20,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_criterionoption",
+      "type": "file",
+      "file": "CriterionOption.md",
+      "x": 220,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_evaluationdirection",
+      "type": "file",
+      "file": "EvaluationDirection.md",
+      "x": 420,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_evaluationmodel",
+      "type": "file",
+      "file": "EvaluationModel.md",
+      "x": 20,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_financialrange",
+      "type": "file",
+      "file": "FinancialRange.md",
+      "x": 220,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_constants_initial_categories",
+      "type": "file",
+      "file": "INITIAL_CATEGORIES.md",
+      "x": 420,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_constants_initial_custom_awards",
+      "type": "file",
+      "file": "INITIAL_CUSTOM_AWARDS.md",
+      "x": 20,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_inadimplenciarankingconfig",
+      "type": "file",
+      "file": "InadimplenciaRankingConfig.md",
+      "x": 220,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_managementbonusconfig",
+      "type": "file",
+      "file": "ManagementBonusConfig.md",
+      "x": 420,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_calculations_schoolevaluationforprizecalculation",
+      "type": "file",
+      "file": "SchoolEvaluationForPrizeCalculation.md",
+      "x": 20,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_scoringrange",
+      "type": "file",
+      "file": "ScoringRange.md",
+      "x": 220,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_thresholds",
+      "type": "file",
+      "file": "Thresholds.md",
+      "x": 420,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_userentity",
+      "type": "file",
+      "file": "UserEntity.md",
+      "x": 20,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_calculations_calculateallprizes",
+      "type": "file",
+      "file": "calculateAllPrizes().md",
+      "x": 220,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_calculations_calculatepoints",
+      "type": "file",
+      "file": "calculatePoints().md",
+      "x": 420,
+      "y": 560,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_calculations_ts",
+      "type": "file",
+      "file": "calculations.ts.md",
+      "x": 20,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_constants_tsx",
+      "type": "file",
+      "file": "constants.tsx.md",
+      "x": 220,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_calculations_getawardlevel",
+      "type": "file",
+      "file": "getAwardLevel().md",
+      "x": 420,
+      "y": 640,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_calculations_getmonthindexfromlabel",
+      "type": "file",
+      "file": "getMonthIndexFromLabel().md",
+      "x": 20,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_types_ts",
+      "type": "file",
+      "file": "types.ts.md",
+      "x": 220,
+      "y": 720,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g1",
+      "type": "group",
+      "label": "Prize & School Management",
+      "x": 1400,
+      "y": 0,
+      "width": 1100,
+      "height": 720,
+      "color": "2"
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_awardcriterion",
+      "type": "file",
+      "file": "AwardCriterion.md",
+      "x": 1420,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_comparisonoperator",
+      "type": "file",
+      "file": "ComparisonOperator.md",
+      "x": 1620,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_criteriaevaluator_criteriaevaluator",
+      "type": "file",
+      "file": "CriteriaEvaluator().md",
+      "x": 1820,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_criteriontype",
+      "type": "file",
+      "file": "CriterionType.md",
+      "x": 1420,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_prizeconfig_prizeconfig",
+      "type": "file",
+      "file": "PrizeConfig().md",
+      "x": 1620,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_prizeconfig_tsx",
+      "type": "file",
+      "file": "PrizeConfig.tsx.md",
+      "x": 1820,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_prizeconfig_prizeconfigprops",
+      "type": "file",
+      "file": "PrizeConfigProps.md",
+      "x": 1420,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_schoolmanager_schoolmanager",
+      "type": "file",
+      "file": "SchoolManager().md",
+      "x": 1620,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_schoolmanager_tsx",
+      "type": "file",
+      "file": "SchoolManager.tsx.md",
+      "x": 1820,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_schoolmanager_schoolmanagerprops",
+      "type": "file",
+      "file": "SchoolManagerProps.md",
+      "x": 1420,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "type": "file",
+      "file": "SchoolUnit.md",
+      "x": 1620,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_formatting_formatcurrency",
+      "type": "file",
+      "file": "formatCurrency().md",
+      "x": 1820,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_formatting_formatcurrencyinput",
+      "type": "file",
+      "file": "formatCurrencyInput().md",
+      "x": 1420,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_formatting_formatpercentage",
+      "type": "file",
+      "file": "formatPercentage().md",
+      "x": 1620,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_formatting_formatpercentagemask",
+      "type": "file",
+      "file": "formatPercentageMask().md",
+      "x": 1820,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_formatting_ts",
+      "type": "file",
+      "file": "formatting.ts.md",
+      "x": 1420,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_formatting_parsecurrencystring",
+      "type": "file",
+      "file": "parseCurrencyString().md",
+      "x": 1620,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_formatting_parsemaskedstring",
+      "type": "file",
+      "file": "parseMaskedString().md",
+      "x": 1820,
+      "y": 480,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g2",
+      "type": "group",
+      "label": "App Entry & Brand Identity",
+      "x": 2580,
+      "y": 0,
+      "width": 880,
+      "height": 620,
+      "color": "3"
+    },
+    {
+      "id": "n_favicon_png_brand",
+      "type": "file",
+      "file": "ANRS Brand Favicon - Letter A Logo.md",
+      "x": 2600,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_anrs_brand_identity",
+      "type": "file",
+      "file": "ANRS Brand Identity - Navy Blue Letter A with Swoosh.md",
+      "x": 2800,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_logo_png_brand",
+      "type": "file",
+      "file": "ANRS Brand Logo - Letter A Logo (Full Size).md",
+      "x": 3000,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_minilogo_png_brand",
+      "type": "file",
+      "file": "ANRS Brand Mini Logo - Letter A Logo (Small).md",
+      "x": 2600,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_index_html_favicon",
+      "type": "file",
+      "file": "Favicon Reference (favicon.png).md",
+      "x": 2800,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_readme_gemini_api",
+      "type": "file",
+      "file": "Gemini API Key Requirement.md",
+      "x": 3000,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_readme_ai_studio",
+      "type": "file",
+      "file": "Google AI Studio Platform.md",
+      "x": 2600,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_claudemd_graphify_instructions",
+      "type": "file",
+      "file": "Graphify Knowledge Graph Instructions.md",
+      "x": 2800,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_index_html_entry",
+      "type": "file",
+      "file": "HTML Entry Point (index.html).md",
+      "x": 3000,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_index_html_inter_font",
+      "type": "file",
+      "file": "Inter Font (Google Fonts).md",
+      "x": 2600,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_readme_nodejs",
+      "type": "file",
+      "file": "Node.js Runtime Prerequisite.md",
+      "x": 2800,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_index_html_root_div",
+      "type": "file",
+      "file": "React Root Mount Point (root).md",
+      "x": 3000,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_readme_app_description",
+      "type": "file",
+      "file": "Sistema Premia\u00c3\u00a7\u00c3\u00b5es Educa\u00c3\u00a7\u00c3\u00a3o ANRS App.md",
+      "x": 2600,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_index_html_index_tsx",
+      "type": "file",
+      "file": "index.tsx Module Entry Script.md",
+      "x": 2800,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g3",
+      "type": "group",
+      "label": "Cost & Results Analysis",
+      "x": 3540,
+      "y": 0,
+      "width": 880,
+      "height": 620,
+      "color": "4"
+    },
+    {
+      "id": "n_components_costanalysis_costanalysis",
+      "type": "file",
+      "file": "CostAnalysis().md",
+      "x": 3560,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_costanalysis_tsx",
+      "type": "file",
+      "file": "CostAnalysis.tsx.md",
+      "x": 3760,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_costanalysis_costanalysisprops",
+      "type": "file",
+      "file": "CostAnalysisProps.md",
+      "x": 3960,
+      "y": 80,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_customaward",
+      "type": "file",
+      "file": "CustomAward.md",
+      "x": 3560,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_evaluation",
+      "type": "file",
+      "file": "Evaluation.md",
+      "x": 3760,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_resultspanel_resultspanel",
+      "type": "file",
+      "file": "ResultsPanel().md",
+      "x": 3960,
+      "y": 160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_resultspanel_tsx",
+      "type": "file",
+      "file": "ResultsPanel.tsx.md",
+      "x": 3560,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_resultspanel_resultspanelprops",
+      "type": "file",
+      "file": "ResultsPanelProps.md",
+      "x": 3760,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_summarytable_schoolwithevaluationstatus",
+      "type": "file",
+      "file": "SchoolWithEvaluationStatus.md",
+      "x": 3960,
+      "y": 240,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_summarytable_summarytable",
+      "type": "file",
+      "file": "SummaryTable().md",
+      "x": 3560,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_summarytable_tsx",
+      "type": "file",
+      "file": "SummaryTable.tsx.md",
+      "x": 3760,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_summarytable_summarytableprops",
+      "type": "file",
+      "file": "SummaryTableProps.md",
+      "x": 3960,
+      "y": 320,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_utils_formatting_formatbrl",
+      "type": "file",
+      "file": "formatBRL().md",
+      "x": 3560,
+      "y": 400,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g4",
+      "type": "group",
+      "label": "Period Management & States",
+      "x": 0,
+      "y": 1100,
+      "width": 660,
+      "height": 420,
+      "color": "5"
+    },
+    {
+      "id": "n_components_emptystate_emptystate",
+      "type": "file",
+      "file": "EmptyState().md",
+      "x": 20,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_emptystate_tsx",
+      "type": "file",
+      "file": "EmptyState.tsx.md",
+      "x": 220,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_emptystate_emptystateprops",
+      "type": "file",
+      "file": "EmptyStateProps.md",
+      "x": 420,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_period",
+      "type": "file",
+      "file": "Period.md",
+      "x": 20,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_periodmanager_periodmanager",
+      "type": "file",
+      "file": "PeriodManager().md",
+      "x": 220,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_periodmanager_tsx",
+      "type": "file",
+      "file": "PeriodManager.tsx.md",
+      "x": 420,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_periodmanager_periodmanagerprops",
+      "type": "file",
+      "file": "PeriodManagerProps.md",
+      "x": 20,
+      "y": 1340,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g5",
+      "type": "group",
+      "label": "User Management & Modals",
+      "x": 1400,
+      "y": 1100,
+      "width": 660,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_components_confirmmodal_confirmmodal",
+      "type": "file",
+      "file": "ConfirmModal().md",
+      "x": 1420,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_confirmmodal_tsx",
+      "type": "file",
+      "file": "ConfirmModal.tsx.md",
+      "x": 1620,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_confirmmodal_confirmmodalprops",
+      "type": "file",
+      "file": "ConfirmModalProps.md",
+      "x": 1820,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_usermanager_usermanager",
+      "type": "file",
+      "file": "UserManager().md",
+      "x": 1420,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_usermanager_tsx",
+      "type": "file",
+      "file": "UserManager.tsx.md",
+      "x": 1620,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_usermanager_usermanagerprops",
+      "type": "file",
+      "file": "UserManagerProps.md",
+      "x": 1820,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g6",
+      "type": "group",
+      "label": "Authentication & Supabase",
+      "x": 2580,
+      "y": 1100,
+      "width": 660,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_components_auth_auth",
+      "type": "file",
+      "file": "Auth().md",
+      "x": 2600,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_auth_tsx",
+      "type": "file",
+      "file": "Auth.tsx.md",
+      "x": 2800,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_auth_authprops",
+      "type": "file",
+      "file": "AuthProps.md",
+      "x": 3000,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_lib_supabase_supabase",
+      "type": "file",
+      "file": "supabase.md",
+      "x": 2600,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_src_lib_supabase_js",
+      "type": "file",
+      "file": "supabase.js.md",
+      "x": 2800,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g7",
+      "type": "group",
+      "label": "App Root & Navigation",
+      "x": 3540,
+      "y": 1100,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_app_app",
+      "type": "file",
+      "file": "App().md",
+      "x": 3560,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_app_tsx",
+      "type": "file",
+      "file": "App.tsx.md",
+      "x": 3760,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_app_apptab",
+      "type": "file",
+      "file": "AppTab.md",
+      "x": 3960,
+      "y": 1180,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_lib_supabase_isconfigured",
+      "type": "file",
+      "file": "isConfigured.md",
+      "x": 3560,
+      "y": 1260,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g8",
+      "type": "group",
+      "label": "Profile Settings",
+      "x": 0,
+      "y": 1600,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_components_profilesettings_profilesettings",
+      "type": "file",
+      "file": "ProfileSettings().md",
+      "x": 20,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_profilesettings_tsx",
+      "type": "file",
+      "file": "ProfileSettings.tsx.md",
+      "x": 220,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_profilesettings_profilesettingsprops",
+      "type": "file",
+      "file": "ProfileSettingsProps.md",
+      "x": 420,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_user",
+      "type": "file",
+      "file": "User.md",
+      "x": 20,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g9",
+      "type": "group",
+      "label": "Entity Management",
+      "x": 1400,
+      "y": 1600,
+      "width": 600,
+      "height": 400,
+      "color": "4"
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_types_entity",
+      "type": "file",
+      "file": "Entity.md",
+      "x": 1420,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_entitymanager_entitymanager",
+      "type": "file",
+      "file": "EntityManager().md",
+      "x": 1620,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_entitymanager_tsx",
+      "type": "file",
+      "file": "EntityManager.tsx.md",
+      "x": 1820,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_entitymanager_entitymanagerprops",
+      "type": "file",
+      "file": "EntityManagerProps.md",
+      "x": 1420,
+      "y": 1760,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g10",
+      "type": "group",
+      "label": "React Entry Point",
+      "x": 2580,
+      "y": 1600,
+      "width": 600,
+      "height": 400,
+      "color": "5"
+    },
+    {
+      "id": "n_index_tsx",
+      "type": "file",
+      "file": "index.tsx.md",
+      "x": 2600,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_index_root",
+      "type": "file",
+      "file": "root.md",
+      "x": 2800,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_index_rootelement",
+      "type": "file",
+      "file": "rootElement.md",
+      "x": 3000,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g11",
+      "type": "group",
+      "label": "Header Component",
+      "x": 3540,
+      "y": 1600,
+      "width": 600,
+      "height": 400,
+      "color": "6"
+    },
+    {
+      "id": "n_components_header_header",
+      "type": "file",
+      "file": "Header().md",
+      "x": 3560,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_header_tsx",
+      "type": "file",
+      "file": "Header.tsx.md",
+      "x": 3760,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_header_headerprops",
+      "type": "file",
+      "file": "HeaderProps.md",
+      "x": 3960,
+      "y": 1680,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g12",
+      "type": "group",
+      "label": "Footer Component",
+      "x": 0,
+      "y": 2080,
+      "width": 600,
+      "height": 400,
+      "color": "1"
+    },
+    {
+      "id": "n_components_footer_footer",
+      "type": "file",
+      "file": "Footer().md",
+      "x": 20,
+      "y": 2160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_footer_tsx",
+      "type": "file",
+      "file": "Footer.tsx.md",
+      "x": 220,
+      "y": 2160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_components_footer_footerprops",
+      "type": "file",
+      "file": "FooterProps.md",
+      "x": 420,
+      "y": 2160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g13",
+      "type": "group",
+      "label": "Vite Build Config",
+      "x": 1400,
+      "y": 2080,
+      "width": 600,
+      "height": 400,
+      "color": "2"
+    },
+    {
+      "id": "n_sistema_premiacoes_educacao_anrs_vite_config_env",
+      "type": "file",
+      "file": "env.md",
+      "x": 1420,
+      "y": 2160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "n_vite_config_ts",
+      "type": "file",
+      "file": "vite.config.ts.md",
+      "x": 1620,
+      "y": 2160,
+      "width": 180,
+      "height": 60
+    },
+    {
+      "id": "g14",
+      "type": "group",
+      "label": "Eliezer Search Data",
+      "x": 2580,
+      "y": 2080,
+      "width": 600,
+      "height": 400,
+      "color": "3"
+    },
+    {
+      "id": "n_eliezer_search_txt",
+      "type": "file",
+      "file": "Eliezer Search Text File.md",
+      "x": 2600,
+      "y": 2160,
+      "width": 180,
+      "height": 60
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_app_tsx_utils_formatting_ts",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_utils_formatting_ts",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_utils_formatting_formatbrl",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_utils_formatting_formatbrl",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_utils_formatting_formatcurrency",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_utils_formatting_formatcurrency",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_utils_formatting_formatpercentagemask",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_utils_formatting_formatpercentagemask",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_utils_formatting_parsemaskedstring",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_utils_formatting_parsemaskedstring",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_utils_formatting_formatcurrencyinput",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_utils_formatting_formatcurrencyinput",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_utils_calculations_ts",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_utils_calculations_ts",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_utils_calculations_getmonthindexfromlabel",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_utils_calculations_getmonthindexfromlabel",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_components_header_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_components_header_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_components_prizeconfig_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_components_prizeconfig_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_components_resultspanel_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_components_resultspanel_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_components_schoolmanager_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_components_schoolmanager_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_components_summarytable_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_components_summarytable_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_components_periodmanager_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_components_periodmanager_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_components_costanalysis_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_components_costanalysis_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_components_emptystate_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_components_emptystate_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_components_footer_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_components_footer_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_components_confirmmodal_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_components_confirmmodal_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_components_auth_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_components_auth_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_components_usermanager_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_components_usermanager_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_components_profilesettings_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_components_profilesettings_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_components_entitymanager_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_components_entitymanager_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_src_lib_supabase_js",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_src_lib_supabase_js",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_lib_supabase_supabase",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_lib_supabase_supabase",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_lib_supabase_isconfigured",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_lib_supabase_isconfigured",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_constants_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_constants_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_sistema_premiacoes_educacao_anrs_constants_initial_categories",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_constants_initial_categories",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_types_ts",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_types_ts",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_sistema_premiacoes_educacao_anrs_types_customaward",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_customaward",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_sistema_premiacoes_educacao_anrs_types_awardcriterion",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_awardcriterion",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_sistema_premiacoes_educacao_anrs_types_period",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_period",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_sistema_premiacoes_educacao_anrs_types_evaluation",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_evaluation",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_sistema_premiacoes_educacao_anrs_types_user",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_user",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_sistema_premiacoes_educacao_anrs_types_entity",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_entity",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_utils_calculations_calculateallprizes",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_utils_calculations_calculateallprizes",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_sistema_premiacoes_educacao_anrs_app_apptab",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_app_apptab",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_sistema_premiacoes_educacao_anrs_app_app",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_app_app",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_app_tsx_index_tsx",
+      "fromNode": "n_app_tsx",
+      "toNode": "n_index_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_constants_tsx_types_ts",
+      "fromNode": "n_constants_tsx",
+      "toNode": "n_types_ts",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_constants_tsx_sistema_premiacoes_educacao_anrs_types_category",
+      "fromNode": "n_constants_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_category",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_constants_tsx_sistema_premiacoes_educacao_anrs_constants_initial_categories",
+      "fromNode": "n_constants_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_constants_initial_categories",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_constants_tsx_sistema_premiacoes_educacao_anrs_constants_initial_custom_awards",
+      "fromNode": "n_constants_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_constants_initial_custom_awards",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_index_tsx_sistema_premiacoes_educacao_anrs_index_rootelement",
+      "fromNode": "n_index_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_index_rootelement",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_index_tsx_sistema_premiacoes_educacao_anrs_index_root",
+      "fromNode": "n_index_tsx",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_index_root",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_period",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_period",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_criteriontype",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_criteriontype",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_comparisonoperator",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_comparisonoperator",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_scoringrange",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_scoringrange",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_financialrange",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_financialrange",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_criterionoption",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_criterionoption",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_awardlevel",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_awardlevel",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_thresholds",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_thresholds",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_evaluationmodel",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_evaluationmodel",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_evaluationdirection",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_evaluationdirection",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_category",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_category",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_inadimplenciarankingconfig",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_inadimplenciarankingconfig",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_managementbonusconfig",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_managementbonusconfig",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_anrsbonusconfig",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_anrsbonusconfig",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_awardcriterion",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_awardcriterion",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_customaward",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_customaward",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_evaluation",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_evaluation",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_user",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_user",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_entity",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_entity",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_userentity",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_userentity",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_sistema_premiacoes_educacao_anrs_types_appconfig",
+      "fromNode": "n_types_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_types_appconfig",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_components_costanalysis_tsx",
+      "fromNode": "n_types_ts",
+      "toNode": "n_components_costanalysis_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_components_criteriaevaluator_tsx",
+      "fromNode": "n_types_ts",
+      "toNode": "n_components_criteriaevaluator_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_components_entitymanager_tsx",
+      "fromNode": "n_types_ts",
+      "toNode": "n_components_entitymanager_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_components_periodmanager_tsx",
+      "fromNode": "n_types_ts",
+      "toNode": "n_components_periodmanager_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_components_prizeconfig_tsx",
+      "fromNode": "n_types_ts",
+      "toNode": "n_components_prizeconfig_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_components_profilesettings_tsx",
+      "fromNode": "n_types_ts",
+      "toNode": "n_components_profilesettings_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_components_resultspanel_tsx",
+      "fromNode": "n_types_ts",
+      "toNode": "n_components_resultspanel_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_components_schoolmanager_tsx",
+      "fromNode": "n_types_ts",
+      "toNode": "n_components_schoolmanager_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_components_summarytable_tsx",
+      "fromNode": "n_types_ts",
+      "toNode": "n_components_summarytable_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_components_usermanager_tsx",
+      "fromNode": "n_types_ts",
+      "toNode": "n_components_usermanager_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_types_ts_utils_calculations_ts",
+      "fromNode": "n_types_ts",
+      "toNode": "n_utils_calculations_ts",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_period_components_costanalysis_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_period",
+      "toNode": "n_components_costanalysis_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_period_components_periodmanager_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_period",
+      "toNode": "n_components_periodmanager_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_criteriontype_components_prizeconfig_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_criteriontype",
+      "toNode": "n_components_prizeconfig_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_comparisonoperator_components_prizeconfig_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_comparisonoperator",
+      "toNode": "n_components_prizeconfig_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_criterionoption_components_criteriaevaluator_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_criterionoption",
+      "toNode": "n_components_criteriaevaluator_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_awardlevel_utils_calculations_ts",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_awardlevel",
+      "toNode": "n_utils_calculations_ts",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_thresholds_utils_calculations_ts",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_thresholds",
+      "toNode": "n_utils_calculations_ts",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_evaluationmodel_components_criteriaevaluator_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_evaluationmodel",
+      "toNode": "n_components_criteriaevaluator_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_evaluationmodel_utils_calculations_ts",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_evaluationmodel",
+      "toNode": "n_utils_calculations_ts",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_evaluationdirection_components_criteriaevaluator_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_evaluationdirection",
+      "toNode": "n_components_criteriaevaluator_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_evaluationdirection_utils_calculations_ts",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_evaluationdirection",
+      "toNode": "n_utils_calculations_ts",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_category_components_criteriaevaluator_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_category",
+      "toNode": "n_components_criteriaevaluator_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_category_utils_calculations_ts",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_category",
+      "toNode": "n_utils_calculations_ts",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_inadimplenciarankingconfig_components_criteriaevaluator_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_inadimplenciarankingconfig",
+      "toNode": "n_components_criteriaevaluator_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_inadimplenciarankingconfig_utils_calculations_ts",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_inadimplenciarankingconfig",
+      "toNode": "n_utils_calculations_ts",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_managementbonusconfig_components_criteriaevaluator_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_managementbonusconfig",
+      "toNode": "n_components_criteriaevaluator_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_managementbonusconfig_utils_calculations_ts",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_managementbonusconfig",
+      "toNode": "n_utils_calculations_ts",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_anrsbonusconfig_components_criteriaevaluator_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_anrsbonusconfig",
+      "toNode": "n_components_criteriaevaluator_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_anrsbonusconfig_utils_calculations_ts",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_anrsbonusconfig",
+      "toNode": "n_utils_calculations_ts",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_awardcriterion_components_prizeconfig_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_awardcriterion",
+      "toNode": "n_components_prizeconfig_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_awardcriterion_components_schoolmanager_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_awardcriterion",
+      "toNode": "n_components_schoolmanager_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_awardcriterion_components_summarytable_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_awardcriterion",
+      "toNode": "n_components_summarytable_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_customaward_components_costanalysis_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_customaward",
+      "toNode": "n_components_costanalysis_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_customaward_components_prizeconfig_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_customaward",
+      "toNode": "n_components_prizeconfig_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_customaward_components_resultspanel_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_customaward",
+      "toNode": "n_components_resultspanel_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_customaward_components_summarytable_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_customaward",
+      "toNode": "n_components_summarytable_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_evaluation_components_costanalysis_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_evaluation",
+      "toNode": "n_components_costanalysis_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_evaluation_components_prizeconfig_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_evaluation",
+      "toNode": "n_components_prizeconfig_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_evaluation_components_summarytable_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_evaluation",
+      "toNode": "n_components_summarytable_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_evaluation_utils_calculations_ts",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_evaluation",
+      "toNode": "n_utils_calculations_ts",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_schoolunit_components_costanalysis_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "toNode": "n_components_costanalysis_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_schoolunit_components_prizeconfig_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "toNode": "n_components_prizeconfig_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_schoolunit_components_schoolmanager_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "toNode": "n_components_schoolmanager_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_schoolunit_components_summarytable_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "toNode": "n_components_summarytable_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_user_components_profilesettings_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_user",
+      "toNode": "n_components_profilesettings_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_user_components_usermanager_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_user",
+      "toNode": "n_components_usermanager_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_sistema_premiacoes_educacao_anrs_types_entity_components_entitymanager_tsx",
+      "fromNode": "n_sistema_premiacoes_educacao_anrs_types_entity",
+      "toNode": "n_components_entitymanager_tsx",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_vite_config_ts_sistema_premiacoes_educacao_anrs_vite_config_env",
+      "fromNode": "n_vite_config_ts",
+      "toNode": "n_sistema_premiacoes_educacao_anrs_vite_config_env",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_auth_tsx_src_lib_supabase_js",
+      "fromNode": "n_components_auth_tsx",
+      "toNode": "n_src_lib_supabase_js",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_auth_tsx_lib_supabase_supabase",
+      "fromNode": "n_components_auth_tsx",
+      "toNode": "n_lib_supabase_supabase",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_auth_tsx_components_auth_authprops",
+      "fromNode": "n_components_auth_tsx",
+      "toNode": "n_components_auth_authprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_auth_tsx_components_auth_auth",
+      "fromNode": "n_components_auth_tsx",
+      "toNode": "n_components_auth_auth",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_confirmmodal_tsx_components_confirmmodal_confirmmodalprops",
+      "fromNode": "n_components_confirmmodal_tsx",
+      "toNode": "n_components_confirmmodal_confirmmodalprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_confirmmodal_tsx_components_confirmmodal_confirmmodal",
+      "fromNode": "n_components_confirmmodal_tsx",
+      "toNode": "n_components_confirmmodal_confirmmodal",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_confirmmodal_tsx_components_entitymanager_tsx",
+      "fromNode": "n_components_confirmmodal_tsx",
+      "toNode": "n_components_entitymanager_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_confirmmodal_tsx_components_prizeconfig_tsx",
+      "fromNode": "n_components_confirmmodal_tsx",
+      "toNode": "n_components_prizeconfig_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_confirmmodal_tsx_components_usermanager_tsx",
+      "fromNode": "n_components_confirmmodal_tsx",
+      "toNode": "n_components_usermanager_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_costanalysis_tsx_utils_formatting_ts",
+      "fromNode": "n_components_costanalysis_tsx",
+      "toNode": "n_utils_formatting_ts",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_costanalysis_tsx_utils_formatting_formatbrl",
+      "fromNode": "n_components_costanalysis_tsx",
+      "toNode": "n_utils_formatting_formatbrl",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_costanalysis_tsx_components_emptystate_tsx",
+      "fromNode": "n_components_costanalysis_tsx",
+      "toNode": "n_components_emptystate_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_costanalysis_tsx_components_costanalysis_costanalysisprops",
+      "fromNode": "n_components_costanalysis_tsx",
+      "toNode": "n_components_costanalysis_costanalysisprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_costanalysis_tsx_components_costanalysis_costanalysis",
+      "fromNode": "n_components_costanalysis_tsx",
+      "toNode": "n_components_costanalysis_costanalysis",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_costanalysis_costanalysis_utils_formatting_formatbrl",
+      "fromNode": "n_components_costanalysis_costanalysis",
+      "toNode": "n_utils_formatting_formatbrl",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_components_criteriaevaluator_tsx_utils_formatting_ts",
+      "fromNode": "n_components_criteriaevaluator_tsx",
+      "toNode": "n_utils_formatting_ts",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_criteriaevaluator_tsx_utils_formatting_formatbrl",
+      "fromNode": "n_components_criteriaevaluator_tsx",
+      "toNode": "n_utils_formatting_formatbrl",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_criteriaevaluator_tsx_utils_formatting_formatpercentage",
+      "fromNode": "n_components_criteriaevaluator_tsx",
+      "toNode": "n_utils_formatting_formatpercentage",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_criteriaevaluator_tsx_utils_formatting_formatcurrency",
+      "fromNode": "n_components_criteriaevaluator_tsx",
+      "toNode": "n_utils_formatting_formatcurrency",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_criteriaevaluator_tsx_utils_formatting_formatpercentagemask",
+      "fromNode": "n_components_criteriaevaluator_tsx",
+      "toNode": "n_utils_formatting_formatpercentagemask",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_criteriaevaluator_tsx_utils_formatting_parsemaskedstring",
+      "fromNode": "n_components_criteriaevaluator_tsx",
+      "toNode": "n_utils_formatting_parsemaskedstring",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_criteriaevaluator_tsx_utils_calculations_ts",
+      "fromNode": "n_components_criteriaevaluator_tsx",
+      "toNode": "n_utils_calculations_ts",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_criteriaevaluator_tsx_utils_calculations_getmonthindexfromlabel",
+      "fromNode": "n_components_criteriaevaluator_tsx",
+      "toNode": "n_utils_calculations_getmonthindexfromlabel",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_criteriaevaluator_tsx_components_criteriaevaluator_criteriaevaluatorprops",
+      "fromNode": "n_components_criteriaevaluator_tsx",
+      "toNode": "n_components_criteriaevaluator_criteriaevaluatorprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_criteriaevaluator_tsx_components_criteriaevaluator_criteriaevaluator",
+      "fromNode": "n_components_criteriaevaluator_tsx",
+      "toNode": "n_components_criteriaevaluator_criteriaevaluator",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_criteriaevaluator_criteriaevaluator_utils_formatting_formatpercentagemask",
+      "fromNode": "n_components_criteriaevaluator_criteriaevaluator",
+      "toNode": "n_utils_formatting_formatpercentagemask",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_components_emptystate_tsx_components_emptystate_emptystateprops",
+      "fromNode": "n_components_emptystate_tsx",
+      "toNode": "n_components_emptystate_emptystateprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_emptystate_tsx_components_emptystate_emptystate",
+      "fromNode": "n_components_emptystate_tsx",
+      "toNode": "n_components_emptystate_emptystate",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_emptystate_tsx_components_entitymanager_tsx",
+      "fromNode": "n_components_emptystate_tsx",
+      "toNode": "n_components_entitymanager_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_emptystate_tsx_components_periodmanager_tsx",
+      "fromNode": "n_components_emptystate_tsx",
+      "toNode": "n_components_periodmanager_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_emptystate_tsx_components_schoolmanager_tsx",
+      "fromNode": "n_components_emptystate_tsx",
+      "toNode": "n_components_schoolmanager_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_emptystate_tsx_components_usermanager_tsx",
+      "fromNode": "n_components_emptystate_tsx",
+      "toNode": "n_components_usermanager_tsx",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_entitymanager_tsx_src_lib_supabase_js",
+      "fromNode": "n_components_entitymanager_tsx",
+      "toNode": "n_src_lib_supabase_js",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_entitymanager_tsx_lib_supabase_supabase",
+      "fromNode": "n_components_entitymanager_tsx",
+      "toNode": "n_lib_supabase_supabase",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_entitymanager_tsx_components_entitymanager_entitymanagerprops",
+      "fromNode": "n_components_entitymanager_tsx",
+      "toNode": "n_components_entitymanager_entitymanagerprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_entitymanager_tsx_components_entitymanager_entitymanager",
+      "fromNode": "n_components_entitymanager_tsx",
+      "toNode": "n_components_entitymanager_entitymanager",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_footer_tsx_components_footer_footerprops",
+      "fromNode": "n_components_footer_tsx",
+      "toNode": "n_components_footer_footerprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_footer_tsx_components_footer_footer",
+      "fromNode": "n_components_footer_tsx",
+      "toNode": "n_components_footer_footer",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_header_tsx_components_header_headerprops",
+      "fromNode": "n_components_header_tsx",
+      "toNode": "n_components_header_headerprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_header_tsx_components_header_header",
+      "fromNode": "n_components_header_tsx",
+      "toNode": "n_components_header_header",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_periodmanager_tsx_components_periodmanager_periodmanagerprops",
+      "fromNode": "n_components_periodmanager_tsx",
+      "toNode": "n_components_periodmanager_periodmanagerprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_periodmanager_tsx_components_periodmanager_periodmanager",
+      "fromNode": "n_components_periodmanager_tsx",
+      "toNode": "n_components_periodmanager_periodmanager",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_prizeconfig_tsx_utils_formatting_ts",
+      "fromNode": "n_components_prizeconfig_tsx",
+      "toNode": "n_utils_formatting_ts",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_prizeconfig_tsx_utils_formatting_formatcurrency",
+      "fromNode": "n_components_prizeconfig_tsx",
+      "toNode": "n_utils_formatting_formatcurrency",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_prizeconfig_tsx_utils_formatting_formatpercentagemask",
+      "fromNode": "n_components_prizeconfig_tsx",
+      "toNode": "n_utils_formatting_formatpercentagemask",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_prizeconfig_tsx_utils_formatting_parsemaskedstring",
+      "fromNode": "n_components_prizeconfig_tsx",
+      "toNode": "n_utils_formatting_parsemaskedstring",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_prizeconfig_tsx_components_prizeconfig_prizeconfigprops",
+      "fromNode": "n_components_prizeconfig_tsx",
+      "toNode": "n_components_prizeconfig_prizeconfigprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_prizeconfig_tsx_components_prizeconfig_prizeconfig",
+      "fromNode": "n_components_prizeconfig_tsx",
+      "toNode": "n_components_prizeconfig_prizeconfig",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_profilesettings_tsx_src_lib_supabase_js",
+      "fromNode": "n_components_profilesettings_tsx",
+      "toNode": "n_src_lib_supabase_js",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_profilesettings_tsx_lib_supabase_supabase",
+      "fromNode": "n_components_profilesettings_tsx",
+      "toNode": "n_lib_supabase_supabase",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_profilesettings_tsx_components_profilesettings_profilesettingsprops",
+      "fromNode": "n_components_profilesettings_tsx",
+      "toNode": "n_components_profilesettings_profilesettingsprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_profilesettings_tsx_components_profilesettings_profilesettings",
+      "fromNode": "n_components_profilesettings_tsx",
+      "toNode": "n_components_profilesettings_profilesettings",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_resultspanel_tsx_utils_formatting_ts",
+      "fromNode": "n_components_resultspanel_tsx",
+      "toNode": "n_utils_formatting_ts",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_resultspanel_tsx_utils_formatting_formatbrl",
+      "fromNode": "n_components_resultspanel_tsx",
+      "toNode": "n_utils_formatting_formatbrl",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_resultspanel_tsx_components_resultspanel_resultspanelprops",
+      "fromNode": "n_components_resultspanel_tsx",
+      "toNode": "n_components_resultspanel_resultspanelprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_resultspanel_tsx_components_resultspanel_resultspanel",
+      "fromNode": "n_components_resultspanel_tsx",
+      "toNode": "n_components_resultspanel_resultspanel",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_resultspanel_resultspanel_utils_formatting_formatbrl",
+      "fromNode": "n_components_resultspanel_resultspanel",
+      "toNode": "n_utils_formatting_formatbrl",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_components_schoolmanager_tsx_utils_formatting_ts",
+      "fromNode": "n_components_schoolmanager_tsx",
+      "toNode": "n_utils_formatting_ts",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_schoolmanager_tsx_utils_formatting_formatcurrency",
+      "fromNode": "n_components_schoolmanager_tsx",
+      "toNode": "n_utils_formatting_formatcurrency",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_schoolmanager_tsx_utils_formatting_parsemaskedstring",
+      "fromNode": "n_components_schoolmanager_tsx",
+      "toNode": "n_utils_formatting_parsemaskedstring",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_schoolmanager_tsx_components_schoolmanager_schoolmanagerprops",
+      "fromNode": "n_components_schoolmanager_tsx",
+      "toNode": "n_components_schoolmanager_schoolmanagerprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_schoolmanager_tsx_components_schoolmanager_schoolmanager",
+      "fromNode": "n_components_schoolmanager_tsx",
+      "toNode": "n_components_schoolmanager_schoolmanager",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_schoolmanager_schoolmanager_utils_formatting_formatcurrency",
+      "fromNode": "n_components_schoolmanager_schoolmanager",
+      "toNode": "n_utils_formatting_formatcurrency",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_components_summarytable_tsx_utils_formatting_ts",
+      "fromNode": "n_components_summarytable_tsx",
+      "toNode": "n_utils_formatting_ts",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_summarytable_tsx_utils_formatting_formatbrl",
+      "fromNode": "n_components_summarytable_tsx",
+      "toNode": "n_utils_formatting_formatbrl",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_summarytable_tsx_components_summarytable_schoolwithevaluationstatus",
+      "fromNode": "n_components_summarytable_tsx",
+      "toNode": "n_components_summarytable_schoolwithevaluationstatus",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_summarytable_tsx_components_summarytable_summarytableprops",
+      "fromNode": "n_components_summarytable_tsx",
+      "toNode": "n_components_summarytable_summarytableprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_summarytable_tsx_components_summarytable_summarytable",
+      "fromNode": "n_components_summarytable_tsx",
+      "toNode": "n_components_summarytable_summarytable",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_summarytable_summarytable_utils_formatting_formatbrl",
+      "fromNode": "n_components_summarytable_summarytable",
+      "toNode": "n_utils_formatting_formatbrl",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_components_usermanager_tsx_src_lib_supabase_js",
+      "fromNode": "n_components_usermanager_tsx",
+      "toNode": "n_src_lib_supabase_js",
+      "label": "imports_from [EXTRACTED]"
+    },
+    {
+      "id": "e_components_usermanager_tsx_lib_supabase_supabase",
+      "fromNode": "n_components_usermanager_tsx",
+      "toNode": "n_lib_supabase_supabase",
+      "label": "imports [EXTRACTED]"
+    },
+    {
+      "id": "e_components_usermanager_tsx_components_usermanager_usermanagerprops",
+      "fromNode": "n_components_usermanager_tsx",
+      "toNode": "n_components_usermanager_usermanagerprops",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_components_usermanager_tsx_components_usermanager_usermanager",
+      "fromNode": "n_components_usermanager_tsx",
+      "toNode": "n_components_usermanager_usermanager",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_src_lib_supabase_js_lib_supabase_isconfigured",
+      "fromNode": "n_src_lib_supabase_js",
+      "toNode": "n_lib_supabase_isconfigured",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_src_lib_supabase_js_lib_supabase_supabase",
+      "fromNode": "n_src_lib_supabase_js",
+      "toNode": "n_lib_supabase_supabase",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_utils_calculations_ts_utils_calculations_getmonthindexfromlabel",
+      "fromNode": "n_utils_calculations_ts",
+      "toNode": "n_utils_calculations_getmonthindexfromlabel",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_utils_calculations_ts_utils_calculations_calculatepoints",
+      "fromNode": "n_utils_calculations_ts",
+      "toNode": "n_utils_calculations_calculatepoints",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_utils_calculations_ts_utils_calculations_getawardlevel",
+      "fromNode": "n_utils_calculations_ts",
+      "toNode": "n_utils_calculations_getawardlevel",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_utils_calculations_ts_utils_calculations_allprizesresult",
+      "fromNode": "n_utils_calculations_ts",
+      "toNode": "n_utils_calculations_allprizesresult",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_utils_calculations_ts_utils_calculations_schoolevaluationforprizecalculation",
+      "fromNode": "n_utils_calculations_ts",
+      "toNode": "n_utils_calculations_schoolevaluationforprizecalculation",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_utils_calculations_ts_utils_calculations_calculateallprizes",
+      "fromNode": "n_utils_calculations_ts",
+      "toNode": "n_utils_calculations_calculateallprizes",
+      "label": "contains [EXTRACTED]"
+    },
+    {
+      "id": "e_utils_calculations_getmonthindexfromlabel_utils_calculations_calculatepoints",
+      "fromNode": "n_utils_calculations_getmonthindexfromlabel",
+      "toNode": "n_utils_calculations_calculatepoints",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_utils_calculations_calculatepoints_utils_calculations_calculateallprizes",
+      "fromNode": "n_utils_calculations_calculatepoints",
+      "toNode": "n_utils_calculations_calculateallprizes",
+      "label": "calls [EXTRACTED]"
+    },
+    {
+      "id": "e_utils_calculations_getawardlevel_utils_calculations_calculateallprizes",
+      "fromNode": "n_utils_calculations_getawardlevel",
+      "toNode": "n_utils_calculations_calculateallprizes",
+      "label": "calls [EXTRACTED]"
+    }
+  ]
+}

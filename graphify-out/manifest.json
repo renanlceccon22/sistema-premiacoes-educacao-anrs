@@ -1,0 +1,122 @@
+{
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\App.tsx": {
+    "mtime": 1773158060.453672,
+    "hash": "2653bdd4e04568e4339988c5728db022"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\constants.tsx": {
+    "mtime": 1772222815.2745473,
+    "hash": "b5b86ece9ca074ede941b87ad27a4fcd"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\index.tsx": {
+    "mtime": 1772400507.1108544,
+    "hash": "250c24e18df0881b042d12e24965fa74"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\types.ts": {
+    "mtime": 1773157746.8615847,
+    "hash": "8d3279ea54fd9a4e7d217383d851f0e3"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\vite.config.ts": {
+    "mtime": 1769903032.3221931,
+    "hash": "34a8d7032a64a6963923a77a09de464a"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\Auth.tsx": {
+    "mtime": 1772083932.9628093,
+    "hash": "42308047cc800bb758e21990680e94cd"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\ConfirmModal.tsx": {
+    "mtime": 1772409019.3873346,
+    "hash": "298588482990e9675a1c4ac017e3cc97"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\CostAnalysis.tsx": {
+    "mtime": 1772420206.2879605,
+    "hash": "a65a35eb050980d2eaa6d063e33d41c1"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\CriteriaEvaluator.tsx": {
+    "mtime": 1772416093.2820766,
+    "hash": "889c4e22c9c671c3592979220a4d757b"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\EmptyState.tsx": {
+    "mtime": 1769963915.9833584,
+    "hash": "4d5b4dc0e663cf7f1eedf69da9cb5d2d"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\EntityManager.tsx": {
+    "mtime": 1772081074.6941295,
+    "hash": "a199407ea7fd408e9be336fd03c24cc0"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\Footer.tsx": {
+    "mtime": 1772084970.4109657,
+    "hash": "18ddca2cac46b2bab44f849cb4d40f63"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\Header.tsx": {
+    "mtime": 1772224152.0627837,
+    "hash": "e6fad28cd6e16d30a391a09c82ff8c44"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\PeriodManager.tsx": {
+    "mtime": 1772418412.7789135,
+    "hash": "095921c590c3659ba0d9b2610122e11b"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\PrizeConfig.tsx": {
+    "mtime": 1773158496.5927567,
+    "hash": "106779ef62907ebc6f7e0195ec836779"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\ProfileSettings.tsx": {
+    "mtime": 1772372318.2134068,
+    "hash": "4b4a9e000103d35486d041e1de983655"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\ResultsPanel.tsx": {
+    "mtime": 1772420277.1596866,
+    "hash": "ce9f593276483f758ba76d8e80747bf3"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\SchoolManager.tsx": {
+    "mtime": 1772420182.708103,
+    "hash": "711a628777145b894c386ae4c12b9818"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\SummaryTable.tsx": {
+    "mtime": 1773161194.8974226,
+    "hash": "9165eff91067a5a3687fa04740eecb36"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\components\\UserManager.tsx": {
+    "mtime": 1772372341.1916692,
+    "hash": "dce344feddcf11c505bb0978a332c215"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\src\\lib\\supabase.js": {
+    "mtime": 1769901936.8569312,
+    "hash": "8a33c391c4c0ebade1e0b91da2a0cc5a"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\utils\\calculations.ts": {
+    "mtime": 1772420372.1964126,
+    "hash": "e1e1ab8de120a7b6a6d764594b308fa3"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\utils\\formatting.ts": {
+    "mtime": 1772415957.8233268,
+    "hash": "4443b4f85611b0cc74c1525345c9b73e"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\CLAUDE.md": {
+    "mtime": 1778372069.2572534,
+    "hash": "747e73a5e1af4b72c0d65c9169c23199"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\eliezer_search.txt": {
+    "mtime": 1772153202.1699734,
+    "hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\index.html": {
+    "mtime": 1769905389.4987173,
+    "hash": "c40f4179ba16b26cae3f8ec674787374"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\README.md": {
+    "mtime": 1769828714.9068353,
+    "hash": "3b8d4ef7f61a463e8b067ddb158f8cb7"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\public\\favicon.png": {
+    "mtime": 1769902282.7850118,
+    "hash": "60f4c1c302749da13ea09d9dda8b1be5"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\public\\logo.png": {
+    "mtime": 1769902282.7850118,
+    "hash": "60f4c1c302749da13ea09d9dda8b1be5"
+  },
+  "C:\\Users\\letil\\OneDrive\\\u00c1rea de Trabalho\\Apps e Sites\\sistema-premiacoes-educacao-anrs\\public\\minilogo.png": {
+    "mtime": 1769902282.7850118,
+    "hash": "60f4c1c302749da13ea09d9dda8b1be5"
+  }
+}

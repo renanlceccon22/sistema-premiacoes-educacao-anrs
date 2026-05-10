@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Graphify temp files
+.graphify_python
+.graphify_*.json
+.graphify_*.txt
+.graphify_*.py

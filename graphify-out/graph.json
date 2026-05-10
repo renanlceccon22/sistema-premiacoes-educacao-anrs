@@ -1,0 +1,3521 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {
+    "hyperedges": [
+      {
+        "id": "anrs_brand_assets",
+        "label": "ANRS Brand Asset Cluster",
+        "nodes": [
+          "favicon_png_brand",
+          "logo_png_brand",
+          "minilogo_png_brand",
+          "anrs_brand_identity"
+        ],
+        "relation": "implement",
+        "confidence": "INFERRED",
+        "confidence_score": 0.95,
+        "source_file": "public/logo.png"
+      },
+      {
+        "id": "app_entry_cluster",
+        "label": "Application Entry Point Cluster",
+        "nodes": [
+          "index_html_entry",
+          "index_html_root_div",
+          "index_html_index_tsx",
+          "readme_app_description"
+        ],
+        "relation": "form",
+        "confidence": "INFERRED",
+        "confidence_score": 0.85,
+        "source_file": "index.html"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "label": "App.tsx",
+      "file_type": "code",
+      "source_file": "App.tsx",
+      "source_location": "L1",
+      "id": "app_tsx",
+      "community": 7,
+      "norm_label": "app.tsx"
+    },
+    {
+      "label": "AppTab",
+      "file_type": "code",
+      "source_file": "App.tsx",
+      "source_location": "L34",
+      "id": "sistema_premiacoes_educacao_anrs_app_apptab",
+      "community": 7,
+      "norm_label": "apptab"
+    },
+    {
+      "label": "App()",
+      "file_type": "code",
+      "source_file": "App.tsx",
+      "source_location": "L42",
+      "id": "sistema_premiacoes_educacao_anrs_app_app",
+      "community": 7,
+      "norm_label": "app()"
+    },
+    {
+      "label": "constants.tsx",
+      "file_type": "code",
+      "source_file": "constants.tsx",
+      "source_location": "L1",
+      "id": "constants_tsx",
+      "community": 0,
+      "norm_label": "constants.tsx"
+    },
+    {
+      "label": "INITIAL_CATEGORIES",
+      "file_type": "code",
+      "source_file": "constants.tsx",
+      "source_location": "L3",
+      "id": "sistema_premiacoes_educacao_anrs_constants_initial_categories",
+      "community": 0,
+      "norm_label": "initial_categories"
+    },
+    {
+      "label": "INITIAL_CUSTOM_AWARDS",
+      "file_type": "code",
+      "source_file": "constants.tsx",
+      "source_location": "L5",
+      "id": "sistema_premiacoes_educacao_anrs_constants_initial_custom_awards",
+      "community": 0,
+      "norm_label": "initial_custom_awards"
+    },
+    {
+      "label": "index.tsx",
+      "file_type": "code",
+      "source_file": "index.tsx",
+      "source_location": "L1",
+      "id": "index_tsx",
+      "community": 10,
+      "norm_label": "index.tsx"
+    },
+    {
+      "label": "rootElement",
+      "file_type": "code",
+      "source_file": "index.tsx",
+      "source_location": "L7",
+      "id": "sistema_premiacoes_educacao_anrs_index_rootelement",
+      "community": 10,
+      "norm_label": "rootelement"
+    },
+    {
+      "label": "root",
+      "file_type": "code",
+      "source_file": "index.tsx",
+      "source_location": "L12",
+      "id": "sistema_premiacoes_educacao_anrs_index_root",
+      "community": 10,
+      "norm_label": "root"
+    },
+    {
+      "label": "types.ts",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L1",
+      "id": "types_ts",
+      "community": 0,
+      "norm_label": "types.ts"
+    },
+    {
+      "label": "Period",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L2",
+      "id": "sistema_premiacoes_educacao_anrs_types_period",
+      "community": 4,
+      "norm_label": "period"
+    },
+    {
+      "label": "CriterionType",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L8",
+      "id": "sistema_premiacoes_educacao_anrs_types_criteriontype",
+      "community": 1,
+      "norm_label": "criteriontype"
+    },
+    {
+      "label": "ComparisonOperator",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L10",
+      "id": "sistema_premiacoes_educacao_anrs_types_comparisonoperator",
+      "community": 1,
+      "norm_label": "comparisonoperator"
+    },
+    {
+      "label": "ScoringRange",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L12",
+      "id": "sistema_premiacoes_educacao_anrs_types_scoringrange",
+      "community": 0,
+      "norm_label": "scoringrange"
+    },
+    {
+      "label": "FinancialRange",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L20",
+      "id": "sistema_premiacoes_educacao_anrs_types_financialrange",
+      "community": 0,
+      "norm_label": "financialrange"
+    },
+    {
+      "label": "CriterionOption",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L28",
+      "id": "sistema_premiacoes_educacao_anrs_types_criterionoption",
+      "community": 0,
+      "norm_label": "criterionoption"
+    },
+    {
+      "label": "AwardLevel",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L34",
+      "id": "sistema_premiacoes_educacao_anrs_types_awardlevel",
+      "community": 0,
+      "norm_label": "awardlevel"
+    },
+    {
+      "label": "Thresholds",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L41",
+      "id": "sistema_premiacoes_educacao_anrs_types_thresholds",
+      "community": 0,
+      "norm_label": "thresholds"
+    },
+    {
+      "label": "EvaluationModel",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L47",
+      "id": "sistema_premiacoes_educacao_anrs_types_evaluationmodel",
+      "community": 0,
+      "norm_label": "evaluationmodel"
+    },
+    {
+      "label": "EvaluationDirection",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L54",
+      "id": "sistema_premiacoes_educacao_anrs_types_evaluationdirection",
+      "community": 0,
+      "norm_label": "evaluationdirection"
+    },
+    {
+      "label": "Category",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L59",
+      "id": "sistema_premiacoes_educacao_anrs_types_category",
+      "community": 0,
+      "norm_label": "category"
+    },
+    {
+      "label": "InadimplenciaRankingConfig",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L68",
+      "id": "sistema_premiacoes_educacao_anrs_types_inadimplenciarankingconfig",
+      "community": 0,
+      "norm_label": "inadimplenciarankingconfig"
+    },
+    {
+      "label": "ManagementBonusConfig",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L75",
+      "id": "sistema_premiacoes_educacao_anrs_types_managementbonusconfig",
+      "community": 0,
+      "norm_label": "managementbonusconfig"
+    },
+    {
+      "label": "AnrsBonusConfig",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L81",
+      "id": "sistema_premiacoes_educacao_anrs_types_anrsbonusconfig",
+      "community": 0,
+      "norm_label": "anrsbonusconfig"
+    },
+    {
+      "label": "AwardCriterion",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L87",
+      "id": "sistema_premiacoes_educacao_anrs_types_awardcriterion",
+      "community": 1,
+      "norm_label": "awardcriterion"
+    },
+    {
+      "label": "CustomAward",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L105",
+      "id": "sistema_premiacoes_educacao_anrs_types_customaward",
+      "community": 3,
+      "norm_label": "customaward"
+    },
+    {
+      "label": "Evaluation",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L115",
+      "id": "sistema_premiacoes_educacao_anrs_types_evaluation",
+      "community": 3,
+      "norm_label": "evaluation"
+    },
+    {
+      "label": "SchoolUnit",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L134",
+      "id": "sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "community": 1,
+      "norm_label": "schoolunit"
+    },
+    {
+      "label": "User",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L147",
+      "id": "sistema_premiacoes_educacao_anrs_types_user",
+      "community": 8,
+      "norm_label": "user"
+    },
+    {
+      "label": "Entity",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L155",
+      "id": "sistema_premiacoes_educacao_anrs_types_entity",
+      "community": 9,
+      "norm_label": "entity"
+    },
+    {
+      "label": "UserEntity",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L163",
+      "id": "sistema_premiacoes_educacao_anrs_types_userentity",
+      "community": 0,
+      "norm_label": "userentity"
+    },
+    {
+      "label": "AppConfig",
+      "file_type": "code",
+      "source_file": "types.ts",
+      "source_location": "L168",
+      "id": "sistema_premiacoes_educacao_anrs_types_appconfig",
+      "community": 0,
+      "norm_label": "appconfig"
+    },
+    {
+      "label": "vite.config.ts",
+      "file_type": "code",
+      "source_file": "vite.config.ts",
+      "source_location": "L1",
+      "id": "vite_config_ts",
+      "community": 13,
+      "norm_label": "vite.config.ts"
+    },
+    {
+      "label": "env",
+      "file_type": "code",
+      "source_file": "vite.config.ts",
+      "source_location": "L7",
+      "id": "sistema_premiacoes_educacao_anrs_vite_config_env",
+      "community": 13,
+      "norm_label": "env"
+    },
+    {
+      "label": "Auth.tsx",
+      "file_type": "code",
+      "source_file": "components/Auth.tsx",
+      "source_location": "L1",
+      "id": "components_auth_tsx",
+      "community": 6,
+      "norm_label": "auth.tsx"
+    },
+    {
+      "label": "AuthProps",
+      "file_type": "code",
+      "source_file": "components/Auth.tsx",
+      "source_location": "L5",
+      "id": "components_auth_authprops",
+      "community": 6,
+      "norm_label": "authprops"
+    },
+    {
+      "label": "Auth()",
+      "file_type": "code",
+      "source_file": "components/Auth.tsx",
+      "source_location": "L9",
+      "id": "components_auth_auth",
+      "community": 6,
+      "norm_label": "auth()"
+    },
+    {
+      "label": "ConfirmModal.tsx",
+      "file_type": "code",
+      "source_file": "components/ConfirmModal.tsx",
+      "source_location": "L1",
+      "id": "components_confirmmodal_tsx",
+      "community": 5,
+      "norm_label": "confirmmodal.tsx"
+    },
+    {
+      "label": "ConfirmModalProps",
+      "file_type": "code",
+      "source_file": "components/ConfirmModal.tsx",
+      "source_location": "L4",
+      "id": "components_confirmmodal_confirmmodalprops",
+      "community": 5,
+      "norm_label": "confirmmodalprops"
+    },
+    {
+      "label": "ConfirmModal()",
+      "file_type": "code",
+      "source_file": "components/ConfirmModal.tsx",
+      "source_location": "L16",
+      "id": "components_confirmmodal_confirmmodal",
+      "community": 5,
+      "norm_label": "confirmmodal()"
+    },
+    {
+      "label": "CostAnalysis.tsx",
+      "file_type": "code",
+      "source_file": "components/CostAnalysis.tsx",
+      "source_location": "L1",
+      "id": "components_costanalysis_tsx",
+      "community": 3,
+      "norm_label": "costanalysis.tsx"
+    },
+    {
+      "label": "CostAnalysisProps",
+      "file_type": "code",
+      "source_file": "components/CostAnalysis.tsx",
+      "source_location": "L11",
+      "id": "components_costanalysis_costanalysisprops",
+      "community": 3,
+      "norm_label": "costanalysisprops"
+    },
+    {
+      "label": "CostAnalysis()",
+      "file_type": "code",
+      "source_file": "components/CostAnalysis.tsx",
+      "source_location": "L20",
+      "id": "components_costanalysis_costanalysis",
+      "community": 3,
+      "norm_label": "costanalysis()"
+    },
+    {
+      "label": "CriteriaEvaluator.tsx",
+      "file_type": "code",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L1",
+      "id": "components_criteriaevaluator_tsx",
+      "community": 0,
+      "norm_label": "criteriaevaluator.tsx"
+    },
+    {
+      "label": "CriteriaEvaluatorProps",
+      "file_type": "code",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L7",
+      "id": "components_criteriaevaluator_criteriaevaluatorprops",
+      "community": 0,
+      "norm_label": "criteriaevaluatorprops"
+    },
+    {
+      "label": "CriteriaEvaluator()",
+      "file_type": "code",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L25",
+      "id": "components_criteriaevaluator_criteriaevaluator",
+      "community": 1,
+      "norm_label": "criteriaevaluator()"
+    },
+    {
+      "label": "EmptyState.tsx",
+      "file_type": "code",
+      "source_file": "components/EmptyState.tsx",
+      "source_location": "L1",
+      "id": "components_emptystate_tsx",
+      "community": 4,
+      "norm_label": "emptystate.tsx"
+    },
+    {
+      "label": "EmptyStateProps",
+      "file_type": "code",
+      "source_file": "components/EmptyState.tsx",
+      "source_location": "L4",
+      "id": "components_emptystate_emptystateprops",
+      "community": 4,
+      "norm_label": "emptystateprops"
+    },
+    {
+      "label": "EmptyState()",
+      "file_type": "code",
+      "source_file": "components/EmptyState.tsx",
+      "source_location": "L11",
+      "id": "components_emptystate_emptystate",
+      "community": 4,
+      "norm_label": "emptystate()"
+    },
+    {
+      "label": "EntityManager.tsx",
+      "file_type": "code",
+      "source_file": "components/EntityManager.tsx",
+      "source_location": "L1",
+      "id": "components_entitymanager_tsx",
+      "community": 9,
+      "norm_label": "entitymanager.tsx"
+    },
+    {
+      "label": "EntityManagerProps",
+      "file_type": "code",
+      "source_file": "components/EntityManager.tsx",
+      "source_location": "L8",
+      "id": "components_entitymanager_entitymanagerprops",
+      "community": 9,
+      "norm_label": "entitymanagerprops"
+    },
+    {
+      "label": "EntityManager()",
+      "file_type": "code",
+      "source_file": "components/EntityManager.tsx",
+      "source_location": "L12",
+      "id": "components_entitymanager_entitymanager",
+      "community": 9,
+      "norm_label": "entitymanager()"
+    },
+    {
+      "label": "Footer.tsx",
+      "file_type": "code",
+      "source_file": "components/Footer.tsx",
+      "source_location": "L1",
+      "id": "components_footer_tsx",
+      "community": 12,
+      "norm_label": "footer.tsx"
+    },
+    {
+      "label": "FooterProps",
+      "file_type": "code",
+      "source_file": "components/Footer.tsx",
+      "source_location": "L3",
+      "id": "components_footer_footerprops",
+      "community": 12,
+      "norm_label": "footerprops"
+    },
+    {
+      "label": "Footer()",
+      "file_type": "code",
+      "source_file": "components/Footer.tsx",
+      "source_location": "L7",
+      "id": "components_footer_footer",
+      "community": 12,
+      "norm_label": "footer()"
+    },
+    {
+      "label": "Header.tsx",
+      "file_type": "code",
+      "source_file": "components/Header.tsx",
+      "source_location": "L1",
+      "id": "components_header_tsx",
+      "community": 11,
+      "norm_label": "header.tsx"
+    },
+    {
+      "label": "HeaderProps",
+      "file_type": "code",
+      "source_file": "components/Header.tsx",
+      "source_location": "L4",
+      "id": "components_header_headerprops",
+      "community": 11,
+      "norm_label": "headerprops"
+    },
+    {
+      "label": "Header()",
+      "file_type": "code",
+      "source_file": "components/Header.tsx",
+      "source_location": "L25",
+      "id": "components_header_header",
+      "community": 11,
+      "norm_label": "header()"
+    },
+    {
+      "label": "PeriodManager.tsx",
+      "file_type": "code",
+      "source_file": "components/PeriodManager.tsx",
+      "source_location": "L1",
+      "id": "components_periodmanager_tsx",
+      "community": 4,
+      "norm_label": "periodmanager.tsx"
+    },
+    {
+      "label": "PeriodManagerProps",
+      "file_type": "code",
+      "source_file": "components/PeriodManager.tsx",
+      "source_location": "L5",
+      "id": "components_periodmanager_periodmanagerprops",
+      "community": 4,
+      "norm_label": "periodmanagerprops"
+    },
+    {
+      "label": "PeriodManager()",
+      "file_type": "code",
+      "source_file": "components/PeriodManager.tsx",
+      "source_location": "L16",
+      "id": "components_periodmanager_periodmanager",
+      "community": 4,
+      "norm_label": "periodmanager()"
+    },
+    {
+      "label": "PrizeConfig.tsx",
+      "file_type": "code",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L1",
+      "id": "components_prizeconfig_tsx",
+      "community": 1,
+      "norm_label": "prizeconfig.tsx"
+    },
+    {
+      "label": "PrizeConfigProps",
+      "file_type": "code",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L7",
+      "id": "components_prizeconfig_prizeconfigprops",
+      "community": 1,
+      "norm_label": "prizeconfigprops"
+    },
+    {
+      "label": "PrizeConfig()",
+      "file_type": "code",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L17",
+      "id": "components_prizeconfig_prizeconfig",
+      "community": 1,
+      "norm_label": "prizeconfig()"
+    },
+    {
+      "label": "ProfileSettings.tsx",
+      "file_type": "code",
+      "source_file": "components/ProfileSettings.tsx",
+      "source_location": "L1",
+      "id": "components_profilesettings_tsx",
+      "community": 8,
+      "norm_label": "profilesettings.tsx"
+    },
+    {
+      "label": "ProfileSettingsProps",
+      "file_type": "code",
+      "source_file": "components/ProfileSettings.tsx",
+      "source_location": "L6",
+      "id": "components_profilesettings_profilesettingsprops",
+      "community": 8,
+      "norm_label": "profilesettingsprops"
+    },
+    {
+      "label": "ProfileSettings()",
+      "file_type": "code",
+      "source_file": "components/ProfileSettings.tsx",
+      "source_location": "L14",
+      "id": "components_profilesettings_profilesettings",
+      "community": 8,
+      "norm_label": "profilesettings()"
+    },
+    {
+      "label": "ResultsPanel.tsx",
+      "file_type": "code",
+      "source_file": "components/ResultsPanel.tsx",
+      "source_location": "L1",
+      "id": "components_resultspanel_tsx",
+      "community": 3,
+      "norm_label": "resultspanel.tsx"
+    },
+    {
+      "label": "ResultsPanelProps",
+      "file_type": "code",
+      "source_file": "components/ResultsPanel.tsx",
+      "source_location": "L6",
+      "id": "components_resultspanel_resultspanelprops",
+      "community": 3,
+      "norm_label": "resultspanelprops"
+    },
+    {
+      "label": "ResultsPanel()",
+      "file_type": "code",
+      "source_file": "components/ResultsPanel.tsx",
+      "source_location": "L23",
+      "id": "components_resultspanel_resultspanel",
+      "community": 3,
+      "norm_label": "resultspanel()"
+    },
+    {
+      "label": "SchoolManager.tsx",
+      "file_type": "code",
+      "source_file": "components/SchoolManager.tsx",
+      "source_location": "L1",
+      "id": "components_schoolmanager_tsx",
+      "community": 1,
+      "norm_label": "schoolmanager.tsx"
+    },
+    {
+      "label": "SchoolManagerProps",
+      "file_type": "code",
+      "source_file": "components/SchoolManager.tsx",
+      "source_location": "L7",
+      "id": "components_schoolmanager_schoolmanagerprops",
+      "community": 1,
+      "norm_label": "schoolmanagerprops"
+    },
+    {
+      "label": "SchoolManager()",
+      "file_type": "code",
+      "source_file": "components/SchoolManager.tsx",
+      "source_location": "L18",
+      "id": "components_schoolmanager_schoolmanager",
+      "community": 1,
+      "norm_label": "schoolmanager()"
+    },
+    {
+      "label": "SummaryTable.tsx",
+      "file_type": "code",
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L1",
+      "id": "components_summarytable_tsx",
+      "community": 3,
+      "norm_label": "summarytable.tsx"
+    },
+    {
+      "label": "SchoolWithEvaluationStatus",
+      "file_type": "code",
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L13",
+      "id": "components_summarytable_schoolwithevaluationstatus",
+      "community": 3,
+      "norm_label": "schoolwithevaluationstatus"
+    },
+    {
+      "label": "SummaryTableProps",
+      "file_type": "code",
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L19",
+      "id": "components_summarytable_summarytableprops",
+      "community": 3,
+      "norm_label": "summarytableprops"
+    },
+    {
+      "label": "SummaryTable()",
+      "file_type": "code",
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L31",
+      "id": "components_summarytable_summarytable",
+      "community": 3,
+      "norm_label": "summarytable()"
+    },
+    {
+      "label": "UserManager.tsx",
+      "file_type": "code",
+      "source_file": "components/UserManager.tsx",
+      "source_location": "L1",
+      "id": "components_usermanager_tsx",
+      "community": 5,
+      "norm_label": "usermanager.tsx"
+    },
+    {
+      "label": "UserManagerProps",
+      "file_type": "code",
+      "source_file": "components/UserManager.tsx",
+      "source_location": "L9",
+      "id": "components_usermanager_usermanagerprops",
+      "community": 5,
+      "norm_label": "usermanagerprops"
+    },
+    {
+      "label": "UserManager()",
+      "file_type": "code",
+      "source_file": "components/UserManager.tsx",
+      "source_location": "L15",
+      "id": "components_usermanager_usermanager",
+      "community": 5,
+      "norm_label": "usermanager()"
+    },
+    {
+      "label": "supabase.js",
+      "file_type": "code",
+      "source_file": "src/lib/supabase.js",
+      "source_location": "L1",
+      "id": "src_lib_supabase_js",
+      "community": 6,
+      "norm_label": "supabase.js"
+    },
+    {
+      "label": "isConfigured",
+      "file_type": "code",
+      "source_file": "src/lib/supabase.js",
+      "source_location": "L14",
+      "id": "lib_supabase_isconfigured",
+      "community": 7,
+      "norm_label": "isconfigured"
+    },
+    {
+      "label": "supabase",
+      "file_type": "code",
+      "source_file": "src/lib/supabase.js",
+      "source_location": "L16",
+      "id": "lib_supabase_supabase",
+      "community": 6,
+      "norm_label": "supabase"
+    },
+    {
+      "label": "calculations.ts",
+      "file_type": "code",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L1",
+      "id": "utils_calculations_ts",
+      "community": 0,
+      "norm_label": "calculations.ts"
+    },
+    {
+      "label": "getMonthIndexFromLabel()",
+      "file_type": "code",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L7",
+      "id": "utils_calculations_getmonthindexfromlabel",
+      "community": 0,
+      "norm_label": "getmonthindexfromlabel()"
+    },
+    {
+      "label": "calculatePoints()",
+      "file_type": "code",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L17",
+      "id": "utils_calculations_calculatepoints",
+      "community": 0,
+      "norm_label": "calculatepoints()"
+    },
+    {
+      "label": "getAwardLevel()",
+      "file_type": "code",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L71",
+      "id": "utils_calculations_getawardlevel",
+      "community": 0,
+      "norm_label": "getawardlevel()"
+    },
+    {
+      "label": "AllPrizesResult",
+      "file_type": "code",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L78",
+      "id": "utils_calculations_allprizesresult",
+      "community": 0,
+      "norm_label": "allprizesresult"
+    },
+    {
+      "label": "SchoolEvaluationForPrizeCalculation",
+      "file_type": "code",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L88",
+      "id": "utils_calculations_schoolevaluationforprizecalculation",
+      "community": 0,
+      "norm_label": "schoolevaluationforprizecalculation"
+    },
+    {
+      "label": "calculateAllPrizes()",
+      "file_type": "code",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L99",
+      "id": "utils_calculations_calculateallprizes",
+      "community": 0,
+      "norm_label": "calculateallprizes()"
+    },
+    {
+      "label": "formatting.ts",
+      "file_type": "code",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L1",
+      "id": "utils_formatting_ts",
+      "community": 1,
+      "norm_label": "formatting.ts"
+    },
+    {
+      "label": "formatBRL()",
+      "file_type": "code",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L2",
+      "id": "utils_formatting_formatbrl",
+      "community": 3,
+      "norm_label": "formatbrl()"
+    },
+    {
+      "label": "formatPercentage()",
+      "file_type": "code",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L6",
+      "id": "utils_formatting_formatpercentage",
+      "community": 1,
+      "norm_label": "formatpercentage()"
+    },
+    {
+      "label": "formatCurrency()",
+      "file_type": "code",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L13",
+      "id": "utils_formatting_formatcurrency",
+      "community": 1,
+      "norm_label": "formatcurrency()"
+    },
+    {
+      "label": "formatPercentageMask()",
+      "file_type": "code",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L25",
+      "id": "utils_formatting_formatpercentagemask",
+      "community": 1,
+      "norm_label": "formatpercentagemask()"
+    },
+    {
+      "label": "formatCurrencyInput()",
+      "file_type": "code",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L35",
+      "id": "utils_formatting_formatcurrencyinput",
+      "community": 1,
+      "norm_label": "formatcurrencyinput()"
+    },
+    {
+      "label": "parseMaskedString()",
+      "file_type": "code",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L45",
+      "id": "utils_formatting_parsemaskedstring",
+      "community": 1,
+      "norm_label": "parsemaskedstring()"
+    },
+    {
+      "label": "parseCurrencyString()",
+      "file_type": "code",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L55",
+      "id": "utils_formatting_parsecurrencystring",
+      "community": 1,
+      "norm_label": "parsecurrencystring()"
+    },
+    {
+      "label": "Graphify Knowledge Graph Instructions",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "claudemd_graphify_instructions",
+      "community": 2,
+      "norm_label": "graphify knowledge graph instructions"
+    },
+    {
+      "label": "Sistema Premia\u00c3\u00a7\u00c3\u00b5es Educa\u00c3\u00a7\u00c3\u00a3o ANRS App",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_app_description",
+      "community": 2,
+      "norm_label": "sistema premiaa\u00a7a\u03bces educaa\u00a7a\u00a3o anrs app"
+    },
+    {
+      "label": "Gemini API Key Requirement",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_gemini_api",
+      "community": 2,
+      "norm_label": "gemini api key requirement"
+    },
+    {
+      "label": "Google AI Studio Platform",
+      "file_type": "document",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_ai_studio",
+      "community": 2,
+      "norm_label": "google ai studio platform"
+    },
+    {
+      "label": "Node.js Runtime Prerequisite",
+      "file_type": "rationale",
+      "source_file": "README.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "readme_nodejs",
+      "community": 2,
+      "norm_label": "node.js runtime prerequisite"
+    },
+    {
+      "label": "HTML Entry Point (index.html)",
+      "file_type": "code",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_html_entry",
+      "community": 2,
+      "norm_label": "html entry point (index.html)"
+    },
+    {
+      "label": "React Root Mount Point (#root)",
+      "file_type": "rationale",
+      "source_file": "index.html",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_html_root_div",
+      "community": 2,
+      "norm_label": "react root mount point (#root)"
+    },
+    {
+      "label": "index.tsx Module Entry Script",
+      "file_type": "code",
+      "source_file": "index.html",
+      "source_location": "line 14",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_html_index_tsx",
+      "community": 2,
+      "norm_label": "index.tsx module entry script"
+    },
+    {
+      "label": "Inter Font (Google Fonts)",
+      "file_type": "rationale",
+      "source_file": "index.html",
+      "source_location": "line 9",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_html_inter_font",
+      "community": 2,
+      "norm_label": "inter font (google fonts)"
+    },
+    {
+      "label": "Favicon Reference (/favicon.png)",
+      "file_type": "code",
+      "source_file": "index.html",
+      "source_location": "line 8",
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "index_html_favicon",
+      "community": 2,
+      "norm_label": "favicon reference (/favicon.png)"
+    },
+    {
+      "label": "ANRS Brand Favicon - Letter A Logo",
+      "file_type": "image",
+      "source_file": "public/favicon.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "favicon_png_brand",
+      "community": 2,
+      "norm_label": "anrs brand favicon - letter a logo"
+    },
+    {
+      "label": "ANRS Brand Logo - Letter A Logo (Full Size)",
+      "file_type": "image",
+      "source_file": "public/logo.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "logo_png_brand",
+      "community": 2,
+      "norm_label": "anrs brand logo - letter a logo (full size)"
+    },
+    {
+      "label": "ANRS Brand Mini Logo - Letter A Logo (Small)",
+      "file_type": "image",
+      "source_file": "public/minilogo.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "minilogo_png_brand",
+      "community": 2,
+      "norm_label": "anrs brand mini logo - letter a logo (small)"
+    },
+    {
+      "label": "ANRS Brand Identity - Navy Blue Letter A with Swoosh",
+      "file_type": "rationale",
+      "source_file": "public/logo.png",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "anrs_brand_identity",
+      "community": 2,
+      "norm_label": "anrs brand identity - navy blue letter a with swoosh"
+    },
+    {
+      "label": "Eliezer Search Text File",
+      "file_type": "document",
+      "source_file": "eliezer_search.txt",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "id": "eliezer_search_txt",
+      "community": 14,
+      "norm_label": "eliezer search text file"
+    }
+  ],
+  "links": [
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "utils_formatting_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "utils_formatting_formatbrl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "utils_formatting_formatcurrency",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "utils_formatting_formatpercentagemask",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "utils_formatting_parsemaskedstring",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "utils_formatting_formatcurrencyinput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "utils_calculations_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "utils_calculations_getmonthindexfromlabel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "components_header_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "components_prizeconfig_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "components_resultspanel_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "components_schoolmanager_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "components_summarytable_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "components_periodmanager_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "components_costanalysis_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "components_emptystate_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "components_footer_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "components_confirmmodal_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "components_auth_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "components_usermanager_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "components_profilesettings_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "components_entitymanager_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "src_lib_supabase_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "lib_supabase_isconfigured",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "constants_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_constants_initial_categories",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_customaward",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_awardcriterion",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_period",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_evaluation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_user",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_entity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "utils_calculations_calculateallprizes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_app_apptab",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "App.tsx",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "app_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_app_app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "index.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "index_tsx",
+      "target": "app_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "constants.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "constants_tsx",
+      "target": "types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "constants.tsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "constants_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_category",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "constants.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "constants_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_constants_initial_categories",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "constants.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "constants_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_constants_initial_custom_awards",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "index_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_index_rootelement",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "index.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "index_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_index_root",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_period",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_criteriontype",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_comparisonoperator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_scoringrange",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_financialrange",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_criterionoption",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_awardlevel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_thresholds",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_evaluationmodel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_evaluationdirection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_category",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_inadimplenciarankingconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_managementbonusconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_anrsbonusconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_awardcriterion",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L105",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_customaward",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L115",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_evaluation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L134",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_user",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L155",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_entity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L163",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_userentity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "types.ts",
+      "source_location": "L168",
+      "weight": 1.0,
+      "source": "types_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_appconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CostAnalysis.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_costanalysis_tsx",
+      "target": "types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/EntityManager.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_entitymanager_tsx",
+      "target": "types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PeriodManager.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_periodmanager_tsx",
+      "target": "types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_prizeconfig_tsx",
+      "target": "types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ProfileSettings.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_profilesettings_tsx",
+      "target": "types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ResultsPanel.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_resultspanel_tsx",
+      "target": "types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SchoolManager.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_schoolmanager_tsx",
+      "target": "types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_summarytable_tsx",
+      "target": "types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/UserManager.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_usermanager_tsx",
+      "target": "types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "types_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CostAnalysis.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_costanalysis_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_period",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PeriodManager.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_periodmanager_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_period",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_prizeconfig_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_criteriontype",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_prizeconfig_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_comparisonoperator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_criterionoption",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_awardlevel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_thresholds",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_evaluationmodel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_evaluationmodel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_evaluationdirection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_evaluationdirection",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_category",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_category",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_inadimplenciarankingconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_inadimplenciarankingconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_managementbonusconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_managementbonusconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_anrsbonusconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_anrsbonusconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_prizeconfig_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_awardcriterion",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SchoolManager.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_schoolmanager_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_awardcriterion",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_summarytable_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_awardcriterion",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CostAnalysis.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_costanalysis_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_customaward",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_prizeconfig_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_customaward",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ResultsPanel.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_resultspanel_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_customaward",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_summarytable_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_customaward",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CostAnalysis.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_costanalysis_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_evaluation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_prizeconfig_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_evaluation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_summarytable_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_evaluation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "sistema_premiacoes_educacao_anrs_types_evaluation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CostAnalysis.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_costanalysis_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_prizeconfig_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SchoolManager.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_schoolmanager_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "components_summarytable_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_schoolunit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ProfileSettings.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_profilesettings_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_user",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/UserManager.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_usermanager_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_user",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/EntityManager.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_entitymanager_tsx",
+      "target": "sistema_premiacoes_educacao_anrs_types_entity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "vite.config.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "vite_config_ts",
+      "target": "sistema_premiacoes_educacao_anrs_vite_config_env",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Auth.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_auth_tsx",
+      "target": "src_lib_supabase_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Auth.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_auth_tsx",
+      "target": "lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Auth.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_auth_tsx",
+      "target": "components_auth_authprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Auth.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "components_auth_tsx",
+      "target": "components_auth_auth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ConfirmModal.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_confirmmodal_tsx",
+      "target": "components_confirmmodal_confirmmodalprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ConfirmModal.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "components_confirmmodal_tsx",
+      "target": "components_confirmmodal_confirmmodal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/EntityManager.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_entitymanager_tsx",
+      "target": "components_confirmmodal_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_prizeconfig_tsx",
+      "target": "components_confirmmodal_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/UserManager.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_usermanager_tsx",
+      "target": "components_confirmmodal_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CostAnalysis.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_costanalysis_tsx",
+      "target": "utils_formatting_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CostAnalysis.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_costanalysis_tsx",
+      "target": "utils_formatting_formatbrl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CostAnalysis.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "components_costanalysis_tsx",
+      "target": "components_emptystate_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CostAnalysis.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "components_costanalysis_tsx",
+      "target": "components_costanalysis_costanalysisprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CostAnalysis.tsx",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "components_costanalysis_tsx",
+      "target": "components_costanalysis_costanalysis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/CostAnalysis.tsx",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "components_costanalysis_costanalysis",
+      "target": "utils_formatting_formatbrl"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "utils_formatting_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "utils_formatting_formatbrl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "utils_formatting_formatpercentage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "utils_formatting_formatcurrency",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "utils_formatting_formatpercentagemask",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "utils_formatting_parsemaskedstring",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "utils_calculations_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "utils_calculations_getmonthindexfromlabel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "components_criteriaevaluator_criteriaevaluatorprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_tsx",
+      "target": "components_criteriaevaluator_criteriaevaluator",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/CriteriaEvaluator.tsx",
+      "source_location": "L214",
+      "weight": 1.0,
+      "source": "components_criteriaevaluator_criteriaevaluator",
+      "target": "utils_formatting_formatpercentagemask"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/EmptyState.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_emptystate_tsx",
+      "target": "components_emptystate_emptystateprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/EmptyState.tsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "components_emptystate_tsx",
+      "target": "components_emptystate_emptystate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/EntityManager.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_entitymanager_tsx",
+      "target": "components_emptystate_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PeriodManager.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_periodmanager_tsx",
+      "target": "components_emptystate_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SchoolManager.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_schoolmanager_tsx",
+      "target": "components_emptystate_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/UserManager.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_usermanager_tsx",
+      "target": "components_emptystate_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/EntityManager.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_entitymanager_tsx",
+      "target": "src_lib_supabase_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/EntityManager.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_entitymanager_tsx",
+      "target": "lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/EntityManager.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_entitymanager_tsx",
+      "target": "components_entitymanager_entitymanagerprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/EntityManager.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "components_entitymanager_tsx",
+      "target": "components_entitymanager_entitymanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Footer.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_footer_tsx",
+      "target": "components_footer_footerprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Footer.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_footer_tsx",
+      "target": "components_footer_footer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Header.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_header_tsx",
+      "target": "components_header_headerprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/Header.tsx",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "components_header_tsx",
+      "target": "components_header_header",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PeriodManager.tsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "components_periodmanager_tsx",
+      "target": "components_periodmanager_periodmanagerprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PeriodManager.tsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "components_periodmanager_tsx",
+      "target": "components_periodmanager_periodmanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_prizeconfig_tsx",
+      "target": "utils_formatting_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_prizeconfig_tsx",
+      "target": "utils_formatting_formatcurrency",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_prizeconfig_tsx",
+      "target": "utils_formatting_formatpercentagemask",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_prizeconfig_tsx",
+      "target": "utils_formatting_parsemaskedstring",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_prizeconfig_tsx",
+      "target": "components_prizeconfig_prizeconfigprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/PrizeConfig.tsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "components_prizeconfig_tsx",
+      "target": "components_prizeconfig_prizeconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ProfileSettings.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_profilesettings_tsx",
+      "target": "src_lib_supabase_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ProfileSettings.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_profilesettings_tsx",
+      "target": "lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ProfileSettings.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_profilesettings_tsx",
+      "target": "components_profilesettings_profilesettingsprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ProfileSettings.tsx",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "components_profilesettings_tsx",
+      "target": "components_profilesettings_profilesettings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ResultsPanel.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_resultspanel_tsx",
+      "target": "utils_formatting_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ResultsPanel.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_resultspanel_tsx",
+      "target": "utils_formatting_formatbrl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ResultsPanel.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "components_resultspanel_tsx",
+      "target": "components_resultspanel_resultspanelprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/ResultsPanel.tsx",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "components_resultspanel_tsx",
+      "target": "components_resultspanel_resultspanel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/ResultsPanel.tsx",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "components_resultspanel_resultspanel",
+      "target": "utils_formatting_formatbrl"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SchoolManager.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_schoolmanager_tsx",
+      "target": "utils_formatting_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SchoolManager.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_schoolmanager_tsx",
+      "target": "utils_formatting_formatcurrency",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SchoolManager.tsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "components_schoolmanager_tsx",
+      "target": "utils_formatting_parsemaskedstring",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SchoolManager.tsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "components_schoolmanager_tsx",
+      "target": "components_schoolmanager_schoolmanagerprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SchoolManager.tsx",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "components_schoolmanager_tsx",
+      "target": "components_schoolmanager_schoolmanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/SchoolManager.tsx",
+      "source_location": "L169",
+      "weight": 1.0,
+      "source": "components_schoolmanager_schoolmanager",
+      "target": "utils_formatting_formatcurrency"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_summarytable_tsx",
+      "target": "utils_formatting_ts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "components_summarytable_tsx",
+      "target": "utils_formatting_formatbrl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "components_summarytable_tsx",
+      "target": "components_summarytable_schoolwithevaluationstatus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "components_summarytable_tsx",
+      "target": "components_summarytable_summarytableprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "components_summarytable_tsx",
+      "target": "components_summarytable_summarytable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "components/SummaryTable.tsx",
+      "source_location": "L407",
+      "weight": 1.0,
+      "source": "components_summarytable_summarytable",
+      "target": "utils_formatting_formatbrl"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/UserManager.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_usermanager_tsx",
+      "target": "src_lib_supabase_js",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "components/UserManager.tsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "components_usermanager_tsx",
+      "target": "lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/UserManager.tsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "components_usermanager_tsx",
+      "target": "components_usermanager_usermanagerprops",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "components/UserManager.tsx",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "components_usermanager_tsx",
+      "target": "components_usermanager_usermanager",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/supabase.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "src_lib_supabase_js",
+      "target": "lib_supabase_isconfigured",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/lib/supabase.js",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "src_lib_supabase_js",
+      "target": "lib_supabase_supabase",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "utils_calculations_getmonthindexfromlabel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "utils_calculations_calculatepoints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "utils_calculations_getawardlevel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "utils_calculations_allprizesresult",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "utils_calculations_schoolevaluationforprizecalculation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "utils_calculations_ts",
+      "target": "utils_calculations_calculateallprizes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "utils_calculations_calculatepoints",
+      "target": "utils_calculations_getmonthindexfromlabel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L158",
+      "weight": 1.0,
+      "source": "utils_calculations_calculateallprizes",
+      "target": "utils_calculations_calculatepoints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/calculations.ts",
+      "source_location": "L111",
+      "weight": 1.0,
+      "source": "utils_calculations_calculateallprizes",
+      "target": "utils_calculations_getawardlevel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "utils_formatting_ts",
+      "target": "utils_formatting_formatbrl",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "utils_formatting_ts",
+      "target": "utils_formatting_formatpercentage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "utils_formatting_ts",
+      "target": "utils_formatting_formatcurrency",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "utils_formatting_ts",
+      "target": "utils_formatting_formatpercentagemask",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "utils_formatting_ts",
+      "target": "utils_formatting_formatcurrencyinput",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "utils_formatting_ts",
+      "target": "utils_formatting_parsemaskedstring",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "utils_formatting_ts",
+      "target": "utils_formatting_parsecurrencystring",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "utils/formatting.ts",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "utils_formatting_parsecurrencystring",
+      "target": "utils_formatting_parsemaskedstring",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "CLAUDE.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "claudemd_graphify_instructions",
+      "target": "readme_app_description"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "line 18",
+      "weight": 1.0,
+      "source": "readme_app_description",
+      "target": "readme_gemini_api"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "line 9",
+      "weight": 1.0,
+      "source": "readme_app_description",
+      "target": "readme_ai_studio"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "line 13",
+      "weight": 1.0,
+      "source": "readme_app_description",
+      "target": "readme_nodejs"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "index_html_entry",
+      "target": "readme_app_description"
+    },
+    {
+      "relation": "conceptually_related_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "README.md",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "readme_gemini_api",
+      "target": "index_html_index_tsx"
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 13",
+      "weight": 1.0,
+      "source": "index_html_entry",
+      "target": "index_html_root_div"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 14",
+      "weight": 1.0,
+      "source": "index_html_entry",
+      "target": "index_html_index_tsx"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 9",
+      "weight": 1.0,
+      "source": "index_html_entry",
+      "target": "index_html_inter_font"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 8",
+      "weight": 1.0,
+      "source": "index_html_entry",
+      "target": "index_html_favicon"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "index.html",
+      "source_location": "line 8",
+      "weight": 1.0,
+      "source": "index_html_favicon",
+      "target": "favicon_png_brand"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/favicon.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "favicon_png_brand",
+      "target": "anrs_brand_identity"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/favicon.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "favicon_png_brand",
+      "target": "logo_png_brand"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/logo.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "logo_png_brand",
+      "target": "anrs_brand_identity"
+    },
+    {
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/minilogo.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "minilogo_png_brand",
+      "target": "logo_png_brand"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/minilogo.png",
+      "source_location": null,
+      "weight": 1.0,
+      "source": "minilogo_png_brand",
+      "target": "anrs_brand_identity"
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "anrs_brand_assets",
+      "label": "ANRS Brand Asset Cluster",
+      "nodes": [
+        "favicon_png_brand",
+        "logo_png_brand",
+        "minilogo_png_brand",
+        "anrs_brand_identity"
+      ],
+      "relation": "implement",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "source_file": "public/logo.png"
+    },
+    {
+      "id": "app_entry_cluster",
+      "label": "Application Entry Point Cluster",
+      "nodes": [
+        "index_html_entry",
+        "index_html_root_div",
+        "index_html_index_tsx",
+        "readme_app_description"
+      ],
+      "relation": "form",
+      "confidence": "INFERRED",
+      "confidence_score": 0.85,
+      "source_file": "index.html"
+    }
+  ],
+  "built_at_commit": "4664b08a4343a08cdf82c6420eda0b12158d7281"
+}

@@ -1,0 +1,220 @@
+{
+  "main": {
+    "id": "142478c4b43e6e40",
+    "type": "split",
+    "children": [
+      {
+        "id": "b1d80df6c658a3d9",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8cddce82823c2d42",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Visualização em gráfico"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "b49e0542ca3a45c7",
+    "type": "split",
+    "children": [
+      {
+        "id": "b73fbb73f5edb678",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d1333cc7ad71ba26",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de arquivos"
+            }
+          },
+          {
+            "id": "a06a63b38bfa0c31",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Procurar"
+            }
+          },
+          {
+            "id": "73ea62c0ef6e8ce1",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "a2bf86121ad4cca6",
+    "type": "split",
+    "children": [
+      {
+        "id": "7dd1055efcf68156",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b89b2c65f9a45411",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Links inversos"
+            }
+          },
+          {
+            "id": "cf316485173b04f9",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Links de saída"
+            }
+          },
+          {
+            "id": "cc641fa5c480912b",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "b1ee1e99afb6e28b",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Todas as propriedades"
+            }
+          },
+          {
+            "id": "5521639420dcdc2d",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Sumário"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir a troca rápida": false,
+      "graph:Abrir visualização em gráfico": false,
+      "canvas:Criar novo canvas": false,
+      "daily-notes:Abrir a nota de hoje": false,
+      "templates:Inserir modelo": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Criar nova base": false
+    }
+  },
+  "active": "8cddce82823c2d42",
+  "lastOpenFiles": [
+    "graphify-out/cost.json",
+    "graphify-out/manifest.json",
+    "graphify-out/graph.html",
+    "graphify-out/obsidian/graph.canvas",
+    "graphify-out/obsidian/parseMaskedString().md",
+    "graphify-out/obsidian/formatCurrencyInput().md",
+    "graphify-out/obsidian/formatPercentageMask().md",
+    "graphify-out/obsidian/formatCurrency().md",
+    "graphify-out/obsidian/formatPercentage().md",
+    "graphify-out/obsidian/formatBRL().md",
+    "graphify-out/obsidian/formatting.ts.md",
+    "graphify-out/obsidian/calculateAllPrizes().md",
+    "graphify-out/obsidian/vite.config.ts.md",
+    "graphify-out/obsidian/UserManagerProps.md",
+    "graphify-out/obsidian/UserManager.tsx.md",
+    "graphify-out/obsidian/UserManager().md",
+    "graphify-out/obsidian/UserEntity.md",
+    "graphify-out/obsidian/User.md",
+    "graphify-out/obsidian/types.ts.md",
+    "graphify-out/obsidian/Thresholds.md",
+    "graphify-out/obsidian/supabase.md",
+    "graphify-out/obsidian/supabase.js.md",
+    "graphify-out/obsidian/SummaryTableProps.md",
+    "graphify-out/obsidian/SummaryTable().md",
+    "graphify-out/obsidian/SummaryTable.tsx.md",
+    "graphify-out/obsidian/ScoringRange.md",
+    "graphify-out/obsidian/SchoolWithEvaluationStatus.md",
+    "graphify-out/obsidian/SchoolUnit.md",
+    "graphify-out/obsidian/SchoolManagerProps.md",
+    "graphify-out/obsidian",
+    "graphify-out/graph.json",
+    "graphify-out/cache/semantic/32540f09c8acf2db57895b27c8b9d6919bcc842b8f98efbaba3be80243468f6b.json",
+    "graphify-out/cache/semantic/c0a130322f50413756265414e980182c048f9b506d7842ddf961cfa618aaae09.json",
+    "graphify-out/cache/semantic/5da103b46144a6e1833b30d1fced19cdd243226ab764c89d3c25d2f3134a4afa.json",
+    "graphify-out/cache/semantic/4575b2da6dee5183bbcbc8abc6b0d94286c3adeb8647230076bd421f2dab5f46.json",
+    "graphify-out/cache/semantic/4bf06902e78fbab95d23b0e070a7bbd9c0e261c63aff7f03c31577b241bdc5d4.json",
+    "graphify-out/cache/semantic/c77ead9382809dc2e506eda6e1b39c6509c59d4c3c98b04a138a01168b8447a5.json",
+    "Sem título.canvas"
+  ]
+}
