@@ -12,7 +12,8 @@
       "Bash(ls \"C:\\\\Users\\\\letil\\\\AppData\\\\Local\\\\Packages\\\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\\\LocalCache\\\\local-packages\\\\Python312\\\\site-packages\\\\graphify\")",
       "Read(//c/Users/letil/AppData/Local/Packages/PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0/LocalCache/local-packages/Python312/site-packages/graphify/**)",
       "Bash(python -m graphify claude install)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
